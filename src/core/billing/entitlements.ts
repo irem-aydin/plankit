@@ -3,7 +3,8 @@
  * Atomik kredi düşümü veritabanındaki consume_generation_credit fonksiyonunda
  * aynı kurallarla yapılır; burası UI ve ön kontrol içindir.
  */
-export const TRIAL_GENERATION_LIMIT = 3;
+/** Yeni hesaba tanınan ücretsiz plan hakkı; sonrası abonelik. */
+export const TRIAL_GENERATION_LIMIT = 1;
 
 export type SubscriptionStatus = "trial" | "active" | "expired";
 

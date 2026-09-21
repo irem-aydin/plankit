@@ -24,7 +24,6 @@ import { APP_NAME } from "@/config/app";
 import { EXAMPLES } from "@/content/examples";
 import { SAMPLE_PLAN } from "@/content/sample-plan";
 import { CATEGORY_NAMES } from "@/core/ai/preview";
-import { TRIAL_GENERATION_LIMIT } from "@/core/billing/entitlements";
 import { HeroDemo } from "./hero-demo";
 import { TryPreview } from "./try-preview";
 
@@ -60,7 +59,7 @@ const CATEGORIES = [
 const FAQ = [
   {
     q: "Ücretli mi?",
-    a: `İlk ${TRIAL_GENERATION_LIMIT} plan ücretsiz ve kredi kartı gerekmez. Sonrasında aylık abonelikle devam edebilirsin.`,
+    a: "İlk planın ücretsiz ve kredi kartı gerekmez. Sonrasında aylık abonelikle devam edebilirsin. Kayıt olmadan önizleme de deneyebilirsin.",
   },
   { q: "Bilgilerim güvende mi?", a: "Planların ve profillerin yalnızca senin hesabında durur. Eklediğin dosyalar saklanmaz; verilerini istediğin an indirebilir veya silebilirsin." },
   { q: "Yapay zekâ hata yapabilir mi?", a: "Evet, bu yüzden tahminler ve varsayımlar planda açıkça işaretlenir. Önemli kararlardan, mevzuat ve tutar içeren konularda uzman görüşü almanı öneririz." },
@@ -134,7 +133,7 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
                   href="/kayit"
                   className="flex items-center gap-2 rounded-lg bg-rose-600 px-6 py-3 font-semibold text-white shadow-lg shadow-rose-600/20 hover:bg-rose-500"
                 >
-                  İlk {TRIAL_GENERATION_LIMIT} plan ücretsiz
+                  İlk planın ücretsiz
                   <ArrowRight className="size-4" aria-hidden />
                 </Link>
                 <a href="#dene" className="rounded-lg px-5 py-3 font-semibold text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50">
@@ -309,15 +308,15 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
 
         {/* CTA */}
         <section className="mx-auto max-w-6xl px-4 pb-20">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-rose-600 to-pink-600 px-6 py-14 text-center text-white sm:px-12">
-            <div className="pointer-events-none absolute -top-20 -left-20 size-64 rounded-full bg-white/10 blur-2xl" aria-hidden />
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-rose-100 via-pink-50 to-rose-200 px-6 py-14 text-center text-slate-900 ring-1 ring-rose-100 sm:px-12">
+            <div className="pointer-events-none absolute -top-20 -left-20 size-64 rounded-full bg-white/60 blur-2xl" aria-hidden />
             <h2 className="relative text-3xl font-bold tracking-tight">İlk planın birkaç dakika uzağında</h2>
-            <p className="relative mx-auto mt-3 max-w-xl text-rose-100">
+            <p className="relative mx-auto mt-3 max-w-xl text-slate-600">
               Ücretsiz hesap oluştur, durumunu anlat ve sana özel stratejini gör.
             </p>
             <Link
               href="/kayit"
-              className="relative mt-8 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold text-rose-700 hover:bg-rose-50"
+              className="relative mt-8 inline-flex items-center gap-2 rounded-lg bg-rose-600 px-6 py-3 font-semibold text-white shadow-sm hover:bg-rose-500"
             >
               Ücretsiz başla <ArrowRight className="size-4" aria-hidden />
             </Link>

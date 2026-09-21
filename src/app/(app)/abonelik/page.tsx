@@ -15,7 +15,7 @@ const NOTICES: Record<string, { tone: "ok" | "warn"; text: string }> = {
   iptal: { tone: "warn", text: "Ödeme tamamlanmadı. İstediğin zaman tekrar deneyebilirsin." },
   limit: {
     tone: "warn",
-    text: `Ücretsiz ${TRIAL_GENERATION_LIMIT} çıktı hakkını kullandın. Sınırsız üretime devam etmek için abone ol.`,
+    text: "Ücretsiz deneme hakkını kullandın. Yeni planlar oluşturmaya devam etmek için abone ol.",
   },
 };
 

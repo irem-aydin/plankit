@@ -104,7 +104,7 @@ export function SelectionForm({
   const allSelected = subcategories.length > 0 && subcategories.every((s) => selected.has(s.id));
   const trialNote =
     remainingTrial !== null && canGenerate
-      ? `Bu üretim deneme hakkından 1 düşecek (kalan: ${remainingTrial}).`
+      ? `Bu plan ücretsiz deneme hakkını kullanacak (kalan: ${remainingTrial}).`
       : canGenerate
         ? "Aboneliğin aktif — sınırsız üretim."
         : "";

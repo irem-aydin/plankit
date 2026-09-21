@@ -41,7 +41,7 @@ export async function previewForVisitor(rawText: string, ip: string): Promise<Pr
     return {
       ok: false,
       limited: true,
-      error: "Bugünkü ücretsiz önizleme hakkın doldu. Ücretsiz hesap açarak tam planını hemen oluşturabilirsin.",
+      error: "Ücretsiz önizleme hakkını kullandın. Ücretsiz hesap açarak tam planını hemen oluşturabilirsin.",
     };
   }
 

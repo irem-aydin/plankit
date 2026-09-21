@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { TRIAL_GENERATION_LIMIT } from "@/core/billing/entitlements";
 import { signUpAction } from "../actions";
 import { AuthForm } from "../auth-form";
 
@@ -13,7 +12,7 @@ export default async function SignUpPage({ searchParams }: PageProps<"/kayit">) 
     <>
       <h1 className="text-xl font-semibold text-slate-900">Ücretsiz hesap oluştur</h1>
       <p className="mt-1 mb-6 text-sm text-slate-600">
-        İlk {TRIAL_GENERATION_LIMIT} çıktı üretimin ücretsiz. Kredi kartı gerekmez.
+        İlk planın ücretsiz. Kredi kartı gerekmez.
       </p>
       {next?.startsWith("/olustur/") && (
         <p className="mb-4 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-900">

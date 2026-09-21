@@ -89,12 +89,12 @@ export default async function ExamplePage({ params }: PageProps<"/ornekler/[slug
         <DocumentView doc={doc} contextLabel="Senaryo" hideTitle />
 
         <section className="mx-auto mt-12 max-w-4xl print:hidden">
-          <div className="rounded-3xl bg-gradient-to-br from-rose-600 to-pink-600 px-6 py-10 text-center text-white">
+          <div className="rounded-3xl bg-gradient-to-br from-rose-100 via-pink-50 to-rose-200 ring-1 ring-rose-100 px-6 py-10 text-center text-slate-900">
             <h2 className="text-2xl font-bold tracking-tight">Aynı planı kendi işin için hazırlayalım</h2>
-            <p className="mx-auto mt-2 max-w-xl text-rose-100">
-              Durumunu anlat; bu yapıdaki plan birkaç dakikada senin rakamlarınla hazır olsun. İlk 3 plan ücretsiz.
+            <p className="mx-auto mt-2 max-w-xl text-slate-600">
+              Durumunu anlat; bu yapıdaki plan birkaç dakikada senin rakamlarınla hazır olsun. İlk planın ücretsiz.
             </p>
-            <Link href={startHref} className="mt-6 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold text-rose-700 hover:bg-rose-50">
+            <Link href={startHref} className="mt-6 inline-flex items-center gap-2 rounded-lg bg-rose-600 px-6 py-3 font-semibold text-white shadow-sm hover:bg-rose-500">
               Ücretsiz başla <ArrowRight className="size-4" aria-hidden />
             </Link>
           </div>

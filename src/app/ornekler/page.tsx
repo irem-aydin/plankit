@@ -79,12 +79,12 @@ export default function ExamplesPage() {
         </div>
 
         <section className="mx-auto max-w-6xl px-4 pb-16">
-          <div className="rounded-3xl bg-gradient-to-br from-rose-600 to-pink-600 px-6 py-12 text-center text-white">
+          <div className="rounded-3xl bg-gradient-to-br from-rose-100 via-pink-50 to-rose-200 ring-1 ring-rose-100 px-6 py-12 text-center text-slate-900">
             <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Aradığın örnek burada yok mu?</h2>
-            <p className="mx-auto mt-3 max-w-xl text-rose-100">
+            <p className="mx-auto mt-3 max-w-xl text-slate-600">
               Ne istediğini kendi cümlelerinle yaz; yapay zekâ konuya uygun çerçeveyi kurup senin durumuna göre doldursun.
             </p>
-            <Link href="/kayit" className="mt-6 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold text-rose-700 hover:bg-rose-50">
+            <Link href="/kayit" className="mt-6 inline-flex items-center gap-2 rounded-lg bg-rose-600 px-6 py-3 font-semibold text-white shadow-sm hover:bg-rose-500">
               Ücretsiz başla <ArrowRight className="size-4" aria-hidden />
             </Link>
           </div>

@@ -9,7 +9,7 @@ export const PREVIEW_MIN_CHARS = 20;
 export const PREVIEW_MAX_CHARS = 600;
 
 /** Aynı ziyaretçi (IP özeti) için günlük deneme sayısı. */
-export const PREVIEW_PER_VISITOR_DAILY = 3;
+export const PREVIEW_PER_VISITOR_DAILY = 1;
 /** Tüm site için günlük üst sınır (maliyet tavanı). */
 export const PREVIEW_GLOBAL_DAILY = 200;
 

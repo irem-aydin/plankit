@@ -91,7 +91,7 @@ export function TryPreview() {
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <span className="text-xs text-slate-500">
-            {length}/{PREVIEW_MAX_CHARS} · kayıt gerekmez
+            {length}/{PREVIEW_MAX_CHARS} · kayıt gerekmez · 1 ücretsiz önizleme
           </span>
           <button
             type="submit"
