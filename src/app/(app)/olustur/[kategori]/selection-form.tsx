@@ -11,6 +11,7 @@ import {
   type IntakeMode,
   type Language,
 } from "@/core/ai/intake";
+import { planCreditCost } from "@/core/billing/plans";
 import type { SubcategoryOption } from "@/infrastructure/supabase/catalog-queries";
 import { generateAction } from "../actions";
 import { FileInput, FilePicker, useFileSelection } from "./file-picker";
@@ -43,8 +44,7 @@ export function SelectionForm({
   categoryId,
   categoryName,
   subcategories,
-  canGenerate,
-  remainingTrial,
+  usage,
   aiAvailable,
   personalizationEnabled,
   profiles,
@@ -55,8 +55,8 @@ export function SelectionForm({
   categoryId: string;
   categoryName: string;
   subcategories: SubcategoryOption[];
-  canGenerate: boolean;
-  remainingTrial: number | null;
+  /** Kullanıcının hakları: denemede plan, abonelikte bu ayki kredi */
+  usage: { kind: "trial" | "credits" | "unlimited" | "none"; remaining: number | null };
   aiAvailable: boolean;
   personalizationEnabled: boolean;
   profiles: ProfileOption[];
@@ -102,12 +102,20 @@ export function SelectionForm({
   }
 
   const allSelected = subcategories.length > 0 && subcategories.every((s) => selected.has(s.id));
+  // Detaylı plan daha uzun ve pahalı olduğu için 2 kredi; denemede her plan 1 hak.
+  const cost = usage.kind === "trial" ? 1 : planCreditCost(detail);
+  const canGenerate = usage.kind === "unlimited" || (usage.remaining ?? 0) >= 1;
+  const canAffordThis = usage.kind === "unlimited" || (usage.remaining ?? 0) >= cost;
   const trialNote =
-    remainingTrial !== null && canGenerate
-      ? `Bu plan ücretsiz deneme hakkını kullanacak (kalan: ${remainingTrial}).`
-      : canGenerate
-        ? "Aboneliğin aktif — sınırsız üretim."
-        : "";
+    usage.kind === "trial" && canGenerate
+      ? "Bu plan ücretsiz deneme hakkını kullanacak."
+      : usage.kind === "credits"
+        ? canAffordThis
+          ? `Bu plan ${cost} kredi kullanacak (bu ay kalan: ${usage.remaining}).`
+          : `Detaylı plan ${cost} kredi gerektiriyor, ${usage.remaining} kredin kaldı. Özet plan seçebilirsin.`
+        : usage.kind === "unlimited"
+          ? "Yönetici hesabı — kota yok."
+          : "";
 
   return (
     <form action={formAction} className="mt-8">
@@ -494,7 +502,7 @@ export function SelectionForm({
               <SubmitButton
                 name="ai"
                 value="1"
-                disabled={!canGenerate || !aiAvailable || !hasSelection}
+                disabled={!canAffordThis || !aiAvailable || !hasSelection}
                 pendingText="Gönderiliyor…"
               >
                 ✨ Bana özel planı oluştur

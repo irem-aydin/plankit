@@ -15,7 +15,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { CategoryIcon } from "@/components/category-icon";
-import { TRIAL_GENERATION_LIMIT } from "@/core/billing/entitlements";
+import { usageSummary } from "@/core/billing/entitlements";
 import { computeDashboardStats } from "@/core/dashboard/stats";
 import { profileCompleteness } from "@/core/profile/profile";
 import { listCategories } from "@/infrastructure/supabase/catalog-queries";
@@ -41,7 +41,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/panel"
   const session = await getCurrentSession();
   if (!session) redirect("/giris");
   const { durum, hosgeldin } = await searchParams;
-  const { user, account, preferences, entitlement } = session;
+  const { user, preferences, entitlement } = session;
 
   const supabase = await createSupabaseServerClient();
   const [profiles, plans, categories] = await Promise.all([
@@ -55,12 +55,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/panel"
   const name = preferences.displayName || user.email?.split("@")[0] || "";
   const showProfiles = preferences.personalizationEnabled;
 
-  const creditValue = entitlement.unlimited ? "Sınırsız" : `${entitlement.remainingTrial ?? 0} / ${TRIAL_GENERATION_LIMIT}`;
-  const creditHint = entitlement.unlimited
-    ? "Pro abonelik"
-    : account.subscriptionStatus === "trial"
-      ? "ücretsiz deneme hakkı"
-      : "deneme süren doldu";
+  const usage = usageSummary(entitlement);
 
   return (
     <div className="space-y-8">
@@ -94,9 +89,9 @@ export default async function DashboardPage({ searchParams }: PageProps<"/panel"
                 Örnek planı gör
               </Link>
             )}
-            {!entitlement.unlimited && account.subscriptionStatus !== "trial" && (
+            {!entitlement.canGenerate && (
               <Link href="/abonelik" className="rounded-lg px-5 py-2.5 text-sm font-semibold text-rose-800 ring-1 ring-rose-300 hover:bg-white/60">
-                Abone ol
+                Plan seç
               </Link>
             )}
           </div>
@@ -114,7 +109,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/panel"
           hint={stats.shared > 0 ? `${stats.shared} paylaşılan planda` : "henüz paylaşım yok"}
           tone="emerald"
         />
-        <StatCard Icon={Gauge} label="Kullanım hakkı" value={creditValue} hint={creditHint} tone="pink" href="/abonelik" />
+        <StatCard Icon={Gauge} label="Kullanım hakkı" value={usage.value} hint={usage.detail} tone="pink" href="/abonelik" />
       </section>
 
       <div className="empty:hidden">

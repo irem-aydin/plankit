@@ -62,19 +62,35 @@ export function progressMessage(completed: number, total: number, finished: stri
   return total > 1 ? `${completed} / ${total} bölüm hazır · son biten: ${name}` : `${name} hazır, kaydediliyor`;
 }
 
+/** Bir kullanıcının son bir saatte başlatabileceği en fazla iş (otomasyon/kötüye kullanım koruması). */
+export const HOURLY_JOB_LIMIT = 10;
+
+/** Tüm site için günlük üst sınır (acil fren); ortam değişkeniyle değiştirilebilir. */
+export const DEFAULT_GLOBAL_DAILY_JOB_LIMIT = 500;
+
 /**
- * Yeni iş başlatılabilir mi? Deneme kullanıcısı kalan hakkından fazla işi
- * aynı anda başlatamaz (aksi hâlde biri boşuna maliyet üretip başarısız olur).
+ * Yeni iş başlatılabilir mi? Kredisi/hakkı süren işlere yetmeyen kullanıcı
+ * aynı anda yeni iş başlatamaz (aksi hâlde biri boşuna maliyet üretip
+ * başarısız olur). Hak kontrolü (canAfford) bundan önce yapılmalıdır.
  */
-export function canStartJob(
-  activeCount: number,
-  entitlement: { unlimited: boolean; remainingTrial: number | null },
-): { ok: true } | { ok: false; reason: string } {
-  if (activeCount >= MAX_ACTIVE_JOBS) {
+export function canStartJob(input: {
+  activeCount: number;
+  /** Son bir saatte başlatılan iş sayısı */
+  recentCount: number;
+  /** Kalan hak/kredi; sınırsızda null */
+  remaining: number | null;
+  /** Bu işin maliyeti (denemede 1) */
+  cost: number;
+}): { ok: true } | { ok: false; reason: string } {
+  if (input.activeCount >= MAX_ACTIVE_JOBS) {
     return { ok: false, reason: `Aynı anda en fazla ${MAX_ACTIVE_JOBS} plan hazırlanabilir. Devam edenlerin bitmesini bekle.` };
   }
-  if (!entitlement.unlimited && entitlement.remainingTrial !== null && activeCount >= entitlement.remainingTrial) {
-    return { ok: false, reason: "Hazırlanmakta olan bir planın var. Deneme hakkın bittiği için önce onun bitmesini bekle." };
+  if (input.recentCount >= HOURLY_JOB_LIMIT) {
+    return { ok: false, reason: "Son bir saatte çok sayıda plan başlattın. Biraz sonra tekrar dene." };
+  }
+  // Süren her iş en az 1 hak ayırır.
+  if (input.remaining !== null && input.activeCount > 0 && input.remaining < input.cost + input.activeCount) {
+    return { ok: false, reason: "Hazırlanmakta olan planların kalan hakkını kullanıyor. Önce onların bitmesini bekle." };
   }
   return { ok: true };
 }

@@ -12,6 +12,9 @@ export function PublicHeader({ cta }: { cta?: { href: string; label: string } })
           <Logo />
         </Link>
         <nav className="flex items-center gap-1 text-sm">
+          <Link href="/fiyatlar" className="hidden rounded-lg px-3 py-2 font-medium text-slate-600 hover:bg-slate-100 sm:inline">
+            Fiyatlar
+          </Link>
           <Link href="/ornekler" className="hidden rounded-lg px-3 py-2 font-medium text-slate-600 hover:bg-slate-100 sm:inline">
             Örnekler
           </Link>
@@ -38,6 +41,9 @@ export function PublicFooter() {
         <span className="flex flex-wrap items-center gap-4">
           <Link href="/ornekler" className="font-medium text-slate-600 hover:underline">
             Örnek planlar
+          </Link>
+          <Link href="/fiyatlar" className="font-medium text-slate-600 hover:underline">
+            Fiyatlar
           </Link>
           <Link href="/yasal" className="font-medium text-slate-600 hover:underline">
             Yasal bilgiler

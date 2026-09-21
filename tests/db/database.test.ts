@@ -240,6 +240,71 @@ describe("paylaşım bağlantısı", () => {
   });
 });
 
+describe("abonelik kredileri (consume_credits)", () => {
+  async function newUser(email: string, patch = "") {
+    const [{ id }] = await rows<{ id: string }>(`insert into auth.users(email) values ($1) returning id`, [email]);
+    if (patch) await db.query(`update users set ${patch} where id = $1`, [id]);
+    return id;
+  }
+  const consume = async (id: string, cost: number, monthly = 10) =>
+    (await rows<{ ok: boolean }>("select public.consume_credits($1, $2, 1, $3) as ok", [id, cost, monthly]))[0].ok;
+  const state = async (id: string) =>
+    (await rows<{ subscription_status: string; trial_limit_used: number; credits_used: number }>(
+      "select subscription_status, trial_limit_used, credits_used from users where id = $1",
+      [id],
+    ))[0];
+
+  it("deneme hesabı tek plan hakkını kullanınca kapanır (detaylı plan da 1 hak)", async () => {
+    const id = await newUser("deneme1@test.com");
+    expect(await consume(id, 2)).toBe(true);
+    expect(await state(id)).toMatchObject({ subscription_status: "expired", trial_limit_used: 1 });
+    expect(await consume(id, 1)).toBe(false);
+  });
+
+  it("abone kredisi maliyete göre düşer ve limitte durur", async () => {
+    const id = await newUser("baslangic@test.com", "subscription_status = 'active', plan = 'starter'");
+    for (let i = 0; i < 4; i++) expect(await consume(id, 2)).toBe(true);
+    expect((await state(id)).credits_used).toBe(8);
+    expect(await consume(id, 3)).toBe(false);
+    expect((await state(id)).credits_used).toBe(8);
+    expect(await consume(id, 2)).toBe(true);
+    expect(await consume(id, 1)).toBe(false);
+  });
+
+  it("ay dolunca kredi sayacı sıfırlanır ve pencere ay ay ilerler", async () => {
+    const id = await newUser(
+      "yenilenen@test.com",
+      "subscription_status = 'active', plan = 'pro', credits_used = 30, credits_period_start = now() - interval '40 days'",
+    );
+    expect(await consume(id, 1, 30)).toBe(true);
+    const [row] = await rows<{ credits_used: number; fresh: boolean }>(
+      "select credits_used, credits_period_start > now() - interval '1 month' as fresh from users where id = $1",
+      [id],
+    );
+    expect(row).toEqual({ credits_used: 1, fresh: true });
+  });
+
+  it("yönetici (internal) hesap kotasızdır, aktif olmayan hesap harcayamaz", async () => {
+    const admin = await newUser("sahip@test.com", "subscription_status = 'active', plan = 'internal'");
+    for (let i = 0; i < 20; i++) expect(await consume(admin, 2)).toBe(true);
+    const expired = await newUser("bitmis@test.com", "subscription_status = 'expired', plan = 'pro'");
+    expect(await consume(expired, 1)).toBe(false);
+  });
+
+  it("kullanıcı fonksiyonu çağıramaz, planını veya kredisini değiştiremez", async () => {
+    await asUser(alice);
+    expect(await allowed("select public.consume_credits($1, 1, 1, 10)", [alice])).toBe(false);
+    await db.query("update users set plan = 'internal', credits_used = 0 where id = $1", [alice]).catch(() => {});
+    await asAdmin();
+    const [row] = await rows<{ plan: string }>("select plan from users where id = $1", [alice]);
+    expect(row.plan).toBe("free");
+  });
+
+  it("geçersiz plan adı kabul edilmez", async () => {
+    expect(await allowed("update users set plan = 'altin' where id = $1", [bob])).toBe(false);
+  });
+});
+
 describe("kayıtsız önizleme kotası", () => {
   const consume = async (visitor: string, perVisitor = 3, global = 5) => {
     const [{ ok }] = await rows<{ ok: boolean }>("select public.consume_preview_quota($1, $2, $3) as ok", [visitor, perVisitor, global]);

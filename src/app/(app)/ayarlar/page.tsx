@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { TRIAL_GENERATION_LIMIT } from "@/core/billing/entitlements";
+import { usageSummary } from "@/core/billing/entitlements";
 import { ProfileRepository } from "@/infrastructure/supabase/profile-repository";
 import { createSupabaseServerClient } from "@/infrastructure/supabase/server";
 import { getCurrentSession } from "@/services/session";
@@ -53,7 +53,7 @@ function Section({
 export default async function SettingsPage() {
   const session = await getCurrentSession();
   if (!session) redirect("/giris?sonra=/ayarlar");
-  const { user, account, preferences, entitlement } = session;
+  const { user, preferences, entitlement } = session;
   const profiles = await new ProfileRepository(await createSupabaseServerClient()).list().catch(() => []);
 
   return (
@@ -120,11 +120,7 @@ export default async function SettingsPage() {
 
           <Section id="abonelik" title="Abonelik">
             <p className="text-sm text-slate-700">
-              {entitlement.unlimited
-                ? "Pro — sınırsız plan oluşturma."
-                : account.subscriptionStatus === "trial"
-                  ? `Ücretsiz deneme: ${account.trialLimitUsed} / ${TRIAL_GENERATION_LIMIT} kullanıldı.`
-                  : "Deneme süren sona erdi."}
+              {usageSummary(entitlement).value} — {usageSummary(entitlement).detail}.
             </p>
             <Link href="/abonelik" className="mt-3 inline-block text-sm font-semibold text-rose-600 hover:underline">
               Abonelik ayrıntıları →

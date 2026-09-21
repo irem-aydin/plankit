@@ -69,6 +69,27 @@ export class JobRepository {
     return (data ?? []).map(toRecord);
   }
 
+  /** Kullanıcının belirli bir andan sonra başlattığı iş sayısı (hız sınırı). */
+  async countForUserSince(userId: string, since: Date): Promise<number> {
+    const { count, error } = await this.client
+      .from("generation_jobs")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .gte("created_at", since.toISOString());
+    if (error) throw new Error(`İşler sayılamadı: ${error.message}`);
+    return count ?? 0;
+  }
+
+  /** Tüm kullanıcıların belirli bir andan sonra başlattığı iş sayısı (günlük üst sınır). */
+  async countAllSince(since: Date): Promise<number> {
+    const { count, error } = await this.client
+      .from("generation_jobs")
+      .select("id", { count: "exact", head: true })
+      .gte("created_at", since.toISOString());
+    if (error) throw new Error(`İşler sayılamadı: ${error.message}`);
+    return count ?? 0;
+  }
+
   async markRunning(id: string) {
     await this.update(id, { status: "running", started_at: new Date().toISOString(), progress: "Hazırlanıyor" });
   }

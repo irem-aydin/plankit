@@ -56,7 +56,13 @@ Plan üretimi 1-5 dakika sürüyor. Vercel'de bir isteğin azami süresi **ücre
 
 **Önerim: B.** Kullanıcı "planın hazırlanıyor, bitince haber vereceğiz" görür; istersen e-posta da gönderilir. Bu, 4 dakika ekran başında bekletmekten de iyi bir deneyim.
 
-### 2.2 🔴 Maliyet koruması yok
+### 2.2 ✅ Maliyet koruması ve abonelik planları (21.09.2026)
+
+**Yapıldı:** Ücretsiz (1 plan) · Başlangıç 249 ₺/ay, 8 kredi · Profesyonel 499 ₺/ay, 25 kredi (kuruluş dönemi fiyatı; ilk 349/749 ₺ yeni site için yüksek bulundu) · yıllıkta %20 indirim (199 / 399 ₺/ay) · Ekip: teklif. Detaylı plan 2, özet plan ve güncelleme 1 kredi; krediler aylık yenilenir, devretmez. Kredi veritabanında atomik düşülür ve yalnızca başarılı üretimde. Kullanıcı başına 2 eşzamanlı ve saatte 10 iş; site geneli 24 saatte 500 iş (ortam değişkeniyle ayarlanır). Herkese açık /fiyatlar sayfası ve uygulama içi abonelik/kullanım ekranı. Fiyatlar Gamma, Upmetrics, LivePlan ve ChatGPT Plus bantlarına göre belirlendi. **Kalan:** Anthropic panelinde aylık harcama limiti; Stripe'ta 4 fiyatın tanımlanması; mesafeli satış sözleşmesi.
+
+*İlk analiz:*
+
+### 2.2 (eski) Maliyet koruması yok
 
 Şu an bir kullanıcı abone olduğunda **sınırsız** plan üretebiliyor. Her plan bize 0,13-0,67 $ arası maliyet çıkarıyor. Kötü niyetli ya da aşırı hevesli tek kullanıcı aylık yüzlerce dolar zarar yazdırabilir.
 

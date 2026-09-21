@@ -402,7 +402,7 @@ function PersonalizationNotes({
               ))}
             </ol>
             <div className="mt-3 flex flex-wrap items-center justify-end gap-3 print:hidden">
-              <span className="text-xs text-slate-500">Güncelleme 1 kullanım hakkı sayılır · 2-4 dk</span>
+              <span className="text-xs text-slate-500">Güncelleme 1 kredi · 2-4 dk</span>
               <button
                 type="button"
                 disabled={refining || answered.length === 0}

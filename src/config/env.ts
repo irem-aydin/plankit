@@ -35,7 +35,36 @@ export const serverEnv = {
   get stripeWebhookSecret() {
     return required("STRIPE_WEBHOOK_SECRET", process.env.STRIPE_WEBHOOK_SECRET);
   },
-  get stripePriceId() {
-    return required("STRIPE_PRICE_ID", process.env.STRIPE_PRICE_ID);
-  },
 };
+
+/**
+ * Stripe fiyat kimlikleri (Stripe panelinde her plan × dönem için bir fiyat).
+ * Tanımlı olmayan fiyatın planı ekranda "yakında" görünür.
+ */
+export const STRIPE_PRICE_ENV = {
+  starter: { month: "STRIPE_PRICE_STARTER_MONTHLY", year: "STRIPE_PRICE_STARTER_YEARLY" },
+  pro: { month: "STRIPE_PRICE_PRO_MONTHLY", year: "STRIPE_PRICE_PRO_YEARLY" },
+} as const;
+
+export function stripePriceId(plan: "starter" | "pro", interval: "month" | "year"): string | undefined {
+  const value = process.env[STRIPE_PRICE_ENV[plan][interval]];
+  // Eski tek fiyatlı kurulumla uyumluluk: STRIPE_PRICE_ID = Profesyonel aylık
+  if (!value && plan === "pro" && interval === "month") return process.env.STRIPE_PRICE_ID || undefined;
+  return value || undefined;
+}
+
+/** Stripe fiyat kimliğinden plan (webhook'ta aboneliğin hangi plana ait olduğunu bulmak için). */
+export function planForStripePrice(priceId: string | undefined): "starter" | "pro" | null {
+  if (!priceId) return null;
+  for (const plan of ["starter", "pro"] as const) {
+    for (const interval of ["month", "year"] as const) {
+      if (stripePriceId(plan, interval) === priceId) return plan;
+    }
+  }
+  return null;
+}
+
+/** Online ödeme yapılandırılmış mı? */
+export function isBillingConfigured(): boolean {
+  return Boolean(process.env.STRIPE_SECRET_KEY);
+}

@@ -1,6 +1,7 @@
 import "server-only";
 import type { Attachment } from "@/core/ai/attachments";
-import { getEntitlement, TRIAL_GENERATION_LIMIT } from "@/core/billing/entitlements";
+import { canAfford, effectiveCost, getEntitlement, TRIAL_GENERATION_LIMIT, type Entitlement } from "@/core/billing/entitlements";
+import { CREDIT_COSTS, monthlyCreditLimit, planCreditCost } from "@/core/billing/plans";
 import {
   generateOutput,
   type GenerateOutputInput,
@@ -17,10 +18,36 @@ import { OutputRepository } from "@/infrastructure/supabase/output-repository";
 
 export class EntitlementError extends Error {
   readonly code = "ENTITLEMENT_REQUIRED";
-  constructor() {
-    super("Ücretsiz deneme hakkınız doldu. Devam etmek için abone olun.");
+  constructor(message = "Ücretsiz deneme hakkınız doldu. Devam etmek için abone olun.") {
+    super(message);
     this.name = "EntitlementError";
   }
+}
+
+/** Hak yetmediğinde kullanıcıya duruma uygun mesaj. */
+export function entitlementMessage(entitlement: Entitlement, cost: number): string {
+  if (entitlement.kind === "credits") {
+    return (entitlement.remaining ?? 0) > 0
+      ? `Bu işlem ${cost} kredi gerektiriyor; bu ay ${entitlement.remaining} kredin kaldı. Özet plan seçebilir veya planını yükseltebilirsin.`
+      : "Bu ayki kredilerin bitti. Krediler her ay yenilenir; hemen devam etmek için planını yükseltebilirsin.";
+  }
+  if (entitlement.kind === "trial") return "Ücretsiz deneme hakkını kullandın. Devam etmek için bir plan seç.";
+  return "Aboneliğin aktif değil. Devam etmek için bir plan seç.";
+}
+
+/** İşlemin maliyeti için yeterli hak yoksa EntitlementError fırlatır; hesabı ve hakkı döner. */
+export async function requireCredits(userId: string, cost: number) {
+  const account = await new AccountRepository(createSupabaseAdminClient()).findById(userId);
+  if (!account) throw new EntitlementError();
+  const entitlement = getEntitlement(account);
+  if (!canAfford(entitlement, cost)) throw new EntitlementError(entitlementMessage(entitlement, cost));
+  return { account, entitlement };
+}
+
+async function consume(userId: string, entitlement: Entitlement, cost: number, plan: Parameters<typeof monthlyCreditLimit>[0]) {
+  const accounts = new AccountRepository(createSupabaseAdminClient());
+  const allowed = await accounts.consumeCredits(userId, effectiveCost(entitlement, cost), TRIAL_GENERATION_LIMIT, monthlyCreditLimit(plan));
+  if (!allowed) throw new EntitlementError(entitlementMessage(entitlement, cost));
 }
 
 export interface GenerateForUserResult {
@@ -43,12 +70,8 @@ export async function generateForUser(
   options: Pick<GenerateOutputOptions, "onProgress"> = {},
 ): Promise<GenerateForUserResult> {
   const admin = createSupabaseAdminClient();
-  const accounts = new AccountRepository(admin);
-
-  const account = await accounts.findById(userId);
-  if (!account || !getEntitlement(account).canGenerate) {
-    throw new EntitlementError();
-  }
+  const cost = planCreditCost(input.context?.detail);
+  const { account, entitlement } = await requireCredits(userId, cost);
 
   // Hata varsa (boş seçim, içerik yok vb.) kredi düşmeden önce fırlatılır.
   const document = await generateOutput(input, new SupabaseCatalogRepository(admin), {
@@ -57,8 +80,8 @@ export async function generateForUser(
     onProgress: options.onProgress,
   });
 
-  const allowed = await accounts.consumeGenerationCredit(userId, TRIAL_GENERATION_LIMIT);
-  if (!allowed) throw new EntitlementError();
+  // Hak yalnızca üretim başarılı olursa düşer.
+  await consume(userId, entitlement, cost, account.plan ?? "free");
 
   const outputId = await new OutputRepository(admin).create(userId, document);
   return { outputId, document };
@@ -78,16 +101,11 @@ export async function refineSectionForUser(
     throw new GenerationError("AI_UNAVAILABLE", "Yapay zekâ özelliği şu anda kullanılamıyor.");
   }
 
-  const accounts = new AccountRepository(createSupabaseAdminClient());
-  const account = await accounts.findById(userId);
-  if (!account || !getEntitlement(account).canGenerate) {
-    throw new EntitlementError();
-  }
+  const { account, entitlement } = await requireCredits(userId, CREDIT_COSTS.refine);
 
   const updated = await refineSection(document, input, new ClaudePersonalizer());
 
-  const allowed = await accounts.consumeGenerationCredit(userId, TRIAL_GENERATION_LIMIT);
-  if (!allowed) throw new EntitlementError();
+  await consume(userId, entitlement, CREDIT_COSTS.refine, account.plan ?? "free");
 
   return updated;
 }

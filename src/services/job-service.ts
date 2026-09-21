@@ -1,8 +1,10 @@
 import "server-only";
 import type { Attachment } from "@/core/ai/attachments";
-import { getEntitlement } from "@/core/billing/entitlements";
+import { effectiveCost } from "@/core/billing/entitlements";
+import { CREDIT_COSTS, planCreditCost } from "@/core/billing/plans";
 import {
   canStartJob,
+  DEFAULT_GLOBAL_DAILY_JOB_LIMIT,
   effectiveJob,
   GENERIC_JOB_ERROR,
   isActive,
@@ -15,11 +17,10 @@ import { GenerationError } from "@/core/output/errors";
 import type { GenerateOutputInput } from "@/core/output/generator";
 import type { RefineSectionInput } from "@/core/output/refiner";
 import { createSupabaseAdminClient } from "@/infrastructure/supabase/admin";
-import { AccountRepository } from "@/infrastructure/supabase/account-repository";
 import { JobRepository } from "@/infrastructure/supabase/job-repository";
 import { OutputRepository } from "@/infrastructure/supabase/output-repository";
 import { rememberAnswers } from "./context-service";
-import { EntitlementError, generateForUser, refineSectionForUser } from "./generation-service";
+import { EntitlementError, generateForUser, refineSectionForUser, requireCredits } from "./generation-service";
 
 /**
  * Arka plan üretimi. İstek yalnızca işi kaydeder ve hemen yanıt döner;
@@ -42,15 +43,38 @@ export class JobLimitError extends Error {
   }
 }
 
-async function assertCanStart(userId: string, jobs: JobRepository) {
-  const account = await new AccountRepository(createSupabaseAdminClient()).findById(userId);
-  if (!account) throw new EntitlementError();
-  const entitlement = getEntitlement(account);
-  if (!entitlement.canGenerate) throw new EntitlementError();
+function globalDailyLimit() {
+  const fromEnv = Number(process.env.AI_GLOBAL_DAILY_JOB_LIMIT);
+  return Number.isFinite(fromEnv) && fromEnv > 0 ? fromEnv : DEFAULT_GLOBAL_DAILY_JOB_LIMIT;
+}
 
-  const active = (await jobs.listRecent(userId)).filter((j) => isActive(j));
-  const check = canStartJob(active.length, entitlement);
+/**
+ * Maliyet koruması: hak/kredi → eşzamanlı iş → saatlik hız → site geneli
+ * günlük üst sınır. Herhangi biri aşılırsa iş başlatılmaz (maliyet oluşmaz).
+ */
+async function assertCanStart(userId: string, jobs: JobRepository, cost: number) {
+  const { entitlement } = await requireCredits(userId, cost);
+
+  const now = Date.now();
+  const [recent, recentCount, todayCount] = await Promise.all([
+    jobs.listRecent(userId),
+    jobs.countForUserSince(userId, new Date(now - 60 * 60_000)),
+    jobs.countAllSince(new Date(now - 24 * 60 * 60_000)),
+  ]);
+  const active = recent.filter((j) => isActive(j));
+
+  const check = canStartJob({
+    activeCount: active.length,
+    recentCount,
+    remaining: entitlement.remaining,
+    cost: effectiveCost(entitlement, cost),
+  });
   if (!check.ok) throw new JobLimitError(check.reason);
+
+  if (todayCount >= globalDailyLimit()) {
+    console.error(`Günlük üretim üst sınırına ulaşıldı (${todayCount}).`);
+    throw new JobLimitError("Sistem şu anda çok yoğun. Lütfen birkaç saat sonra tekrar dene; kullanım hakkından bir şey düşmedi.");
+  }
   return active;
 }
 
@@ -67,7 +91,7 @@ export async function startGenerationJob(
   displayTitle: string,
 ): Promise<StartedJob> {
   const jobs = new JobRepository(createSupabaseAdminClient());
-  await assertCanStart(userId, jobs);
+  await assertCanStart(userId, jobs, planCreditCost(input.context?.detail));
   const jobId = await jobs.create({ userId, kind: "generate", title: jobTitle(displayTitle) });
 
   return {
@@ -105,7 +129,7 @@ export async function startRefineJob(
   input: RefineSectionInput,
 ): Promise<StartedJob> {
   const jobs = new JobRepository(createSupabaseAdminClient());
-  const active = await assertCanStart(userId, jobs);
+  const active = await assertCanStart(userId, jobs, CREDIT_COSTS.refine);
   if (active.some((j) => j.kind === "refine" && j.outputId === outputId)) {
     throw new JobLimitError("Bu plan zaten güncelleniyor. Lütfen bitmesini bekle.");
   }

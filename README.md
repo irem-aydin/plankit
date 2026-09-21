@@ -167,9 +167,9 @@ cp .env.example .env.local
 
 ### 3. Stripe
 
-1. **Product catalog**'da bir ürün ve aylık yinelenen fiyat oluştur → `price_…` ID'sini `STRIPE_PRICE_ID`'ye yaz.
+1. **Product catalog**'da iki ürün oluştur (Başlangıç, Profesyonel); her birine aylık ve yıllık yinelenen fiyat ekle. Tutarlar `src/core/billing/plans.ts` ile aynı olmalı (249 / 2.388 TL ve 499 / 4.788 TL). Dört `price_…` kimliğini `STRIPE_PRICE_STARTER_MONTHLY`, `STRIPE_PRICE_STARTER_YEARLY`, `STRIPE_PRICE_PRO_MONTHLY`, `STRIPE_PRICE_PRO_YEARLY`'ye yaz. Fiyatı tanımlanmayan plan ekranda "yakında" görünür.
 2. `STRIPE_SECRET_KEY` = test modu secret key.
-3. **Settings → Billing → Customer portal**'ı etkinleştir (abonelik yönetimi/iptal için).
+3. **Settings → Billing → Customer portal**'ı etkinleştir; "Customers can switch plans" seçeneğinde iki ürünün dört fiyatını ekle (plan değişikliği portal üzerinden yapılır).
 4. Yerelde webhook:
    ```bash
    stripe listen --forward-to localhost:3000/api/stripe/webhook
@@ -179,6 +179,13 @@ cp .env.example .env.local
    `checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `customer.subscription.paused`, `customer.subscription.resumed`.
 
 Test kartı: `4242 4242 4242 4242`, ileri bir tarih, herhangi bir CVC.
+
+### Maliyet koruması
+
+- Abonelikte aylık kredi kotası (Başlangıç 10, Profesyonel 30); detaylı plan 2, özet plan ve güncelleme 1 kredi. Düşüm veritabanında atomik (`consume_credits`), yalnızca üretim başarılıysa.
+- Kullanıcı başına en fazla 2 eşzamanlı iş ve saatte 10 iş; site geneli 24 saatte `AI_GLOBAL_DAILY_JOB_LIMIT` (varsayılan 500).
+- Kayıtsız önizleme: ziyaretçi başına günde 1, site geneli günde 200.
+- **Anthropic Console → Settings → Limits**'ten aylık harcama limiti tanımla (son güvenlik ağı).
 
 ### 4. Çalıştır
 

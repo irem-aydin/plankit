@@ -1,6 +1,7 @@
 import "server-only";
 import type Stripe from "stripe";
-import { publicEnv, serverEnv } from "@/config/env";
+import { planForStripePrice, publicEnv, serverEnv, stripePriceId } from "@/config/env";
+import type { BillingInterval, PaidPlanId } from "@/core/billing/plans";
 import { mapStripeSubscriptionStatus } from "@/core/billing/entitlements";
 import { getStripe } from "@/infrastructure/stripe";
 import { createSupabaseAdminClient } from "@/infrastructure/supabase/admin";
@@ -24,15 +25,29 @@ async function ensureStripeCustomer(userId: string): Promise<string> {
   return customer.id;
 }
 
-/** Abonelik için Stripe Checkout oturumu açar ve yönlendirme URL'ini döner. */
-export async function createCheckoutSession(userId: string): Promise<string> {
+export class BillingUnavailableError extends Error {}
+
+/**
+ * Seçilen plan ve dönem için Stripe Checkout oturumu açar ve yönlendirme
+ * URL'ini döner. Zaten aktif Stripe aboneliği olan kullanıcı plan
+ * değişikliği için Müşteri Portalı'na yönlendirilir (çift abonelik olmasın).
+ */
+export async function createCheckoutSession(userId: string, plan: PaidPlanId, interval: BillingInterval): Promise<string> {
+  const price = stripePriceId(plan, interval);
+  if (!price) throw new BillingUnavailableError("Bu plan için online ödeme henüz açılmadı.");
+
+  const account = await accounts().findById(userId);
+  if (account?.subscriptionStatus === "active" && account.stripeSubscriptionId) {
+    return createBillingPortalSession(userId);
+  }
+
   const customer = await ensureStripeCustomer(userId);
   const session = await getStripe().checkout.sessions.create({
     mode: "subscription",
     customer,
     client_reference_id: userId,
-    line_items: [{ price: serverEnv.stripePriceId, quantity: 1 }],
-    subscription_data: { metadata: { user_id: userId } },
+    line_items: [{ price, quantity: 1 }],
+    subscription_data: { metadata: { user_id: userId, plan } },
     allow_promotion_codes: true,
     success_url: `${publicEnv.siteUrl}/abonelik?durum=basarili`,
     cancel_url: `${publicEnv.siteUrl}/abonelik?durum=iptal`,
@@ -123,12 +138,18 @@ async function syncSubscription(
     return;
   }
 
-  const periodEnd = subscription.items.data[0]?.current_period_end;
+  const item = subscription.items.data[0];
+  const periodEnd = item?.current_period_end;
+  const plan = planForStripePrice(item?.price?.id) ?? (subscription.metadata?.plan === "starter" ? "starter" : subscription.metadata?.plan === "pro" ? "pro" : undefined);
+  // Yeni başlayan (ya da yeniden başlayan) abonelikte aylık kredi penceresi bugünden başlar.
+  const becameActive = status === "active" && account?.subscriptionStatus !== "active";
 
   await repo.updateSubscription(userId, {
     status: status ?? undefined,
     stripeCustomerId: customerId,
     stripeSubscriptionId: subscription.id,
     currentPeriodEnd: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
+    plan,
+    resetCreditsFrom: becameActive ? new Date().toISOString() : undefined,
   });
 }

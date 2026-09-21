@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   canStartJob,
   effectiveJob,
+  HOURLY_JOB_LIMIT,
   INTERRUPTED_MESSAGE,
   isActive,
   jobTitle,
@@ -70,22 +71,28 @@ describe("isActive", () => {
 });
 
 describe("canStartJob", () => {
-  const subscriber = { unlimited: true, remainingTrial: null };
+  const base = { activeCount: 0, recentCount: 0, remaining: null as number | null, cost: 1 };
 
-  it("abone, sınıra kadar iş başlatabilir", () => {
-    expect(canStartJob(0, subscriber).ok).toBe(true);
-    expect(canStartJob(MAX_ACTIVE_JOBS - 1, subscriber).ok).toBe(true);
-    expect(canStartJob(MAX_ACTIVE_JOBS, subscriber).ok).toBe(false);
+  it("eşzamanlı iş sınırına kadar izin verir", () => {
+    expect(canStartJob(base).ok).toBe(true);
+    expect(canStartJob({ ...base, activeCount: MAX_ACTIVE_JOBS - 1 }).ok).toBe(true);
+    expect(canStartJob({ ...base, activeCount: MAX_ACTIVE_JOBS }).ok).toBe(false);
   });
 
-  it("deneme kullanıcısı kalan hakkından fazla işi aynı anda başlatamaz", () => {
-    expect(canStartJob(0, { unlimited: false, remainingTrial: 1 }).ok).toBe(true);
-    expect(canStartJob(1, { unlimited: false, remainingTrial: 1 }).ok).toBe(false);
-    expect(canStartJob(1, { unlimited: false, remainingTrial: 3 }).ok).toBe(true);
+  it("saatlik hız sınırını uygular", () => {
+    expect(canStartJob({ ...base, recentCount: HOURLY_JOB_LIMIT - 1 }).ok).toBe(true);
+    expect(canStartJob({ ...base, recentCount: HOURLY_JOB_LIMIT }).ok).toBe(false);
+  });
+
+  it("süren işler kalan hakkı tüketiyorsa yenisini başlatmaz", () => {
+    expect(canStartJob({ ...base, remaining: 1, activeCount: 0 }).ok).toBe(true);
+    expect(canStartJob({ ...base, remaining: 1, activeCount: 1 }).ok).toBe(false);
+    expect(canStartJob({ ...base, remaining: 5, activeCount: 1, cost: 2 }).ok).toBe(true);
+    expect(canStartJob({ ...base, remaining: 2, activeCount: 1, cost: 2 }).ok).toBe(false);
   });
 
   it("reddedilince kullanıcıya bir sebep gösterir", () => {
-    const result = canStartJob(MAX_ACTIVE_JOBS, subscriber);
+    const result = canStartJob({ ...base, activeCount: MAX_ACTIVE_JOBS });
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.reason.length).toBeGreaterThan(10);
   });

@@ -1,6 +1,7 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { AccountState, SubscriptionStatus } from "@/core/billing/entitlements";
+import type { PlanId } from "@/core/billing/plans";
 
 export interface Account extends AccountState {
   id: string;
@@ -20,10 +21,13 @@ type UserRow = {
   stripe_customer_id: string | null;
   stripe_subscription_id: string | null;
   current_period_end: string | null;
+  plan: PlanId;
+  credits_used: number;
+  credits_period_start: string;
 };
 
 const COLUMNS =
-  "id, email, subscription_status, trial_started_at, trial_limit_used, stripe_customer_id, stripe_subscription_id, current_period_end";
+  "id, email, subscription_status, trial_started_at, trial_limit_used, stripe_customer_id, stripe_subscription_id, current_period_end, plan, credits_used, credits_period_start";
 
 function toAccount(row: UserRow): Account {
   return {
@@ -35,6 +39,9 @@ function toAccount(row: UserRow): Account {
     stripeCustomerId: row.stripe_customer_id,
     stripeSubscriptionId: row.stripe_subscription_id,
     currentPeriodEnd: row.current_period_end,
+    plan: row.plan,
+    creditsUsed: row.credits_used,
+    creditsPeriodStart: row.credits_period_start,
   };
 }
 
@@ -62,11 +69,16 @@ export class AccountRepository {
     return data ? toAccount(data) : null;
   }
 
-  /** Deneme hakkını atomik olarak tüketir; izin yoksa false döner. */
-  async consumeGenerationCredit(userId: string, trialLimit: number): Promise<boolean> {
-    const { data, error } = await this.client.rpc("consume_generation_credit", {
+  /**
+   * Hakkı atomik olarak düşer: denemede 1 plan, abonelikte aylık krediden
+   * `cost`. Hak yoksa false döner ve hiçbir şey değişmez.
+   */
+  async consumeCredits(userId: string, cost: number, trialLimit: number, monthlyLimit: number): Promise<boolean> {
+    const { data, error } = await this.client.rpc("consume_credits", {
       p_user_id: userId,
-      p_limit: trialLimit,
+      p_cost: cost,
+      p_trial_limit: trialLimit,
+      p_monthly_limit: monthlyLimit,
     });
     if (error) throw new Error(`Kullanım hakkı düşülemedi: ${error.message}`);
     return data === true;
@@ -87,12 +99,17 @@ export class AccountRepository {
       stripeCustomerId: string;
       stripeSubscriptionId: string | null;
       currentPeriodEnd: string | null;
+      plan?: PlanId;
+      /** Yeni abonelikte kredi penceresini bu andan başlatır ve sayacı sıfırlar */
+      resetCreditsFrom?: string;
     },
   ) {
     const { error } = await this.client
       .from("users")
       .update({
         ...(patch.status ? { subscription_status: patch.status } : {}),
+        ...(patch.plan ? { plan: patch.plan } : {}),
+        ...(patch.resetCreditsFrom ? { credits_used: 0, credits_period_start: patch.resetCreditsFrom } : {}),
         stripe_customer_id: patch.stripeCustomerId,
         stripe_subscription_id: patch.stripeSubscriptionId,
         current_period_end: patch.currentPeriodEnd,

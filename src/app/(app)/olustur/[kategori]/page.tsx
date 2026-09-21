@@ -54,9 +54,13 @@ export default async function SubcategorySelectionPage({ params, searchParams }:
 
       {entitlement && !entitlement.canGenerate && (
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
-          <p className="text-sm text-amber-900">Ücretsiz deneme hakların doldu. Sınırsız çıktı için abone ol.</p>
+          <p className="text-sm text-amber-900">
+            {entitlement.kind === "credits"
+              ? "Bu ayki kredilerin bitti. Krediler her ay yenilenir; hemen devam etmek için planını yükseltebilirsin."
+              : "Ücretsiz deneme hakkını kullandın. Yeni planlar için sana uygun planı seç."}
+          </p>
           <Link href="/abonelik" className="rounded-lg bg-amber-600 px-3 py-2 text-sm font-semibold text-white hover:bg-amber-500">
-            Abonelik seçenekleri
+            Planları gör
           </Link>
         </div>
       )}
@@ -65,8 +69,7 @@ export default async function SubcategorySelectionPage({ params, searchParams }:
         categoryId={data.category.id}
         categoryName={data.category.name}
         subcategories={data.subcategories}
-        canGenerate={entitlement?.canGenerate ?? false}
-        remainingTrial={entitlement?.remainingTrial ?? null}
+        usage={{ kind: entitlement?.kind ?? "none", remaining: entitlement?.remaining ?? 0 }}
         aiAvailable={isAiConfigured()}
         personalizationEnabled={personalization}
         profiles={profiles}

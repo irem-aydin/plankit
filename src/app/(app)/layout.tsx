@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Logo } from "@/components/logo";
 import { APP_NAME } from "@/config/app";
+import { usageSummary } from "@/core/billing/entitlements";
 import { getCurrentSession } from "@/services/session";
 import { LogOut, Settings } from "lucide-react";
 import { AppNav } from "./app-nav";
@@ -12,6 +13,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   if (!session) redirect("/giris");
 
   const { entitlement, user, preferences } = session;
+  const usage = usageSummary(entitlement);
   const displayName = preferences.displayName || user.email;
 
   return (
@@ -29,18 +31,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             <Link
               href="/abonelik"
               className={`rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-inset ${
-                entitlement.unlimited
+                usage.tone === "plan"
                   ? "bg-emerald-50 text-emerald-700 ring-emerald-200"
-                  : entitlement.canGenerate
+                  : usage.tone === "trial"
                     ? "bg-rose-50 text-rose-700 ring-rose-200"
                     : "bg-amber-50 text-amber-800 ring-amber-200"
               }`}
             >
-              {entitlement.unlimited
-                ? "Pro"
-                : entitlement.canGenerate
-                  ? `Deneme: ${entitlement.remainingTrial} hak`
-                  : "Abone ol"}
+              {usage.badge}
             </Link>
             <Link
               href="/ayarlar"
