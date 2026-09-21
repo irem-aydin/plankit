@@ -183,7 +183,7 @@ Test kartı: `4242 4242 4242 4242`, ileri bir tarih, herhangi bir CVC.
 ### Maliyet koruması
 
 - Abonelikte aylık kredi kotası (Başlangıç 10, Profesyonel 30); detaylı plan 2, özet plan ve güncelleme 1 kredi. Düşüm veritabanında atomik (`consume_credits`), yalnızca üretim başarılıysa.
-- Kullanıcı başına en fazla 2 eşzamanlı iş ve saatte 10 iş; site geneli 24 saatte `AI_GLOBAL_DAILY_JOB_LIMIT` (varsayılan 500).
+- Kullanıcı başına en fazla 2 eşzamanlı iş ve saatte 10 iş; site geneli 24 saatte `AI_GLOBAL_DAILY_JOB_LIMIT` (varsayılan 100; kullanıcı arttıkça yükseltin).
 - Kayıtsız önizleme: ziyaretçi başına günde 1, site geneli günde 200.
 - **Anthropic Console → Settings → Limits**'ten aylık harcama limiti tanımla (son güvenlik ağı).
 

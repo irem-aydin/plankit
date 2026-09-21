@@ -66,7 +66,7 @@ export function progressMessage(completed: number, total: number, finished: stri
 export const HOURLY_JOB_LIMIT = 10;
 
 /** Tüm site için günlük üst sınır (acil fren); ortam değişkeniyle değiştirilebilir. */
-export const DEFAULT_GLOBAL_DAILY_JOB_LIMIT = 500;
+export const DEFAULT_GLOBAL_DAILY_JOB_LIMIT = 100;
 
 /**
  * Yeni iş başlatılabilir mi? Kredisi/hakkı süren işlere yetmeyen kullanıcı

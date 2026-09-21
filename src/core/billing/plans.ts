@@ -34,7 +34,7 @@ export const PLANS: Record<PaidPlanId, PaidPlan> = {
     priceMonthly: 249,
     priceYearly: 2_388,
     features: [
-      "Ayda 8 kredi (8 özet plan)",
+      "Ayda 8 kredi (8 özet veya 4 detaylı plan)",
       "Tüm alanlar ve hazır şablonlar",
       "Dosya ve görsel ekleme",
       "Profiller ve karar hafızası",
@@ -52,7 +52,7 @@ export const PLANS: Record<PaidPlanId, PaidPlan> = {
     features: [
       "Ayda 25 kredi (25 özet veya 12 detaylı plan)",
       "Başlangıç'taki her şey",
-      "Detaylı planlar için daha fazla alan",
+      "Yoğun kullanım için 3 kat kredi",
       "Öncelikli destek",
       "Yeni özelliklere erken erişim",
     ],
