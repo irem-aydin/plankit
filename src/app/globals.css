@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+@media print {
+  @page {
+    margin: 16mm 14mm;
+  }
+  body {
+    background: #fff;
+  }
+  /* Form elemanları yazdırmada düz metin gibi görünsün */
+  input,
+  select,
+  textarea {
+    border-color: transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    appearance: none;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  /* Sayfa kırılması: satırlar ve küçük bloklar bölünmesin; uzun bölümler bölünebilsin
+     (bölüm bazlı "avoid" ilk sayfanın boş kalmasına yol açıyordu). */
+  tr,
+  li {
+    break-inside: avoid;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+  textarea {
+    resize: none !important;
+    overflow: hidden !important;
+  }
+  table {
+    table-layout: auto !important;
+    min-width: 0 !important;
+    font-size: 11px;
+  }
+  td,
+  th {
+    vertical-align: top;
+  }
+}

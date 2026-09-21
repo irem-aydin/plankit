@@ -1,0 +1,133 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { GenerationError } from "@/core/output/errors";
+import type { RefineSectionInput } from "@/core/output/refiner";
+import { redirect } from "next/navigation";
+import { generatedDocumentSchema, type GeneratedDocument } from "@/core/output/document";
+import { OutputRepository } from "@/infrastructure/supabase/output-repository";
+import { createSupabaseServerClient, getAuthenticatedUser } from "@/infrastructure/supabase/server";
+import type { ExtractedDecision } from "@/core/ai/decisions";
+import { ProfileRepository } from "@/infrastructure/supabase/profile-repository";
+import { rememberAnswers } from "@/services/context-service";
+import { proposeDecisionsForProfile, saveDecisionsToProfile } from "@/services/memory-service";
+import { EntitlementError, refineSectionForUser } from "@/services/generation-service";
+
+export type SaveResult = { ok: true; savedAt: string } | { ok: false; error: string };
+
+export async function saveOutputAction(outputId: string, document: GeneratedDocument): Promise<SaveResult> {
+  const parsed = generatedDocumentSchema.safeParse(document);
+  if (!parsed.success) return { ok: false, error: "Doküman biçimi geçersiz." };
+
+  // Kullanıcı istemcisi: RLS yalnızca kendi çıktısını güncellemeye izin verir.
+  const supabase = await createSupabaseServerClient();
+  const updated = await new OutputRepository(supabase).updateDocument(outputId, parsed.data);
+  if (!updated) return { ok: false, error: "Çıktı bulunamadı veya erişim yetkiniz yok." };
+
+  revalidatePath("/ciktilar");
+  return { ok: true, savedAt: new Date().toISOString() };
+}
+
+export async function deleteOutputAction(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  const supabase = await createSupabaseServerClient();
+  await new OutputRepository(supabase).delete(id);
+  revalidatePath("/ciktilar");
+  redirect("/ciktilar");
+}
+
+export type RefineResult =
+  | { ok: true; document: GeneratedDocument; remembered: number }
+  | { ok: false; error: string; needsSubscription?: boolean };
+
+/** Açık soruların cevaplarıyla bir bölümü yapay zekâ ile günceller ve kaydeder. */
+export async function refineSectionAction(
+  outputId: string,
+  document: GeneratedDocument,
+  input: RefineSectionInput,
+): Promise<RefineResult> {
+  const user = await getAuthenticatedUser();
+  if (!user) return { ok: false, error: "Oturumunuz sona ermiş. Lütfen tekrar giriş yapın." };
+
+  const parsed = generatedDocumentSchema.safeParse(document);
+  if (!parsed.success) return { ok: false, error: "Doküman biçimi geçersiz." };
+
+  // Sahiplik kontrolü: RLS yalnızca kullanıcının kendi çıktısını döndürür.
+  const supabase = await createSupabaseServerClient();
+  const outputs = new OutputRepository(supabase);
+  if (!(await outputs.findById(outputId))) {
+    return { ok: false, error: "Çıktı bulunamadı veya erişim yetkiniz yok." };
+  }
+
+  let updated: GeneratedDocument;
+  try {
+    updated = await refineSectionForUser(user.id, parsed.data, input);
+  } catch (error) {
+    if (error instanceof EntitlementError) return { ok: false, error: error.message, needsSubscription: true };
+    if (error instanceof GenerationError) return { ok: false, error: error.message };
+    console.error("Plan güncellemesi başarısız:", error);
+    return { ok: false, error: "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin." };
+  }
+
+  await outputs.updateDocument(outputId, updated);
+  const remembered = await rememberAnswers(user.id, updated.context?.profile?.id, input.answers);
+  revalidatePath("/ciktilar");
+  return { ok: true, document: updated, remembered };
+}
+
+export type DecisionProposal =
+  | { ok: true; decisions: ExtractedDecision[]; profileId: string; profileName: string }
+  | { ok: false; error: string };
+
+/** Plandaki kalıcı kararları çıkarır (henüz kaydetmez). */
+export async function proposeDecisionsAction(
+  outputId: string,
+  document: GeneratedDocument,
+  profileId: string,
+): Promise<DecisionProposal> {
+  const user = await getAuthenticatedUser();
+  if (!user) return { ok: false, error: "Oturumunuz sona ermiş. Lütfen tekrar giriş yapın." };
+
+  const parsed = generatedDocumentSchema.safeParse(document);
+  if (!parsed.success) return { ok: false, error: "Doküman biçimi geçersiz." };
+
+  const supabase = await createSupabaseServerClient();
+  if (!(await new OutputRepository(supabase).findById(outputId))) {
+    return { ok: false, error: "Çıktı bulunamadı veya erişim yetkiniz yok." };
+  }
+  const profile = await new ProfileRepository(supabase).findById(profileId);
+  if (!profile) return { ok: false, error: "Profil bulunamadı." };
+
+  try {
+    const decisions = await proposeDecisionsForProfile(profileId, parsed.data);
+    return { ok: true, decisions, profileId, profileName: profile.name };
+  } catch (error) {
+    if (error instanceof GenerationError) return { ok: false, error: error.message };
+    console.error("Kararlar çıkarılamadı:", error);
+    return { ok: false, error: "Kararlar çıkarılamadı. Lütfen tekrar deneyin." };
+  }
+}
+
+export type SaveDecisionsResult = { ok: true; saved: number } | { ok: false; error: string };
+
+/** Kullanıcının seçtiği kararları profil hafızasına kaydeder. */
+export async function saveDecisionsAction(
+  profileId: string,
+  documentTitle: string,
+  decisions: ExtractedDecision[],
+): Promise<SaveDecisionsResult> {
+  const user = await getAuthenticatedUser();
+  if (!user) return { ok: false, error: "Oturumunuz sona ermiş. Lütfen tekrar giriş yapın." };
+  if (decisions.length === 0) return { ok: false, error: "Kaydedilecek madde seçilmedi." };
+
+  try {
+    const saved = await saveDecisionsToProfile(user.id, profileId, documentTitle, decisions);
+    revalidatePath("/profiller");
+    revalidatePath(`/profiller/${profileId}`);
+    return { ok: true, saved };
+  } catch (error) {
+    if (error instanceof GenerationError) return { ok: false, error: error.message };
+    console.error("Kararlar kaydedilemedi:", error);
+    return { ok: false, error: "Kararlar kaydedilemedi. Lütfen tekrar deneyin." };
+  }
+}

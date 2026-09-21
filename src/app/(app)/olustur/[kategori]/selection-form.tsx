@@ -1,0 +1,521 @@
+"use client";
+
+import { useActionState, useState } from "react";
+import { useFormStatus } from "react-dom";
+import { OutputTypeBadge } from "@/components/output-type-badge";
+import { FREE_TEXT_HINTS, INTAKE_QUESTIONS, type DetailLevel, type IntakeMode } from "@/core/ai/intake";
+import type { SubcategoryOption } from "@/infrastructure/supabase/catalog-queries";
+import { generateAction } from "../actions";
+import { FileInput, FilePicker, useFileSelection } from "./file-picker";
+
+const MODES: { id: IntakeMode; title: string; text: string }[] = [
+  { id: "quick", title: "Kısa sorular", text: "5 soru · ~2 dakika" },
+  { id: "detailed", title: "Detaylı sorular", text: "13 soru · daha isabetli sonuç" },
+  { id: "free", title: "Kendim anlatayım", text: "Serbest metin" },
+];
+
+const DETAIL_OPTIONS: { id: DetailLevel; title: string; text: string }[] = [
+  { id: "summary", title: "Özet plan", text: "Kısa, hemen uygulanabilir · daha hızlı" },
+  { id: "detailed", title: "Detaylı plan", text: "Kapsamlı çalışma dokümanı · daha uzun sürer" },
+];
+
+const inputClass =
+  "mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-xs placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none";
+
+export interface ProfileOption {
+  id: string;
+  name: string;
+  kindLabel: string;
+  completeness: number;
+}
+
+export function SelectionForm({
+  categoryId,
+  categoryName,
+  subcategories,
+  canGenerate,
+  remainingTrial,
+  aiAvailable,
+  personalizationEnabled,
+  profiles,
+  defaultProfileId,
+  defaultDetail,
+}: {
+  categoryId: string;
+  categoryName: string;
+  subcategories: SubcategoryOption[];
+  canGenerate: boolean;
+  remainingTrial: number | null;
+  aiAvailable: boolean;
+  personalizationEnabled: boolean;
+  profiles: ProfileOption[];
+  defaultProfileId: string | null;
+  defaultDetail: DetailLevel;
+}) {
+  const [state, formAction] = useActionState(generateAction, {});
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [step, setStep] = useState<"select" | "context">("select");
+  const [mode, setMode] = useState<IntakeMode>("quick");
+  const [detail, setDetail] = useState<DetailLevel>(defaultDetail);
+  const [profileId, setProfileId] = useState<string>(defaultProfileId ?? profiles[0]?.id ?? "");
+  const [saveAsProfile, setSaveAsProfile] = useState(false);
+  const [customRequest, setCustomRequest] = useState("");
+  const fileSelection = useFileSelection();
+  const selectedProfile = profiles.find((p) => p.id === profileId);
+
+  const selectedSubs = subcategories.filter((s) => selected.has(s.id));
+  // Hazır şablonu olanlar yapay zekâsız da alınabilir; diğerlerini yapay zekâ tasarlar.
+  const readyToFill = selectedSubs.filter((s) => s.hasContent);
+  const aiOnly = selectedSubs.filter((s) => !s.hasContent);
+  const hasCustom = customRequest.trim().length > 0;
+  const canUseWithoutAi = readyToFill.length === selectedSubs.length && selectedSubs.length > 0 && !hasCustom;
+  const hasSelection = selectedSubs.length > 0 || hasCustom;
+
+  function toggle(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  const allSelected = subcategories.length > 0 && subcategories.every((s) => selected.has(s.id));
+  const trialNote =
+    remainingTrial !== null && canGenerate
+      ? `Bu üretim deneme hakkından 1 düşecek (kalan: ${remainingTrial}).`
+      : canGenerate
+        ? "Aboneliğin aktif — sınırsız üretim."
+        : "";
+
+  return (
+    <form action={formAction} className="mt-8">
+      {[...selected].map((id) => (
+        <input key={id} type="hidden" name="subcategoryIds" value={id} />
+      ))}
+      <input type="hidden" name="categoryId" value={categoryId} />
+      <input type="hidden" name="customRequest" value={customRequest} />
+      <FileInput inputRef={fileSelection.inputRef} />
+
+      {/* ---------------------------------------------------- Adım: seçim */}
+      <div hidden={step !== "select"}>
+        {/* Serbest istek: sayfanın en üstünde, asıl giriş noktası */}
+        <div className="rounded-2xl border border-violet-300 bg-gradient-to-br from-violet-50 to-white p-4 sm:p-5">
+          <label htmlFor="custom-request" className="block text-base font-semibold text-slate-900">
+            ✨ Ne oluşturmak istiyorsun?
+          </label>
+          <p className="mt-1 text-sm text-slate-600">
+            {categoryName} alanında ihtiyacını kendi cümlenle yaz; yapay zekâ konuya uygun çerçeveyi hazırlayıp senin
+            durumuna göre doldursun. Ya da aşağıdaki hazır başlıklardan seç.
+          </p>
+          <textarea
+            id="custom-request"
+            value={customRequest}
+            onChange={(e) => setCustomRequest(e.target.value.slice(0, 500))}
+            rows={2}
+            placeholder="Örn. Bayilerimizi değerlendirmek için bir performans ve sözleşme yenileme çerçevesi istiyorum."
+            className={`${inputClass} field-sizing-content min-h-16 bg-white`}
+          />
+          {hasCustom && (
+            <p className="mt-2 text-xs font-medium text-violet-800">
+              İsteğin dokümana eklenecek. İstersen aşağıdan başlık da seçebilirsin.
+            </p>
+          )}
+
+          <FilePicker selection={fileSelection} id="files-top" compact />
+        </div>
+
+        <div className="mt-8 flex items-center gap-3">
+          <span className="h-px flex-1 bg-slate-200" />
+          <span className="text-xs font-medium tracking-wide text-slate-500 uppercase">
+            veya hazır başlıklardan seç
+          </span>
+          <span className="h-px flex-1 bg-slate-200" />
+        </div>
+
+        <div className="mt-6">
+        <div className="mb-3 flex items-center justify-between text-sm">
+          <span className="text-slate-600">
+            <strong className="text-slate-900">{selected.size}</strong> başlık seçildi
+          </span>
+          {subcategories.length > 1 && (
+            <button
+              type="button"
+              onClick={() => setSelected(allSelected ? new Set() : new Set(subcategories.map((s) => s.id)))}
+              className="font-medium text-indigo-600 hover:underline"
+            >
+              {allSelected ? "Seçimi temizle" : "Hepsini seç"}
+            </button>
+          )}
+        </div>
+
+        <fieldset className="grid gap-3 md:grid-cols-2">
+          <legend className="sr-only">Alt başlıklar</legend>
+          {subcategories.map((sub) => {
+            const checked = selected.has(sub.id);
+            return (
+              <label
+                key={sub.id}
+                className={`flex cursor-pointer gap-3 rounded-xl border bg-white p-4 transition ${
+                  checked ? "border-indigo-400 ring-2 ring-indigo-500/20" : "border-slate-200 hover:border-slate-300"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={() => toggle(sub.id)}
+                  className="mt-0.5 size-4 shrink-0 rounded border-slate-300 accent-indigo-600"
+                />
+                <span className="min-w-0">
+                  <span className="flex flex-wrap items-center gap-2">
+                    <span className="font-medium text-slate-900">{sub.name}</span>
+                    <OutputTypeBadge type={sub.outputType} />
+                    {sub.outputType === "template" && (
+                      <span className="rounded-full bg-violet-50 px-2 py-0.5 text-xs font-medium text-violet-700 ring-1 ring-violet-200 ring-inset">
+                        ✨ Yapay zekâ
+                      </span>
+                    )}
+                  </span>
+                  {sub.description && <span className="mt-1 block text-sm text-slate-600">{sub.description}</span>}
+                </span>
+              </label>
+            );
+          })}
+        </fieldset>
+        </div>
+
+        <StickyBar error={step === "select" ? state.error : undefined} note={trialNote}>
+          {hasSelection && aiAvailable ? (
+            <button
+              type="button"
+              disabled={!canGenerate}
+              onClick={() => {
+                setStep("context");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+            >
+              Devam et →
+            </button>
+          ) : (
+            <SubmitButton name="ai" value="0" disabled={!canGenerate || !canUseWithoutAi}>
+              Oluştur
+            </SubmitButton>
+          )}
+        </StickyBar>
+      </div>
+
+      {/* ------------------------------------------------ Adım: bağlam */}
+      {step === "context" && (
+        <div>
+          <button
+            type="button"
+            onClick={() => setStep("select")}
+            className="text-sm font-medium text-slate-500 hover:text-slate-800"
+          >
+            ← Başlık seçimine dön
+          </button>
+
+          <p className="mt-4 text-sm font-medium text-violet-700">Adım 3</p>
+          <div className="mt-1 rounded-2xl border border-violet-200 bg-gradient-to-br from-violet-50 to-white p-5 sm:p-6">
+            <h2 className="text-xl font-bold text-slate-900">Durumunu anlat, planını birlikte hazırlayalım</h2>
+            <p className="mt-1 text-sm text-slate-600">
+              Yapay zekâ anlattıklarına göre{" "}
+              <strong>
+                {[...selectedSubs.map((s) => s.name), ...(hasCustom ? ["kendi isteğin"] : [])].join(", ")}
+              </strong>{" "}
+              için analiz, öneri ve somut aksiyon adımları hazırlayacak. Ne kadar net anlatırsan sonuç o kadar isabetli
+              olur. Emin olmadığın soruları boş bırakabilirsin.
+            </p>
+
+            {personalizationEnabled && (
+              <div className="mt-5">
+                <p className="text-sm font-medium text-slate-800">Bu plan kimin için?</p>
+                <div role="radiogroup" aria-label="Profil" className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {profiles.map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={profileId === p.id}
+                      onClick={() => setProfileId(p.id)}
+                      className={`rounded-xl border p-3 text-left transition ${
+                        profileId === p.id
+                          ? "border-violet-500 bg-white ring-2 ring-violet-500/20"
+                          : "border-slate-200 bg-white/60 hover:border-slate-300"
+                      }`}
+                    >
+                      <span className="block text-xs text-slate-500">{p.kindLabel}</span>
+                      <span className="block text-sm font-semibold text-slate-900">{p.name}</span>
+                      <span className="block text-xs text-slate-500">🧠 Seni hatırlıyor · profil %{Math.round(p.completeness * 100)} dolu</span>
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    role="radio"
+                    aria-checked={profileId === ""}
+                    onClick={() => setProfileId("")}
+                    className={`rounded-xl border p-3 text-left transition ${
+                      profileId === ""
+                        ? "border-violet-500 bg-white ring-2 ring-violet-500/20"
+                        : "border-slate-200 bg-white/60 hover:border-slate-300"
+                    }`}
+                  >
+                    <span className="block text-xs text-slate-500">✏️ Tek seferlik</span>
+                    <span className="block text-sm font-semibold text-slate-900">Profil kullanmadan anlat</span>
+                    <span className="block text-xs text-slate-500">Soruları bu plan için cevapla</span>
+                  </button>
+                </div>
+                {profiles.length === 0 && (
+                  <p className="mt-2 text-xs text-slate-600">
+                    İpucu: Aşağıdaki cevapları profil olarak kaydedersen bir dahaki sefere tekrar yazman gerekmez.
+                  </p>
+                )}
+              </div>
+            )}
+            <input type="hidden" name="profileId" value={selectedProfile ? selectedProfile.id : ""} />
+
+            <div
+              role="radiogroup"
+              aria-label="Anlatım şekli"
+              hidden={Boolean(selectedProfile)}
+              className="mt-5 grid gap-2 sm:grid-cols-3"
+            >
+              {MODES.map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={mode === m.id}
+                  onClick={() => setMode(m.id)}
+                  className={`rounded-xl border p-3 text-left transition ${
+                    mode === m.id
+                      ? "border-violet-500 bg-white ring-2 ring-violet-500/20"
+                      : "border-slate-200 bg-white/60 hover:border-slate-300"
+                  }`}
+                >
+                  <span className="block text-sm font-semibold text-slate-900">{m.title}</span>
+                  <span className="block text-xs text-slate-500">{m.text}</span>
+                </button>
+              ))}
+            </div>
+            <input type="hidden" name="mode" value={mode} />
+
+            <p className="mt-5 text-sm font-medium text-slate-800">Plan ne kadar detaylı olsun?</p>
+            <div role="radiogroup" aria-label="Plan uzunluğu" className="mt-2 grid gap-2 sm:grid-cols-2">
+              {DETAIL_OPTIONS.map((d) => (
+                <button
+                  key={d.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={detail === d.id}
+                  onClick={() => setDetail(d.id)}
+                  className={`rounded-xl border p-3 text-left transition ${
+                    detail === d.id
+                      ? "border-violet-500 bg-white ring-2 ring-violet-500/20"
+                      : "border-slate-200 bg-white/60 hover:border-slate-300"
+                  }`}
+                >
+                  <span className="block text-sm font-semibold text-slate-900">{d.title}</span>
+                  <span className="block text-xs text-slate-500">{d.text}</span>
+                </button>
+              ))}
+            </div>
+            <input type="hidden" name="detail" value={detail} />
+          </div>
+
+          {selectedProfile && (
+            <div className="mt-6">
+              <label htmlFor="extra" className="block text-sm font-medium text-slate-800">
+                Bu plana özel eklemek istediğin bir şey var mı? <span className="font-normal text-slate-500">(isteğe bağlı)</span>
+              </label>
+              <p className="mt-1 text-xs text-slate-500">
+                &quot;{selectedProfile.name}&quot; profilindeki bilgiler ve hafıza otomatik kullanılacak. Sadece bu plana özel
+                durumu yaz; ör. &quot;Yeni şube açma kararı için değerlendirme yapıyoruz.&quot;
+              </p>
+              <textarea
+                id="extra"
+                name="extra"
+                rows={4}
+                maxLength={8000}
+                className={`${inputClass} field-sizing-content min-h-24`}
+              />
+            </div>
+          )}
+
+          <div className="mt-6 space-y-5" hidden={Boolean(selectedProfile)}>
+            {/* Tüm modların alanları DOM'da kalır; kullanıcı mod değiştirince yazdıkları kaybolmaz. */}
+            {(["quick", "detailed"] as const).map((m) => (
+              <div key={m} hidden={mode !== m} className="space-y-5">
+                {INTAKE_QUESTIONS[m].map((q, i) => (
+                  <div key={q.id}>
+                    <label htmlFor={`${m}-${q.id}`} className="block text-sm font-medium text-slate-800">
+                      {i + 1}. {q.label}
+                    </label>
+                    {q.multiline ? (
+                      <textarea
+                        id={`${m}-${q.id}`}
+                        name={mode === m ? `ctx.${q.id}` : undefined}
+                        placeholder={q.placeholder}
+                        rows={2}
+                        className={`${inputClass} field-sizing-content min-h-16`}
+                      />
+                    ) : (
+                      <input
+                        id={`${m}-${q.id}`}
+                        name={mode === m ? `ctx.${q.id}` : undefined}
+                        placeholder={q.placeholder}
+                        className={inputClass}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            ))}
+
+            <div hidden={mode !== "free"}>
+              <label htmlFor="free-text" className="block text-sm font-medium text-slate-800">
+                Durumunu kendi cümlelerinle anlat
+              </label>
+              <p className="mt-1 text-xs text-slate-500">Şunlardan bahsetmen faydalı olur: {FREE_TEXT_HINTS.join(" · ")}</p>
+              <textarea
+                id="free-text"
+                name={mode === "free" ? "ctx.free" : undefined}
+                rows={10}
+                placeholder="Örn. İstanbul'da 4 şubesi olan bir kahve zinciriyiz. Hafta içi öğleden sonraları satışlarımız düşük ve online sipariş kanalımız yok. 12 ay içinde cironun %20'sini online kanaldan elde etmek istiyoruz…"
+                className={`${inputClass} field-sizing-content min-h-48`}
+              />
+            </div>
+          </div>
+
+          <FilePicker selection={fileSelection} id="files-context" />
+
+          {personalizationEnabled && !selectedProfile && (
+            <div className="mt-6 rounded-xl border border-slate-200 bg-white p-4">
+              <label className="flex cursor-pointer items-start gap-3">
+                <input
+                  type="checkbox"
+                  name="saveAsProfile"
+                  value="1"
+                  checked={saveAsProfile}
+                  onChange={(e) => setSaveAsProfile(e.target.checked)}
+                  className="mt-1 accent-violet-600"
+                />
+                <span>
+                  <span className="block text-sm font-medium text-slate-900">🧠 Bu bilgileri profil olarak kaydet</span>
+                  <span className="block text-xs text-slate-600">
+                    Bir dahaki planda tekrar yazmak yerine profili seçmen yeterli olur.
+                  </span>
+                </span>
+              </label>
+              {saveAsProfile && (
+                <input
+                  name="newProfileName"
+                  required
+                  maxLength={80}
+                  placeholder="Profil adı, ör. İş yerim – Ege Zeytincilik"
+                  className={`${inputClass} mt-3`}
+                />
+              )}
+            </div>
+          )}
+
+          {aiOnly.length > 0 && (
+            <p className="mt-4 rounded-lg bg-violet-50 px-4 py-3 text-sm text-violet-900">
+              Şu başlıklar için çerçeveyi de yapay zekâ hazırlayacak: {aiOnly.map((s) => s.name).join(", ")}.
+            </p>
+          )}
+
+          <StickyBar error={state.error} note={trialNote}>
+            <div className="flex flex-wrap items-center gap-2">
+              {canUseWithoutAi && (
+                <SubmitButton name="ai" value="0" variant="secondary" disabled={!canGenerate} pendingText="Oluşturuluyor…">
+                  Boş şablon olarak al
+                </SubmitButton>
+              )}
+              <SubmitButton
+                name="ai"
+                value="1"
+                disabled={!canGenerate || !aiAvailable || !hasSelection}
+                pendingText="Planın hazırlanıyor… (2-4 dk)"
+              >
+                ✨ Bana özel planı oluştur
+              </SubmitButton>
+            </div>
+          </StickyBar>
+          {!aiAvailable && (
+            <p className="mt-2 text-right text-xs text-amber-700">Yapay zekâ özelliği henüz yapılandırılmadı.</p>
+          )}
+          <PendingOverlay />
+        </div>
+      )}
+    </form>
+  );
+}
+
+function StickyBar({ children, error, note }: { children: React.ReactNode; error?: string; note: string }) {
+  return (
+    <div className="sticky bottom-0 mt-6 -mx-4 border-t border-slate-200 bg-slate-50/95 px-4 py-4 backdrop-blur">
+      {error && (
+        <p role="alert" className="mb-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+          {error}
+        </p>
+      )}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-slate-600">{note}</p>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function SubmitButton({
+  children,
+  name,
+  value,
+  disabled,
+  pendingText,
+  variant = "primary",
+}: {
+  children: React.ReactNode;
+  name: string;
+  value: string;
+  disabled?: boolean;
+  pendingText?: string;
+  variant?: "primary" | "secondary";
+}) {
+  const { pending, data } = useFormStatus();
+  const isThis = pending && data?.get(name) === value;
+  return (
+    <button
+      type="submit"
+      name={name}
+      value={value}
+      disabled={pending || disabled}
+      className={
+        variant === "primary"
+          ? "rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+          : "rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+      }
+    >
+      {isThis ? (pendingText ?? "İşleniyor…") : children}
+    </button>
+  );
+}
+
+function PendingOverlay() {
+  const { pending, data } = useFormStatus();
+  if (!pending || data?.get("ai") !== "1") return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm">
+      <div className="max-w-sm rounded-2xl bg-white p-6 text-center shadow-xl">
+        <div className="mx-auto size-10 animate-spin rounded-full border-4 border-violet-200 border-t-violet-600" />
+        <p className="mt-4 font-semibold text-slate-900">Planın hazırlanıyor</p>
+        <p className="mt-1 text-sm text-slate-600">
+          Yapay zekâ durumunu analiz edip stratejik adımları oluşturuyor. Bu işlem 2-4 dakika sürebilir; lütfen sayfayı
+          kapatma.
+        </p>
+      </div>
+    </div>
+  );
+}

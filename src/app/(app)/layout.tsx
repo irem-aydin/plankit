@@ -1,0 +1,62 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { APP_NAME } from "@/config/app";
+import { getCurrentSession } from "@/services/session";
+import { AppNav } from "./app-nav";
+
+export default async function AppLayout({ children }: { children: React.ReactNode }) {
+  const session = await getCurrentSession();
+  if (!session) redirect("/giris");
+
+  const { entitlement, user, preferences } = session;
+  const displayName = preferences.displayName || user.email;
+
+  return (
+    <div className="flex flex-1 flex-col">
+      <header className="border-b border-slate-200 bg-white print:hidden">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+          <div className="flex flex-wrap items-center gap-4">
+            <Link href="/panel" className="text-lg font-bold tracking-tight">
+              {APP_NAME}
+            </Link>
+            <AppNav />
+          </div>
+
+          <div className="flex items-center gap-2 text-sm">
+            <Link
+              href="/abonelik"
+              className={`rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-inset ${
+                entitlement.unlimited
+                  ? "bg-emerald-50 text-emerald-700 ring-emerald-200"
+                  : entitlement.canGenerate
+                    ? "bg-indigo-50 text-indigo-700 ring-indigo-200"
+                    : "bg-amber-50 text-amber-800 ring-amber-200"
+              }`}
+            >
+              {entitlement.unlimited
+                ? "Pro"
+                : entitlement.canGenerate
+                  ? `Deneme: ${entitlement.remainingTrial} hak`
+                  : "Abone ol"}
+            </Link>
+            <Link
+              href="/ayarlar"
+              title={displayName ?? undefined}
+              className="flex items-center gap-2 rounded-md px-2 py-1.5 text-slate-700 hover:bg-slate-100"
+            >
+              <span aria-hidden className="flex size-7 items-center justify-center rounded-full bg-slate-200 text-xs font-semibold uppercase text-slate-700">
+                {(displayName ?? "?").slice(0, 1)}
+              </span>
+              <span className="hidden sm:inline">Ayarlar</span>
+            </Link>
+            <form action="/auth/cikis" method="post">
+              <button className="rounded-md px-2 py-1.5 text-slate-600 hover:bg-slate-100">Çıkış</button>
+            </form>
+          </div>
+        </div>
+      </header>
+
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 print:max-w-none print:p-0">{children}</main>
+    </div>
+  );
+}
