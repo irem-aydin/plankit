@@ -1,0 +1,486 @@
+{
+  "schemaVersion": 1,
+  "title": "PRD Örneği: Mobil Uygulamaya Abonelik Özelliği",
+  "generatedAt": "2026-09-21T14:13:12.395Z",
+  "sections": [
+    {
+      "subcategoryId": "custom",
+      "subcategoryName": "Premium Abonelik PRD — Mobil Fitness Uygulaması",
+      "categoryId": "10000000-0000-4000-8000-000000000003",
+      "categoryName": "Ürün Yönetimi",
+      "templateId": "ai-designed",
+      "templateVersion": 1,
+      "body": {
+        "kind": "template",
+        "summary": "80.000 aktif kullanıcılı, reklam gelirine bağımlı ücretsiz fitness uygulamasına aylık 149 TL'lik premium abonelik (kişisel antrenman programı, reklamsız kullanım, beslenme takibi) eklenmesi için ürün gereksinim dokümanı. İlk 6 ayda %4 dönüşüm hedefine yönelik kapsam, fiyatlandırma, ölçüm ve uygulama planını içerir.",
+        "sections": [
+          {
+            "id": "s0",
+            "title": "1. Problem, Kapsam ve Ürün Hedefleri",
+            "description": "Ürünün neden yapıldığını, kapsam sınırlarını ve ölçülebilir hedefleri tanımlar. Hedef metrikler tablosu, lansmandan sonraki 6 aylık pencere (15.12.2026 - 15.06.2027) için referans alınır.",
+            "fields": [
+              {
+                "id": "s0f0",
+                "label": "Problem Tanımı",
+                "type": "textarea",
+                "value": "Tek gelir kaynağı reklam olduğu için 80.000 aktif kullanıcıdan elde edilen gelir işletme giderlerini karşılamıyor ve kullanıcı başına gelir reklam dolgu oranına bağlı olarak dalgalanıyor. Kullanıcıların ödemeye istekli olduğu kişiselleştirilmiş içerik (antrenman programı, beslenme takibi) bugün üründe yok."
+              },
+              {
+                "id": "s0f1",
+                "label": "Kapsam (Dahil)",
+                "type": "textarea",
+                "value": "iOS ve Android için aylık 149 TL tekrarlayan abonelik; App Store ve Google Play uygulama içi satın alma entegrasyonu; kişisel antrenman programı, reklamsız deneyim ve beslenme takibi modülleri; paywall, deneme süresi ve abonelik yönetimi ekranları."
+              },
+              {
+                "id": "s0f2",
+                "label": "Kapsam Dışı (Bu Sürümde Yok)",
+                "type": "textarea",
+                "value": "- Web üzerinden kredi kartı/İyzico ile doğrudan satış\n- Yıllık paket ve aile/kurumsal planlar (v2 değerlendirilecek)\n- Canlı antrenör/diyetisyen desteği ve giyilebilir cihaz entegrasyonları\n- Yeni pazarlara (yurt dışı, çoklu para birimi) açılım"
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Hedef",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Mevcut Durum",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "6. Ay Hedefi (15.06.2027)",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Ölçüm Kaynağı",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Ücretliye dönüşüm",
+                  "c1": "%0 (abonelik yok)",
+                  "c2": "Aktif kullanıcıların %4'ü = ~3.200 abone",
+                  "c3": "Store abonelik raporları + analitik"
+                },
+                {
+                  "c0": "Brüt aylık abonelik cirosu",
+                  "c1": "0 TL",
+                  "c2": "~476.800 TL/ay (3.200 × 149 TL, tahmini)",
+                  "c3": "Store gelir raporu"
+                },
+                {
+                  "c0": "Deneme→ücretli dönüşüm",
+                  "c1": "Yok",
+                  "c2": "%35 (tahmini hedef, ilk 8 haftada revize edilir",
+                  "c3": "Kohort analizi"
+                },
+                {
+                  "c0": "1. ay abone elde tutma",
+                  "c1": "Yok",
+                  "c2": "%80",
+                  "c3": "Store iptal/yenileme verisi"
+                },
+                {
+                  "c0": "Reklam geliri kaybı",
+                  "c1": "Baz alınan mevcut ARPU",
+                  "c2": "Abone kaybı nedeniyle en fazla %5 düşüş",
+                  "c3": "Reklam ağı paneli"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s1",
+            "title": "2. Kullanıcı Segmentleri ve Değer Önerisi",
+            "description": "Paywall mesajı ve özellik önceliği bu segmentlere göre belirlenir. Segment büyüklükleri ürün analitiğiyle doğrulanmalıdır.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Segment",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Tahmini Pay",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Temel İhtiyaç",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Premium Değer Önerisi",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Düzenli kullanıcı (haftada 3+ oturum)",
+                  "c1": "%15-20 (doğrulanmalı)",
+                  "c2": "Gelişmiş, kişiye özel program",
+                  "c3": "Hedefe göre haftalık güncellenen antrenman planı"
+                },
+                {
+                  "c0": "Kilo/form hedefi olan kullanıcı",
+                  "c1": "%25-30 (doğrulanmalı)",
+                  "c2": "Kalori ve makro takibi",
+                  "c3": "Beslenme takibi + antrenmanla birleşik ilerleme raporu"
+                },
+                {
+                  "c0": "Reklamdan rahatsız kullanıcı",
+                  "c1": "Tüm tabana yayılı",
+                  "c2": "Kesintisiz deneyim",
+                  "c3": "Reklamsız kullanım (tek başına satın alma gerekçesi zayıf, paket içinde sunulur)"
+                },
+                {
+                  "c0": "Pasif/yeni kullanıcı",
+                  "c1": "%50+",
+                  "c2": "Alışkanlık oluşturma",
+                  "c3": "Bu sürümde hedeflenmez; ücretsiz katman ve onboarding ile beslenir"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s2",
+            "title": "3. Fonksiyonel Gereksinimler (MoSCoW)",
+            "description": "Lansman kapsamı yalnızca Must ve seçili Should maddelerinden oluşur. Her gereksinim için kabul kriteri sprint backlog'unda detaylandırılır.",
+            "fields": [
+              {
+                "id": "s2f0",
+                "label": "Platform ve Teknik Gereksinimler",
+                "type": "textarea",
+                "value": "- StoreKit 2 (iOS) ve Google Play Billing Library 6+ entegrasyonu; sunucu tarafı makbuz/satın alma doğrulaması zorunlu\n- Abonelik durumunun tek bir kullanıcı hesabına bağlanması ve iki platform arasında senkron çalışması\n- Satın alma geri yükleme (restore) akışı ve iade/iptal webhook'larının işlenmesi"
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Gereksinim",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Öncelik",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Kabul Kriteri (özet)",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Aylık 149 TL abonelik satın alma (iOS+Android)",
+                  "c1": "Must",
+                  "c2": "Satın alma sonrası 5 sn içinde premium erişim açılır; makbuz sunucuda doğrulanır"
+                },
+                {
+                  "c0": "Reklamsız kullanım anahtarı",
+                  "c1": "Must",
+                  "c2": "Aktif abonede tüm reklam çağrıları devre dışı; abonelik bitince otomatik geri döner"
+                },
+                {
+                  "c0": "Kişisel antrenman programı üretimi",
+                  "c1": "Must",
+                  "c2": "Hedef, seviye ve haftalık gün sayısına göre 4 haftalık plan oluşur ve haftalık güncellenir"
+                },
+                {
+                  "c0": "Beslenme takibi (kalori/makro günlüğü)",
+                  "c1": "Must",
+                  "c2": "Yemek arama, porsiyon girişi, günlük özet; en az 5.000 kayıtlık Türkçe besin veritabanı"
+                },
+                {
+                  "c0": "Paywall + 7 gün ücretsiz deneme",
+                  "c1": "Should",
+                  "c2": "En az 3 giriş noktası (onboarding, program sekmesi, beslenme sekmesi); A/B test edilebilir"
+                },
+                {
+                  "c0": "Abonelik yönetimi ve iptal yönlendirmesi",
+                  "c1": "Must",
+                  "c2": "Uygulama içinden store abonelik sayfasına yönlendirme; mesafeli satış ve ön bilgilendirme metinleri görünür"
+                },
+                {
+                  "c0": "Barkod ile yemek ekleme, offline plan indirme",
+                  "c1": "Could",
+                  "c2": "v2'ye ertelendi"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s3",
+            "title": "4. Paketleme, Fiyatlandırma ve Gelir Modeli",
+            "description": "149 TL fiyat kararı bağlayıcı kabul edilmiştir; bu bölüm net gelir etkisini ve ücretsiz/premium sınırını netleştirir. Tüm tutarlar tahminidir ve store sözleşmeleri ile mali müşavir teyidi gerektirir.",
+            "fields": [
+              {
+                "id": "s3f0",
+                "label": "Net Gelir Hesabı (tahmini)",
+                "type": "textarea",
+                "value": "149 TL kullanıcı ödemesi KDV dahil varsayılmıştır: 149 / 1,20 = 124,17 TL net satış. Store komisyonu küçük işletme programlarında %15 alınırsa (aksi halde %30): 124,17 × 0,85 = ~105,5 TL abone başına net. 3.200 abone × 105,5 TL = ~337.600 TL/ay net gelir (tahmini). Komisyon oranı %30 olursa bu rakam ~278.500 TL'ye düşer."
+              },
+              {
+                "id": "s3f1",
+                "label": "Ücretsiz / Premium Sınırı",
+                "type": "textarea",
+                "value": "Ücretsiz katman reklamlı kalır; hazır (kişiselleştirilmemiş) antrenman şablonlarına ve günde 3 yemek kaydına erişir. Kişisel program, sınırsız beslenme kaydı, ilerleme raporu ve reklamsızlık premium tarafındadır."
+              },
+              {
+                "id": "s3f2",
+                "label": "Yasal ve Uyum Notları",
+                "type": "textarea",
+                "value": "- Zorunlu: mesafeli satış/ön bilgilendirme metinleri, otomatik yenileme bilgilendirmesi, KVKK aydınlatma metni ve sağlık/beslenme verisi için açık rıza (özel nitelikli kişisel veri)\n- Zorunlu: e-fatura/mali süreçler için store'un vergi rolüne göre muhasebe kurgusu — mali müşavirden teyit edilmeli\n- Beklenen (yasal zorunluluk değil): tıbbi tavsiye olmadığına dair sorumluluk reddi ve diyetisyen onaylı içerik etiketi"
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Senaryo",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Dönüşüm",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Abone Sayısı",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Tahmini Net Aylık Gelir",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Kötümser",
+                  "c1": "%2",
+                  "c2": "1.600",
+                  "c3": "~168.800 TL"
+                },
+                {
+                  "c0": "Hedef",
+                  "c1": "%4",
+                  "c2": "3.200",
+                  "c3": "~337.600 TL"
+                },
+                {
+                  "c0": "İyimser",
+                  "c1": "%6",
+                  "c2": "4.800",
+                  "c3": "~506.400 TL"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s4",
+            "title": "5. Ölçümleme, Deney Planı ve Riskler",
+            "description": "Lansman sonrası ilk 8 hafta öğrenme dönemi olarak yönetilir; fiyat değil, paywall ve deneme değişkenleri test edilir.",
+            "fields": [
+              {
+                "id": "s4f0",
+                "label": "Deney Planı",
+                "type": "textarea",
+                "value": "- A/B test 1 (hafta 1-4): 7 gün deneme vs. denemesiz doğrudan satın alma\n- A/B test 2 (hafta 5-8): paywall giriş noktası (onboarding sonu vs. 3. antrenman sonrası)\n- Karar eşiği: bir varyant deneme→ücretli dönüşümde en az 5 puan fark yaratırsa kalıcı hale getirilir"
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Risk",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Etki",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Olasılık",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Azaltma Aksiyonu",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "%4 dönüşümün gerçekçi olmaması (sektör tipik aralığı %1-3)",
+                  "c1": "Yüksek",
+                  "c2": "Yüksek",
+                  "c3": "Kötümser senaryoya göre nakit planı; 3. ayda hedef revizyonu"
+                },
+                {
+                  "c0": "Store inceleme reddi (abonelik/gizlilik metinleri)",
+                  "c1": "Yüksek",
+                  "c2": "Orta",
+                  "c3": "Lansmandan 3 hafta önce test derlemesi ile ön inceleme"
+                },
+                {
+                  "c0": "Reklam gelirinin abonelerde kaybı",
+                  "c1": "Orta",
+                  "c2": "Kesin",
+                  "c3": "Abone başına net gelir reklam ARPU'sundan yüksek olduğu sürece kabul edilir; aylık takip"
+                },
+                {
+                  "c0": "Beslenme veritabanı kalitesizliği",
+                  "c1": "Orta",
+                  "c2": "Orta",
+                  "c3": "Lisanslı Türkçe besin veritabanı tedariki; sağlayıcı seçimi Ekim 2026'da"
+                },
+                {
+                  "c0": "Faturalama hatası / çift tahsilat",
+                  "c1": "Yüksek",
+                  "c2": "Düşük",
+                  "c3": "Sunucu taraflı doğrulama, sandbox test seti, iade prosedürü"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s5",
+            "title": "6. Uygulama Yol Haritası",
+            "description": "Sorumlular rol bazlıdır. Tarihler bugünkü (21.09.2026) duruma göre planlanmıştır; lansman 15.12.2026, 6 aylık hedef penceresi 15.06.2027'de kapanır.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Aksiyon",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Sorumlu Rol",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Bitiş Tarihi",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Başarı Ölçütü",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Gereksinim dondurma, kabul kriterleri ve paywall tasarımı",
+                  "c1": "Ürün Yöneticisi + UX",
+                  "c2": "10.10.2026",
+                  "c3": "Tüm Must maddeleri onaylı backlog'da"
+                },
+                {
+                  "c0": "Besin veritabanı tedarikçi seçimi ve sözleşme",
+                  "c1": "Ürün Yöneticisi",
+                  "c2": "17.10.2026",
+                  "c3": "En az 5.000 Türkçe kayıt, lisans imzalı"
+                },
+                {
+                  "c0": "Billing entegrasyonu + sunucu doğrulama (iOS/Android)",
+                  "c1": "Mobil ve Backend Ekip Lideri",
+                  "c2": "14.11.2026",
+                  "c3": "Sandbox'ta satın alma, yenileme, iptal, restore testleri geçer"
+                },
+                {
+                  "c0": "Kişisel program motoru ve beslenme takibi geliştirme",
+                  "c1": "Mobil Ekip Lideri",
+                  "c2": "21.11.2026",
+                  "c3": "Kabul kriterleri karşılanır, iç beta açılır"
+                },
+                {
+                  "c0": "Yasal metinler (mesafeli satış, KVKK açık rıza) ve store listeleme",
+                  "c1": "Ürün Yöneticisi + Hukuk Danışmanı",
+                  "c2": "28.11.2026",
+                  "c3": "Metinler yayında; store inceleme onayı alınır"
+                },
+                {
+                  "c0": "Kapalı beta (2.000 kullanıcı) ve düzeltmeler",
+                  "c1": "Ürün Yöneticisi",
+                  "c2": "10.12.2026",
+                  "c3": "Kritik hata yok; deneme başlatma oranı ölçüldü"
+                },
+                {
+                  "c0": "Genel lansman ve A/B testlerin başlatılması",
+                  "c1": "Ürün Yöneticisi + Pazarlama",
+                  "c2": "15.12.2026",
+                  "c3": "Tüm kullanıcıya açık; günlük metrik panosu canlı"
+                },
+                {
+                  "c0": "1. çeyrek değerlendirmesi ve hedef revizyonu",
+                  "c1": "Ürün Yöneticisi + Kurucu",
+                  "c2": "15.03.2027",
+                  "c3": "Dönüşüm %2'nin altındaysa paketleme/fiyat revizyon kararı alınır"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "personalization": {
+        "model": "claude-opus-5",
+        "keyFindings": [
+          "%4 dönüşüm hedefi (3.200 abone, ~476.800 TL brüt / ~337.600 TL tahmini net aylık gelir) mobil abonelik pazarında tipik %1-3 aralığının üzerindedir; kötümser senaryo (%2) üzerinden nakit planı yapılmalıdır.",
+          "149 TL'nin kullanıcıya ulaşan kısmı KDV ve store komisyonundan sonra ~105,5 TL'ye (komisyon %30 ise ~87 TL) inmektedir; Apple Small Business Program ve Google Play %15 kademesine kayıt lansman öncesi tamamlanmalıdır.",
+          "Beslenme ve sağlık verisi KVKK kapsamında özel nitelikli kişisel veridir; açık rıza akışı ve mesafeli satış metinleri olmadan store onayı ve yasal uyum riski doğar."
+        ],
+        "assumptions": [
+          "149 TL fiyatı KDV dahil son kullanıcı fiyatıdır; net satış 149/1,20 = 124,17 TL olarak hesaplanmıştır (mali müşavir teyidi gerekir).",
+          "Store komisyonu küçük işletme programlarıyla %15 varsayılmıştır; aksi halde tüm gelir tahminleri yaklaşık %18 düşer.",
+          "80.000 aktif kullanıcı aylık aktif kullanıcı (MAU) olarak alınmış ve %4 dönüşüm bu taban üzerinden hesaplanmıştır.",
+          "Geliştirme için en az bir iOS, bir Android ve bir backend geliştiricinin 10 hafta boyunca ayrılabildiği varsayılmıştır.",
+          "Tüm maliyet, dönüşüm ve gelir rakamları tahminidir; ilk 8 haftalık canlı veriyle doğrulanacaktır."
+        ],
+        "openQuestions": [
+          "Mevcut reklam ARPU'su nedir? Abone başına net 105,5 TL ile karşılaştırılmadan reklam kaybı etkisi ölçülemez.",
+          "Ekip büyüklüğü, geliştirme bütçesi ve nakit runway nedir? Lansman tarihi buna göre sabitlenmeli.",
+          "Haftada 3+ oturum yapan aktif kullanıcı oranı gerçekte kaçtır (dönüşüm potansiyelinin ana göstergesi)?",
+          "Besin veritabanı satın alınacak mı yoksa içeride mi oluşturulacak; lisans maliyeti bütçede var mı?",
+          "Yıllık paket (ör. 1.490 TL) lansmanda hiç sunulmayacak mı? Elde tutmayı ciddi etkileyebilir."
+        ]
+      }
+    }
+  ],
+  "missing": [],
+  "context": {
+    "mode": "free",
+    "detail": "summary",
+    "language": "tr",
+    "entries": [
+      {
+        "question": "Kullanıcının kendi anlatımı",
+        "answer": "80.000 aktif kullanıcısı olan ücretsiz bir mobil fitness uygulamasıyız. Gelirimiz yalnızca reklamdan geliyor ve yetersiz. Kişisel antrenman programları, reklamsız kullanım ve beslenme takibi içeren aylık 149 TL'lik premium abonelik eklemek istiyoruz. iOS ve Android için. İlk 6 ayda kullanıcıların %4'ünü aboneye çevirmeyi hedefliyoruz."
+      }
+    ]
+  },
+  "attachments": []
+}

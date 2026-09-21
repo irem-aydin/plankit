@@ -1,0 +1,443 @@
+{
+  "schemaVersion": 1,
+  "title": "Pazara Giriş Planı Örneği: Zeytinyağı İhracatı (Almanya)",
+  "generatedAt": "2026-09-21T14:13:12.395Z",
+  "sections": [
+    {
+      "subcategoryId": "custom",
+      "subcategoryName": "Almanya Pazarına Giriş Planı – Ayvalık Sızma Zeytinyağı (Yıl 1)",
+      "categoryId": "10000000-0000-4000-8000-000000000004",
+      "categoryName": "İş Geliştirme",
+      "templateId": "ai-designed",
+      "templateVersion": 1,
+      "body": {
+        "kind": "template",
+        "summary": "Ayvalık merkezli aile şirketinin 180 ton yıllık üretiminden küçük bir hacmi premium şişelenmiş ürünle Almanya'ya yönlendirmesi için hazırlanmış özet pazara giriş planıdır. 1,5 milyon TL'lik ilk yıl bütçesi, ihracat deneyimi olmaması ve hasat sezonu takvimi kısıtları altında kanal seçimi, uyum gereklilikleri ve 9 aylık uygulama adımlarını içerir.",
+        "sections": [
+          {
+            "id": "s0",
+            "title": "1. Kapsam ve Hedef Tanımı",
+            "description": "Yıl 1 için pazara giriş kapsamını, hedef hacmi ve başarı ölçütünü netleştirin; bu bölüm sonraki tüm kararların sınırını belirler.",
+            "fields": [
+              {
+                "id": "s0f0",
+                "label": "Pazara giriş amacı",
+                "type": "textarea",
+                "value": "Almanya'da premium şişelenmiş Ayvalık sızma zeytinyağı ile ilk ticari referansı oluşturmak; Yıl 1 hedefi hacim büyütmek değil, uyumlu ve sürdürülebilir bir kanal kurmaktır."
+              },
+              {
+                "id": "s0f1",
+                "label": "Yıl 1 hedef hacmi (tahmini)",
+                "type": "textarea",
+                "value": "Toplam 180 tonluk üretimin %3-5'i, yani 6-9 ton (yaklaşık 12.000-18.000 adet 500 ml cam şişe). Bu hacim mevcut üretim kapasitesini zorlamaz ve yurt içi satışları riske atmaz."
+              },
+              {
+                "id": "s0f2",
+                "label": "Kapsam dışı (Yıl 1)",
+                "type": "textarea",
+                "value": "- Alman zincir marketlere (Edeka, Rewe) doğrudan listeleme\n- Almanya'da kendi şirket/depo kurulumu\n- Özel etiket (private label) üretimi\n- Organik sertifikalı ürün hattı"
+              },
+              {
+                "id": "s0f3",
+                "label": "Yıl 1 başarı ölçütü",
+                "type": "textarea",
+                "value": "31 Mayıs 2027'ye kadar en az 2 aktif alıcı (1 etnik/toptan dağıtımcı + 1 delikatesli/online kanal), 6 ton kümülatif sevkiyat ve tekrar siparişi gelmiş en az 1 müşteri."
+              }
+            ]
+          },
+          {
+            "id": "s1",
+            "title": "2. Hedef Segment ve Kanal Değerlendirmesi",
+            "description": "Dört olası kanalı erişim hızı, gerekli yatırım ve Yıl 1 uygunluğu açısından karşılaştırın; puanı yüksek ilk iki kanala odaklanın.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Kanal",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Hedef tüketici",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Giriş zorluğu",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Tahmini Yıl 1 hacmi",
+                  "type": "text"
+                },
+                {
+                  "id": "c4",
+                  "label": "Yıl 1 kararı",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Türk market zincirleri / etnik toptancı (Berlin, Köln, Frankfurt)",
+                  "c1": "Almanya'daki Türk tüketici",
+                  "c2": "Düşük – dil avantajı, hızlı karar",
+                  "c3": "3-5 ton",
+                  "c4": "Öncelik 1"
+                },
+                {
+                  "c0": "Delikatesli / feinkost ve organik bağımsız dükkanlar",
+                  "c1": "Premium Alman tüketici",
+                  "c2": "Orta – numune ve hikâye gerekli",
+                  "c3": "1-2 ton",
+                  "c4": "Öncelik 2"
+                },
+                {
+                  "c0": "Kendi web sitesi + Amazon.de",
+                  "c1": "Her iki segment",
+                  "c2": "Orta-yüksek – lojistik ve ambalaj maliyeti",
+                  "c3": "0,5-1 ton",
+                  "c4": "Pilot (küçük ölçek)"
+                },
+                {
+                  "c0": "Alman ulusal zincir marketler",
+                  "c1": "Kitle Alman tüketici",
+                  "c2": "Yüksek – listeleme ücreti, IFS/BRC, büyük hacim",
+                  "c3": "0 ton",
+                  "c4": "Yıl 2-3'e ertelendi"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s2",
+            "title": "3. Uyum, Belge ve Etiket Gereklilikleri",
+            "description": "Yasal zorunlu olanlar ile pazarın beklediği (zorunlu olmayan) gereklilikleri ayırt edin; zorunlu maddeler ilk sevkiyattan önce tamamlanmalıdır.",
+            "fields": [
+              {
+                "id": "s2f0",
+                "label": "Kritik uyarı",
+                "type": "textarea",
+                "value": "AB'ye zeytinyağı ihracatında ürün analizi, etiket ve ambalaj kuralları sıkıdır; aşağıdaki listeler yönlendirici olup Ticaret Bakanlığı / İhracatçı Birlikleri ve Alman ithalatçınızın gümrük müşaviri tarafından teyit edilmelidir."
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Gereklilik",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Statü",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Sorumlu",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Hedef tarih",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "İhracatçı Birliği üyeliği, vergi/ETGB süreçleri, ihracat kayıt işlemleri",
+                  "c1": "Yasal zorunlu",
+                  "c2": "Mali İşler + dış ticaret danışmanı",
+                  "c3": "30 Kasım 2026"
+                },
+                {
+                  "c0": "Akredite laboratuvar analizi (serbest asitlik, peroksit, UV, duyusal panel) – sızma sınıfı teyidi",
+                  "c1": "Yasal zorunlu",
+                  "c2": "Üretim/Kalite Sorumlusu",
+                  "c3": "15 Aralık 2026"
+                },
+                {
+                  "c0": "AB uyumlu etiket: köken, sınıf, hasat/son tüketim, besin beyanı, lot, Almanca dil",
+                  "c1": "Yasal zorunlu",
+                  "c2": "Marka/Tasarım + dış ticaret danışmanı",
+                  "c3": "31 Aralık 2026"
+                },
+                {
+                  "c0": "Ambalaj geri dönüşüm kaydı (LUCID/VerpackG) ve lisans",
+                  "c1": "Almanya'da zorunlu – ithalatçı mı marka mı sorumlu, teyit edilmeli",
+                  "c2": "Dış ticaret danışmanı",
+                  "c3": "15 Ocak 2027"
+                },
+                {
+                  "c0": "ISO 22000 / IFS gıda güvenliği sertifikası",
+                  "c1": "Zorunlu değil, premium kanalın beklentisi",
+                  "c2": "Kalite Sorumlusu",
+                  "c3": "Yıl 2 (bütçe dışı)"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s3",
+            "title": "4. Fiyatlandırma ve Bütçe Dağılımı",
+            "description": "1,5 milyon TL'lik bütçeyi kalemlere bölün ve raf fiyatı mantığını kontrol edin; tüm tutarlar tahminidir ve teklif alınarak doğrulanmalıdır.",
+            "fields": [
+              {
+                "id": "s3f0",
+                "label": "Fiyat mantığı (tahmini)",
+                "type": "textarea",
+                "value": "Premium 500 ml cam şişede ithalatçıya FOB satış fiyatı 6,5-8 EUR aralığı hedeflenmelidir; ithalatçı ve perakende marjları eklendiğinde Almanya rafında 14-18 EUR bandına denk gelir ki bu, İtalyan/İspanyol premium ürünlerle rekabet edilebilir bir seviyedir. Nihai fiyat, ilk ithalatçı teklifiyle teyit edilmelidir."
+              },
+              {
+                "id": "s3f1",
+                "label": "Bütçe notu",
+                "type": "textarea",
+                "value": "1,5 milyon TL yalnızca pazara giriş yatırımıdır; ürün maliyeti (6-9 ton yağ) mevcut üretimden karşılanacağı için bu bütçeye dahil edilmemiştir."
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Bütçe kalemi",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Tahmini tutar (TL)",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Pay",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Not",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Ambalaj, etiket, marka tasarımı ve kalıp",
+                  "c1": "450.000",
+                  "c2": "%30",
+                  "c3": "12.000-18.000 şişe için ilk parti; teklif alınacak"
+                },
+                {
+                  "c0": "Dış ticaret danışmanlığı ve belge/analiz masrafları",
+                  "c1": "300.000",
+                  "c2": "%20",
+                  "c3": "Sözleşmeli danışman, 9 ay"
+                },
+                {
+                  "c0": "Fuar katılımı + saha ziyaretleri (Anuga / Biofach ziyaretçi, alıcı görüşmeleri)",
+                  "c1": "350.000",
+                  "c2": "%23",
+                  "c3": "Stand yerine ziyaretçi katılımı, maliyeti düşürür"
+                },
+                {
+                  "c0": "Numune, kargo, ilk sevkiyat lojistiği",
+                  "c1": "250.000",
+                  "c2": "%17",
+                  "c3": "Numune gönderimleri ve ilk 2 palet nakliye"
+                },
+                {
+                  "c0": "Dijital tanıtım, Almanca içerik, ihtiyat payı",
+                  "c1": "150.000",
+                  "c2": "%10",
+                  "c3": "Esneklik için ayrılmış rezerv"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s4",
+            "title": "5. Riskler ve Önlemler",
+            "description": "Yıl 1'i durdurabilecek riskleri olasılık ve etkisiyle birlikte izleyin; her risk için tek bir sahip atanmıştır.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Risk",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Olasılık / Etki",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Önlem",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Sahip",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Analiz sonucunun sızma sınıfı sınırlarını karşılamaması",
+                  "c1": "Düşük / Yüksek",
+                  "c2": "Hasat sonrası erken numune analizi, en iyi partilerin ihracat için ayrılması",
+                  "c3": "Kalite Sorumlusu"
+                },
+                {
+                  "c0": "Etiket veya ambalaj uyumsuzluğu nedeniyle gümrükte takılma",
+                  "c1": "Orta / Yüksek",
+                  "c2": "Etiket taslağının ithalatçının gümrük müşavirine ön onaya gönderilmesi",
+                  "c3": "Dış ticaret danışmanı"
+                },
+                {
+                  "c0": "Kur ve nakliye maliyeti dalgalanması nedeniyle marj erimesi",
+                  "c1": "Yüksek / Orta",
+                  "c2": "EUR bazlı fiyatlama, 6 ay geçerli teklif, %10 ihtiyat payı",
+                  "c3": "Mali İşler"
+                },
+                {
+                  "c0": "Tek dağıtımcıya bağımlılık",
+                  "c1": "Orta / Yüksek",
+                  "c2": "En az 2 kanalın paralel geliştirilmesi (etnik + delikatesli)",
+                  "c3": "İhracat Sorumlusu"
+                },
+                {
+                  "c0": "Yurt içi talebin ihracata ayrılan hacmi sıkıştırması",
+                  "c1": "Düşük / Orta",
+                  "c2": "Hacmin üretimin %5'iyle sınırlanması ve Kasım'da parti rezervasyonu",
+                  "c3": "Genel Müdür"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s5",
+            "title": "6. Uygulama Adımları (Ekim 2026 – Haziran 2027)",
+            "description": "Adımlar hasat sezonuna göre sıralanmıştır: Kasım-Aralık hasat ve belge hazırlığı, Ocak-Mart alıcı geliştirme, Nisan-Mayıs ilk sevkiyat. Her adımın sahibi ve ölçütü nettir.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Adım",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Sorumlu rol",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Tarih",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Başarı ölçütü",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Dış ticaret danışmanı seçimi ve İhracatçı Birliği üyeliğinin tamamlanması",
+                  "c1": "Genel Müdür",
+                  "c2": "1-30 Kasım 2026",
+                  "c3": "Sözleşme imzalı, üyelik aktif"
+                },
+                {
+                  "c0": "2026/27 hasadından ihracat partisinin ayrılması ve akredite laboratuvar analizi",
+                  "c1": "Üretim/Kalite Sorumlusu",
+                  "c2": "1-15 Aralık 2026",
+                  "c3": "9 ton rezerve, analiz raporu sızma sınıfını teyit ediyor"
+                },
+                {
+                  "c0": "Almanca AB uyumlu etiket ve premium 500 ml ambalaj tasarımının onayı",
+                  "c1": "Marka/Tasarım",
+                  "c2": "1-31 Aralık 2026",
+                  "c3": "Danışman onaylı baskıya hazır tasarım"
+                },
+                {
+                  "c0": "Berlin, Köln ve Frankfurt'ta 10 Türk toptancı/market zinciri ile görüşme, numune gönderimi",
+                  "c1": "İhracat Sorumlusu",
+                  "c2": "5 Ocak - 20 Şubat 2027",
+                  "c3": "10 numune gönderildi, 4 geri dönüş, 2 fiyat teklifi"
+                },
+                {
+                  "c0": "Delikatesli/feinkost kanalı için Biofach veya bölgesel gıda fuarına ziyaretçi katılımı",
+                  "c1": "İhracat Sorumlusu",
+                  "c2": "Şubat 2027",
+                  "c3": "En az 15 nitelikli alıcı teması, 5 takip toplantısı"
+                },
+                {
+                  "c0": "İlk ihracat sözleşmesi, VerpackG/LUCID kaydının netleşmesi ve ödeme koşullarının belirlenmesi",
+                  "c1": "Mali İşler + Genel Müdür",
+                  "c2": "1-31 Mart 2027",
+                  "c3": "İmzalı sözleşme, %50 peşin veya akreditif"
+                },
+                {
+                  "c0": "İlk ticari sevkiyat (2 palet, yaklaşık 1,5-2 ton) ve gümrük sürecinin tamamlanması",
+                  "c1": "İhracat Sorumlusu",
+                  "c2": "15-30 Nisan 2027",
+                  "c3": "Ürün gümrükten sorunsuz geçti, teslim tutanağı alındı"
+                },
+                {
+                  "c0": "Yıl 1 değerlendirmesi: hacim, marj, kanal performansı ve Yıl 2 kararı",
+                  "c1": "Genel Müdür",
+                  "c2": "15-30 Haziran 2027",
+                  "c3": "6 ton kümülatif satış teyidi ve Yıl 2 bütçe kararı"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "personalization": {
+        "model": "claude-opus-5",
+        "keyFindings": [
+          "Yıl 1'de doğru hedef hacim üretimin %3-5'i (6-9 ton) olmalıdır; 1,5 milyon TL bütçe ancak bu ölçekte ambalaj, belge, fuar ve lojistiği karşılar. Daha büyük hedef bütçeyi aşar.",
+          "En hızlı ve en az maliyetli giriş kapısı Almanya'daki Türk market zincirleri ve etnik toptancılardır; Alman ulusal zincirler listeleme ücreti ve IFS/BRC beklentisi nedeniyle Yıl 2-3'e bırakılmalıdır.",
+          "En büyük teknik risk ürün kalitesi değil, etiket ve ambalaj mevzuatı uyumudur (AB etiket kuralları + Almanya ambalaj kaydı); bu nedenle bütçenin %20'si danışmanlık ve belgeye ayrılmıştır."
+        ],
+        "assumptions": [
+          "Mevcut tesiste şişeleme kapasitesi bulunduğu ve 12.000-18.000 şişelik partinin ek makine yatırımı gerektirmediği varsayıldı.",
+          "Hedef hacim hesabı: 180 ton x %5 = 9 ton; 9 ton ≈ 0,916 kg/L yoğunlukla yaklaşık 9.800 litre, 500 ml şişede yaklaşık 19.600 şişe. Plan ihtiyatlı olarak 12.000-18.000 şişe bandını kullandı.",
+          "1,5 milyon TL bütçenin yalnızca pazara giriş yatırımını kapsadığı, ihraç edilecek yağın maliyetinin mevcut üretim bütçesinden karşılandığı varsayıldı.",
+          "Tüm maliyet ve fiyat aralıkları tahminidir; tedarikçi ve nakliyeci tekliflerine ve ilk ithalatçı görüşmesine göre güncellenmelidir.",
+          "2026/27 hasadının normal rekolte vereceği ve sızma sınıfı analiz kriterlerini karşılayacağı varsayıldı."
+        ],
+        "openQuestions": [
+          "Mevcut tesiste şişeleme hattı var mı, yoksa fason şişeleme mi kullanılacak?",
+          "Ailede Almanca veya Almanya'da ticari bağlantısı olan bir kişi/akraba ağı var mı? (Kanal açma hızını doğrudan etkiler)",
+          "Yurt içi satışlardan 6-9 ton yağı geri çekmek hangi müşteri/kanalı etkiler; bu kabul edilebilir mi?",
+          "Marka Almanya'da tescilli mi, AB marka başvurusu yapıldı mı?",
+          "Nakit akışı ilk sevkiyatta vadeli ödemeyi kaldırabilir mi, yoksa akreditif/peşin şart mı?"
+        ]
+      }
+    }
+  ],
+  "missing": [],
+  "context": {
+    "mode": "free",
+    "detail": "summary",
+    "language": "tr",
+    "entries": [
+      {
+        "question": "Kullanıcının kendi anlatımı",
+        "answer": "Ayvalık'ta 3 kuşaktır zeytinyağı üreten bir aile şirketiyiz. Yıllık 180 ton sızma zeytinyağı üretiyoruz, tamamını yurt içinde satıyoruz. Almanya'daki Türk ve Alman tüketicilere premium şişelenmiş ürünle girmek istiyoruz. İhracat deneyimimiz yok. İlk yıl için ayırabileceğimiz bütçe 1,5 milyon TL."
+      }
+    ]
+  },
+  "attachments": []
+}

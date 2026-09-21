@@ -163,3 +163,54 @@ it("boş veya tek satırlık tabloda grafik üretmez", () => {
   expect(detectCharts({ columns: [{ id: "a", label: "Adım" }], rows: [] })).toEqual([]);
   expect(detectCharts({ columns: [{ id: "a", label: "Adım" }], rows: [{ a: "" }, { a: "tek" }] })).toEqual([]);
 });
+
+describe("detectCharts — yapay zekânın tasarladığı düz metin tablolar", () => {
+  it("seçenek listesi olmayan SWOT sütununu değerlerinden tanır", () => {
+    const columns: ChartColumn[] = [{ id: "c0", label: "Boyut" }, { id: "c1", label: "Bulgu" }];
+    const rows = [
+      { c0: "Güçlü yön", c1: "Sadık müşteri" },
+      { c0: "Zayıf yön", c1: "Kapasite sınırlı" },
+      { c0: "Fırsat", c1: "Ekşi maya talebi" },
+      { c0: "Tehdit", c1: "Zincir marketler" },
+    ];
+    const [chart] = detectCharts({ columns, rows });
+    expect(chart.kind).toBe("swot");
+    if (chart.kind === "swot") expect(chart.quadrants[0].items).toEqual(["Sadık müşteri"]);
+  });
+
+  it("'Olasılık / Etki' birleşik sütununu iki eksene ayırır", () => {
+    const columns: ChartColumn[] = [{ id: "r", label: "Risk" }, { id: "oe", label: "Olasılık / Etki" }];
+    const rows = [{ r: "Hekim direnci", oe: "Yüksek / Yüksek" }, { r: "Veri taşıma", oe: "Orta / Yüksek" }, { r: "Eğitim", oe: "Düşük / Orta" }];
+    const [chart] = detectCharts({ columns, rows }) as MatrixChart[];
+    expect(chart).toMatchObject({ kind: "matrix", xLabel: "Olasılık", yLabel: "Etki" });
+    expect(chart.points[1]).toEqual({ label: "Veri taşıma", x: 1, y: 2 });
+  });
+
+  it("'O/E/Skor' gibi 1-5 puanlı sütunu tanır", () => {
+    const columns: ChartColumn[] = [{ id: "id", label: "ID" }, { id: "r", label: "Risk" }, { id: "s", label: "O/E/Skor" }];
+    const rows = [{ id: "R-01", r: "Donanım arızası", s: "3/5/15" }, { id: "R-02", r: "Kira gecikmesi", s: "2/2/4" }];
+    const [chart] = detectCharts({ columns, rows }) as MatrixChart[];
+    expect(chart).toMatchObject({ kind: "matrix", xLabel: "Olasılık", yLabel: "Etki" });
+    expect(chart.points).toEqual([{ label: "Donanım arızası", x: 1, y: 2 }, { label: "Kira gecikmesi", x: 0, y: 0 }]);
+  });
+
+  it("düz metin seviye sütunlarından paydaş matrisi kurar", () => {
+    const columns: ChartColumn[] = [{ id: "p", label: "Paydaş" }, { id: "e", label: "Etkilenme Düzeyi" }, { id: "g", label: "Karar Gücü" }];
+    const rows = [{ p: "Hekimler", e: "Yüksek", g: "Yüksek" }, { p: "Hastalar", e: "Yüksek", g: "Düşük" }];
+    const [chart] = detectCharts({ columns, rows }) as MatrixChart[];
+    expect(chart).toMatchObject({ xLabel: "Etkilenme Düzeyi", yLabel: "Karar Gücü" });
+  });
+
+  it("sıra numarası gibi sayısal sütunları seviye sanmaz; anlamsız eksenlerle matris çizmez", () => {
+    const columns: ChartColumn[] = [{ id: "n", label: "No" }, { id: "a", label: "Adım" }, { id: "o", label: "Öncelik" }, { id: "k", label: "Kalite" }];
+    const rows = [{ n: "1", a: "A", o: "Yüksek", k: "Orta" }, { n: "2", a: "B", o: "Düşük", k: "Yüksek" }];
+    expect(detectCharts({ columns, rows }).some((c) => c.kind === "matrix")).toBe(false);
+  });
+});
+
+it("'Çok yüksek' ve 'Çok düşük' ifadelerini doğru seviyeye koyar", () => {
+  const columns: ChartColumn[] = [{ id: "r", label: "Risk" }, { id: "oe", label: "Olasılık / Etki" }];
+  const rows = [{ r: "A", oe: "Çok düşük / Çok yüksek" }, { r: "B", oe: "Orta / Yüksek" }];
+  const [chart] = detectCharts({ columns, rows }) as MatrixChart[];
+  expect(chart.points[0]).toEqual({ label: "A", x: 0, y: 2 });
+});

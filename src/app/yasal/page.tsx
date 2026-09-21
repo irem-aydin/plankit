@@ -110,6 +110,12 @@ export default function LegalPage() {
                 yalnızca dosya adı ve türü kaydedilir.
               </li>
               <li>
+                <strong>Kayıt olmadan önizleme:</strong> ana sayfadaki deneme kutusuna yazdığınız metin yalnızca kısa
+                önizlemeyi üretmek için yapay zekâ sağlayıcısına (Anthropic) gönderilir ve <strong>saklanmaz</strong>.
+                Kötüye kullanımı önlemek için IP adresinizin geri döndürülemez, her gün değişen bir özeti (hash) en fazla
+                2 gün tutulur; IP adresinin kendisi kaydedilmez.
+              </li>
+              <li>
                 <strong>Ödeme verileri:</strong> ücretli plana geçildiğinde ödeme işlemleri Stripe üzerinden yürütülür;
                 kart bilgileri tarafımızca görülmez ve saklanmaz.
               </li>

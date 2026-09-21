@@ -1,0 +1,482 @@
+{
+  "schemaVersion": 1,
+  "title": "Ürün Yol Haritası Örneği: KOBİ Muhasebe Yazılımı",
+  "generatedAt": "2026-09-21T14:13:12.395Z",
+  "sections": [
+    {
+      "subcategoryId": "custom",
+      "subcategoryName": "KOBİ Ön Muhasebe Yazılımı — 12 Aylık Ürün Yol Haritası (Ekim 2026 – Eylül 2027)",
+      "categoryId": "10000000-0000-4000-8000-000000000003",
+      "categoryName": "Ürün Yönetimi",
+      "templateId": "ai-designed",
+      "templateVersion": 1,
+      "body": {
+        "kind": "template",
+        "summary": "3.200 ücretli KOBİ müşterisine hizmet veren bulut ön muhasebe ürünü için e-fatura/e-arşiv kararlılığı, mobil uygulama, banka entegrasyonları ve yapay zekâ destekli gider sınıflandırma önceliklerini 12 kişilik ürün ekibinin kapasitesine göre sıralayan yol haritası. Doküman; mevcut durum, fırsat değerlendirme, çeyreklik plan, kapasite dağılımı, riskler ve 90 günlük uygulama adımlarını içerir.",
+        "sections": [
+          {
+            "id": "s0",
+            "title": "1. Ürün Bağlamı ve Yol Haritası Hedefleri",
+            "description": "Yol haritasının çözmeye çalıştığı iş problemini, hedef sonuçları ve kapsam dışını netleştirir. Çeyrek başlarında gözden geçirilir.",
+            "fields": [
+              {
+                "id": "s0f0",
+                "label": "Mevcut Durum Özeti",
+                "type": "textarea",
+                "value": "3.200 ücretli KOBİ müşterisine bulut ön muhasebe hizmeti veriliyor. Üç yapısal boşluk var: e-fatura/e-arşiv entegrasyonunda süreklilik sorunları, mobil uygulamanın hiç olmaması ve eksik banka entegrasyonları. Rakipler yapay zekâ ile gider sınıflandırmayı pazarlama argümanına dönüştürmüş durumda."
+              },
+              {
+                "id": "s0f1",
+                "label": "12 Aylık Ürün Hedefleri",
+                "type": "textarea",
+                "value": "- E-fatura/e-arşiv kaynaklı destek taleplerini ve başarısız gönderim oranını kalıcı biçimde düşürmek (temel ölçüm ilk 30 günde alınacak).\n- iOS ve Android'de canlı mobil uygulama ile mobil aktif kullanıcı tabanı oluşturmak.\n- En yüksek hacimli 5 banka için otomatik hesap hareketi akışı sağlamak.\n- Yapay zekâ destekli gider sınıflandırmayı rekabet açığını kapatacak düzeyde yayına almak."
+              },
+              {
+                "id": "s0f2",
+                "label": "Kapsam Dışı (Bu 12 Ay)",
+                "type": "textarea",
+                "value": "Tam kapsamlı genel muhasebe/beyanname modülü, bordro, e-ticaret pazaryeri entegrasyonları ve yurt dışı pazara açılma bu dönem kapsam dışıdır; 12 kişilik ekip kapasitesi dört ana temaya ayrılmıştır."
+              }
+            ]
+          },
+          {
+            "id": "s1",
+            "title": "2. Mevcut Durum ve Sorun Analizi",
+            "description": "Her sorun alanının müşteri etkisi, iş etkisi ve aciliyeti karşılaştırılır. Destek ve ürün analitiği verisiyle doğrulanmalıdır.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Sorun Alanı",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Müşteri Etkisi",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "İş Etkisi",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Aciliyet",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "E-fatura/e-arşiv entegrasyon sorunları",
+                  "c1": "Fatura gönderilemiyor, yasal süreç riske giriyor",
+                  "c2": "Destek yükü ve iptal (churn) baskısı; mevcut 3.200 müşterinin tamamını ilgilendiriyor",
+                  "c3": "Çok yüksek — hemen"
+                },
+                {
+                  "c0": "Mobil uygulama yok",
+                  "c1": "Saha/yolda kayıt ve tahsilat takibi yapılamıyor",
+                  "c2": "Yeni müşteri kazanımında kayıp; demo kaybı (oran ölçülmeli)",
+                  "c3": "Yüksek — 2. çeyrek"
+                },
+                {
+                  "c0": "Eksik banka entegrasyonları",
+                  "c1": "Hesap hareketleri elle giriliyor, mutabakat yavaş",
+                  "c2": "Ürün yapışkanlığı düşük, kullanım sıklığı az",
+                  "c3": "Yüksek — 2.-3. çeyrek"
+                },
+                {
+                  "c0": "Yapay zekâ ile gider sınıflandırma yok",
+                  "c1": "Manuel kategorileme zaman alıyor",
+                  "c2": "Rekabet dezavantajı; fiyat/algı baskısı",
+                  "c3": "Orta-yüksek — 3.-4. çeyrek"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s2",
+            "title": "3. Fırsat Değerlendirme ve Önceliklendirme",
+            "description": "Temalar değer, güven (kanıt düzeyi), kolaylık ve bağımlılık ekseninde puanlanır; puanlar ekip tahminidir ve keşif çıktısıyla güncellenir.",
+            "fields": [
+              {
+                "id": "s2f0",
+                "label": "Önceliklendirme Gerekçesi",
+                "type": "textarea",
+                "value": "E-fatura/e-arşiv kararlılığı bir özellik değil, mevcut geliri koruyan hijyen yatırımıdır ve önce gelir. Banka entegrasyonları hem kullanım sıklığını hem de yapay zekâ sınıflandırmanın ihtiyaç duyduğu veri akışını sağladığı için yapay zekâdan önce konumlandırılmıştır."
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Tema",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Değer (1-5)",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Kanıt Düzeyi",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Uygulama Kolaylığı (1-5)",
+                  "type": "text"
+                },
+                {
+                  "id": "c4",
+                  "label": "Öncelik Sırası",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "E-fatura/e-arşiv kararlılığı",
+                  "c1": "5",
+                  "c2": "Yüksek — destek talepleri",
+                  "c3": "3",
+                  "c4": "1"
+                },
+                {
+                  "c0": "Banka entegrasyonları (ilk 5 banka)",
+                  "c1": "4",
+                  "c2": "Orta — müşteri geri bildirimi",
+                  "c3": "2",
+                  "c4": "2"
+                },
+                {
+                  "c0": "Mobil uygulama (iOS/Android)",
+                  "c1": "4",
+                  "c2": "Orta — satış kaybı anekdotları",
+                  "c3": "2",
+                  "c4": "3"
+                },
+                {
+                  "c0": "Yapay zekâ ile gider sınıflandırma",
+                  "c1": "3",
+                  "c2": "Orta — rakip hamlesi",
+                  "c3": "3",
+                  "c4": "4"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s3",
+            "title": "4. Çeyreklik Yol Haritası",
+            "description": "Dört çeyrek için ana teslimatlar ve ölçülebilir sonuç hedefleri. Hedef değerler ilk çeyrekte alınacak temel ölçümden sonra kesinleşir.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Çeyrek",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Ana Tema",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Teslimatlar",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Başarı Ölçütü",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Ç1: Eki–Ara 2026",
+                  "c1": "E-fatura/e-arşiv kararlılığı",
+                  "c2": "Hata izleme ve yeniden gönderim altyapısı, anlaşılır hata mesajları, entegratör bağlantısı için yedekli kuyruk, durum sayfası",
+                  "c3": "Başarısız gönderim oranı ve ilgili destek talebi hacminde temel ölçüme göre belirgin düşüş"
+                },
+                {
+                  "c0": "Ç2: Oca–Mar 2027",
+                  "c1": "Banka entegrasyonları + mobil temel",
+                  "c2": "En yüksek hacimli 3 banka için hesap hareketi akışı; mobil uygulama beta (fatura kesme, tahsilat görüntüleme)",
+                  "c3": "Bağlı banka hesabı olan müşteri sayısı; beta'da aktif kullanıcı sayısı"
+                },
+                {
+                  "c0": "Ç3: Nis–Haz 2027",
+                  "c1": "Mobil yayın + 2 banka daha",
+                  "c2": "iOS/Android mağaza yayını, mobil belge/fiş fotoğrafı, 4. ve 5. banka entegrasyonu",
+                  "c3": "Mobil aylık aktif kullanıcı oranı; 5 bankanın tamamının canlı olması"
+                },
+                {
+                  "c0": "Ç4: Tem–Eyl 2027",
+                  "c1": "Yapay zekâ ile gider sınıflandırma",
+                  "c2": "Banka ve fiş verisiyle otomatik kategori önerisi, kullanıcı onay akışı, doğruluk geri bildirim döngüsü",
+                  "c3": "Öneri kabul oranı ve kategorileme süresinde azalma"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s4",
+            "title": "5. Ekip Kapasitesi ve Yürütme Modeli",
+            "description": "12 kişilik ürün ekibinin temalara dağılımı. Kişi sayıları tam zaman eşdeğeri (FTE) tahminidir; rol dağılımı mevcut yetkinliklere göre teyit edilmeli.",
+            "fields": [
+              {
+                "id": "s4f0",
+                "label": "Kapasite Notu",
+                "type": "textarea",
+                "value": "12 kişinin yaklaşık 2'si (ürün yönetimi ve tasarım) tüm temalara yatay hizmet verdiğinden, aynı anda en fazla iki ana tema paralel yürütülmelidir. Mobil ve yapay zekâ temalarının aynı çeyreğe alınması kapasiteyi zorlar; bu nedenle ayrıştırılmıştır."
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Tema",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Ayrılan Kapasite (FTE, tahmini)",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Aktif Dönem",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Sorumlu Rol",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "E-fatura/e-arşiv kararlılığı",
+                  "c1": "4",
+                  "c2": "Ç1, ardından 1 FTE bakım",
+                  "c3": "Entegrasyon ekip lideri"
+                },
+                {
+                  "c0": "Banka entegrasyonları",
+                  "c1": "3",
+                  "c2": "Ç2–Ç3",
+                  "c3": "Backend takım lideri"
+                },
+                {
+                  "c0": "Mobil uygulama",
+                  "c1": "4",
+                  "c2": "Ç2–Ç3",
+                  "c3": "Mobil ürün sahibi"
+                },
+                {
+                  "c0": "Yapay zekâ gider sınıflandırma",
+                  "c1": "3",
+                  "c2": "Ç4 (keşif Ç3'te başlar)",
+                  "c3": "Veri/ML sorumlusu"
+                },
+                {
+                  "c0": "Ürün yönetimi ve tasarım (yatay)",
+                  "c1": "2",
+                  "c2": "Tüm yıl",
+                  "c3": "Ürün müdürü"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s5",
+            "title": "6. Riskler ve Azaltıcı Önlemler",
+            "description": "Yol haritasını raydan çıkarabilecek başlıca riskler ve önlemler; aylık ürün gözden geçirmesinde güncellenir.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Risk",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Olasılık",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Etki",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Azaltıcı Önlem",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Entegratör/GİB tarafı kaynaklı kesintiler kontrol dışı kalır",
+                  "c1": "Yüksek",
+                  "c2": "Yüksek",
+                  "c3": "Yedekli kuyruk, otomatik yeniden gönderim ve müşteriye şeffaf durum sayfası; entegratörle hizmet seviyesi (SLA) görüşmesi"
+                },
+                {
+                  "c0": "Banka API erişim onaylarının gecikmesi",
+                  "c1": "Orta",
+                  "c2": "Yüksek",
+                  "c3": "Ç1'de başvuruların paralel başlatılması; onay gelmeyen banka yerine listedeki sıradakine geçiş"
+                },
+                {
+                  "c0": "Mobil uygulama mağaza onayı ve bakım yükünün hafife alınması",
+                  "c1": "Orta",
+                  "c2": "Orta",
+                  "c3": "Ç2'de beta ile erken mağaza süreci; tek kod tabanlı yaklaşımın teknik değerlendirmesi"
+                },
+                {
+                  "c0": "Yapay zekâ sınıflandırma doğruluğunun düşük çıkması",
+                  "c1": "Orta",
+                  "c2": "Orta",
+                  "c3": "Ç3'te etiketli veriyle yapılabilirlik testi; öneri her zaman kullanıcı onayına sunulur"
+                },
+                {
+                  "c0": "12 kişilik ekibin dört temaya bölünmesiyle odak kaybı",
+                  "c1": "Yüksek",
+                  "c2": "Yüksek",
+                  "c3": "Aynı anda en fazla iki tema kuralı; mevzuat kaynaklı acil işler için kapasitenin %15'i yedek tutulur"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s6",
+            "title": "7. İlk 90 Gün Uygulama Planı",
+            "description": "21 Eylül 2026 itibarıyla başlatılacak somut adımlar; her satırın sahibi ve tamamlanma tarihi bağlayıcıdır.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Adım",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Sorumlu Rol",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Tarih",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Çıktı / Başarı Ölçütü",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "E-fatura/e-arşiv hata ve destek talebi temel ölçümünün çıkarılması",
+                  "c1": "Ürün müdürü",
+                  "c2": "2026-10-09",
+                  "c3": "Son 90 günün başarısız gönderim oranı ve talep hacmi raporu"
+                },
+                {
+                  "c0": "Entegratör ile teknik görüşme ve hizmet seviyesi/limit teyidi",
+                  "c1": "Entegrasyon ekip lideri",
+                  "c2": "2026-10-16",
+                  "c3": "Yazılı SLA ve hata kodu listesi; yasal zorunluluklar ilgili kurumdan teyit edilecek"
+                },
+                {
+                  "c0": "Yeniden gönderim kuyruğu ve hata izleme altyapısının yayına alınması",
+                  "c1": "Entegrasyon ekip lideri",
+                  "c2": "2026-11-27",
+                  "c3": "Başarısız gönderimlerin otomatik yeniden denenmesi, müşteriye durum bildirimi"
+                },
+                {
+                  "c0": "İlk 5 banka listesinin müşteri hesap hacmine göre kesinleştirilmesi",
+                  "c1": "Ürün müdürü",
+                  "c2": "2026-10-30",
+                  "c3": "Veriyle desteklenmiş banka öncelik listesi"
+                },
+                {
+                  "c0": "Banka API/erişim başvurularının paralel başlatılması",
+                  "c1": "Backend takım lideri",
+                  "c2": "2026-11-13",
+                  "c3": "En az 3 bankada başvuru süreci açık"
+                },
+                {
+                  "c0": "Mobil uygulama kapsam tanımı ve teknoloji kararı (tek kod tabanı vs. yerel)",
+                  "c1": "Mobil ürün sahibi",
+                  "c2": "2026-12-04",
+                  "c3": "Onaylanmış kapsam dokümanı ve tahmini efor"
+                },
+                {
+                  "c0": "10 müşteriyle mobil kullanım senaryosu görüşmeleri",
+                  "c1": "Ürün müdürü",
+                  "c2": "2026-12-11",
+                  "c3": "İlk sürüm için en kritik 3 senaryonun doğrulanması"
+                },
+                {
+                  "c0": "Ç1 kapanış gözden geçirmesi ve Ç2 planının onayı",
+                  "c1": "Ürün müdürü",
+                  "c2": "2026-12-19",
+                  "c3": "Ölçümlerle güncellenmiş Ç2 yol haritası"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "personalization": {
+        "model": "claude-opus-5",
+        "keyFindings": [
+          "E-fatura/e-arşiv kararlılığı bir özellik değil gelir koruma işidir; 3.200 müşterinin tamamını etkilediği için ilk çeyreğin tamamı buna ayrılmalıdır.",
+          "Yapay zekâ ile gider sınıflandırma rakip baskısına rağmen 4. çeyreğe konumlandırılmalıdır; çünkü kaliteli çıktı için banka entegrasyonlarından gelen işlem verisine bağımlıdır.",
+          "12 kişilik ekip dört temayı paralel yürütemez; aynı anda en fazla iki tema kuralı uygulanmazsa dördü de yarım kalma riski taşır."
+        ],
+        "assumptions": [
+          "Ürün ekibindeki 12 kişinin yaklaşık 10'unun geliştirme/teknik, 2'sinin ürün-tasarım rolünde olduğu varsayıldı; gerçek dağılım farklıysa kapasite tablosu güncellenmelidir.",
+          "Mevcut mobil geliştirme yetkinliğinin ekip içinde bulunduğu veya Ç2 başına kadar kazanılabileceği varsayıldı.",
+          "E-fatura/e-arşiv hizmetinin bir özel entegratör üzerinden verildiği varsayıldı; doğrudan entegrasyon varsa Ç1 kapsamı genişler.",
+          "Banka entegrasyonlarının API veya açık bankacılık kanalıyla mümkün olduğu varsayıldı; erişim şartları ve ücretler ilgili bankalardan teyit edilmeli.",
+          "Çeyrek süreleri ve tarihler 2026-09-21 tarihinden itibaren takvim çeyreklerine göre kurgulandı."
+        ],
+        "openQuestions": [
+          "E-fatura/e-arşiv hatalarının mevcut oranı ve aylık destek talebi hacmi nedir (hedef belirlemek için gerekli)?",
+          "Müşteri iptal (churn) oranı nedir ve iptallerin ne kadarı bu üç eksikle ilişkilendirilebiliyor?",
+          "Müşterilerin en çok kullandığı 5 banka hangileridir ve bu bankalarla mevcut bir ticari ilişki var mı?",
+          "12 kişilik ekipte mobil ve veri/makine öğrenmesi yetkinliği mevcut mu, yoksa işe alım/dış kaynak bütçesi var mı?",
+          "Bu yol haritası için ayrılan yıllık geliştirme ve lisans/entegratör bütçesi nedir?"
+        ]
+      }
+    }
+  ],
+  "missing": [],
+  "context": {
+    "mode": "free",
+    "detail": "summary",
+    "language": "tr",
+    "entries": [
+      {
+        "question": "Kullanıcının kendi anlatımı",
+        "answer": "KOBİ'lere bulut tabanlı ön muhasebe yazılımı sunuyoruz; 3.200 ücretli müşterimiz var. Müşteriler e-fatura/e-arşiv entegrasyonunda sorun yaşıyor, mobil uygulamamız yok ve banka entegrasyonları eksik. Rakipler yapay zekâ ile gider sınıflandırma sunmaya başladı. Ürün ekibimiz 12 kişi. Önümüzdeki 12 ayın önceliklerini belirlemek istiyoruz."
+      }
+    ]
+  },
+  "attachments": []
+}

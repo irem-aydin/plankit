@@ -82,14 +82,14 @@ export function AuthForm({
         {isSignIn ? (
           <>
             Hesabın yok mu?{" "}
-            <Link href="/kayit" className="font-semibold text-rose-600 hover:underline">
+            <Link href={next ? `/kayit?sonra=${encodeURIComponent(next)}` : "/kayit"} className="font-semibold text-rose-600 hover:underline">
               Kayıt ol
             </Link>
           </>
         ) : (
           <>
             Zaten hesabın var mı?{" "}
-            <Link href="/giris" className="font-semibold text-rose-600 hover:underline">
+            <Link href={next ? `/giris?sonra=${encodeURIComponent(next)}` : "/giris"} className="font-semibold text-rose-600 hover:underline">
               Giriş yap
             </Link>
           </>

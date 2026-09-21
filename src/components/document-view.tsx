@@ -1,15 +1,24 @@
 import { TableCharts } from "./table-charts";
 import type { DocumentSection, GeneratedDocument, SectionBody } from "@/core/output/document";
 
-/** Dokümanın salt okunur görünümü (örnek plan ve ileride paylaşım bağlantısı için). */
-export function DocumentView({ doc }: { doc: GeneratedDocument }) {
+/** Dokümanın salt okunur görünümü (örnek planlar ve paylaşım bağlantısı). */
+export function DocumentView({
+  doc,
+  contextLabel = "Kullanıcının anlattığı durum",
+  hideTitle = false,
+}: {
+  doc: GeneratedDocument;
+  contextLabel?: string;
+  /** Sayfa kendi başlığını gösteriyorsa (tek h1 olsun diye) */
+  hideTitle?: boolean;
+}) {
   return (
     <article className="mx-auto max-w-4xl">
-      <h1 className="text-3xl font-bold tracking-tight text-slate-900">{doc.title}</h1>
+      {!hideTitle && <h1 className="text-3xl font-bold tracking-tight text-slate-900">{doc.title}</h1>}
 
       {doc.context && (
-        <div className="mt-5 rounded-xl border border-slate-200 bg-white p-4 text-sm">
-          <p className="font-medium text-slate-800">Kullanıcının anlattığı durum</p>
+        <div className={`${hideTitle ? "" : "mt-5 "}rounded-xl border border-slate-200 bg-white p-4 text-sm`}>
+          <p className="font-medium text-slate-800">{contextLabel}</p>
           {doc.context.entries.map((e, i) => (
             <p key={i} className="mt-2 whitespace-pre-line text-slate-600">
               {e.answer}

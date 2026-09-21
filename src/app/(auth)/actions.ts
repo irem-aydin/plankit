@@ -44,10 +44,11 @@ export async function signUpAction(_prev: AuthFormState, formData: FormData): Pr
   const parsed = signUpSchema.safeParse({ email: formData.get("email"), password: formData.get("password") });
   if (!parsed.success) return { error: parsed.error.issues[0].message };
 
+  const next = safeInternalPath(formData.get("next"), "/panel?hosgeldin=1");
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.auth.signUp({
     ...parsed.data,
-    options: { emailRedirectTo: `${publicEnv.siteUrl}/auth/callback?next=/panel` },
+    options: { emailRedirectTo: `${publicEnv.siteUrl}/auth/callback?next=${encodeURIComponent(next)}` },
   });
 
   if (error) {
@@ -61,7 +62,7 @@ export async function signUpAction(_prev: AuthFormState, formData: FormData): Pr
     };
   }
 
-  if (data.session) redirect("/panel?hosgeldin=1");
+  if (data.session) redirect(next);
 
   return {
     message: "Hesabınız oluşturuldu. Devam etmek için e-postanıza gelen doğrulama bağlantısına tıklayın.",

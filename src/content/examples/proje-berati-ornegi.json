@@ -1,0 +1,446 @@
+{
+  "schemaVersion": 1,
+  "title": "Proje Beratı Örneği: E-ticaret Ödeme Altyapısı Yenileme",
+  "generatedAt": "2026-09-21T14:13:12.395Z",
+  "sections": [
+    {
+      "subcategoryId": "custom",
+      "subcategoryName": "Ödeme Altyapısı Yenileme Projesi – Proje Beratı",
+      "categoryId": "10000000-0000-4000-8000-000000000002",
+      "categoryName": "Proje Yönetimi",
+      "templateId": "ai-designed",
+      "templateVersion": 1,
+      "body": {
+        "kind": "template",
+        "summary": "Aylık 25.000 sipariş hacimli ev tekstili e-ticaret operasyonunda ödeme sağlayıcısı değişimi, taksit, cüzdan ve tek tıkla ödeme yeteneklerinin devreye alınması için PMBOK yaklaşımına uygun proje beratıdır. Kapsam, hedefler, 1,2 milyon TL bütçe dağılımı, 5 aylık takvim, riskler ve sahipli uygulama adımlarını onaya hazır biçimde tanımlar.",
+        "sections": [
+          {
+            "id": "s0",
+            "title": "1. Proje Künyesi ve İş Gerekçesi",
+            "description": "Projenin varlık nedenini, problemin büyüklüğünü ve üst düzey çıktısını tek sayfada özetler; sponsor onayı bu bölüme dayanır.",
+            "fields": [
+              {
+                "id": "s0f0",
+                "label": "Proje Adı ve Süresi",
+                "type": "text",
+                "value": "Ödeme Altyapısı Yenileme Projesi. Süre: 5 ay (başlangıç 2026-09-28, tam geçiş 2027-02-19). Bütçe tavanı: 1.200.000 TL."
+              },
+              {
+                "id": "s0f1",
+                "label": "Problem Tanımı",
+                "type": "textarea",
+                "value": "Mevcut ödeme altyapısında sepet terk oranı %71 ve ödeme hataları sık tekrarlanıyor. Hata kaynaklı başarısız işlemler hem ciro kaybı hem de müşteri hizmetleri yükü yaratıyor; taksit, cüzdan ve tek tıkla ödeme seçeneklerinin bulunmaması ev tekstili sepet ortalamasında dönüşümü baskılıyor."
+              },
+              {
+                "id": "s0f2",
+                "label": "İş Gerekçesi (tahmini)",
+                "type": "textarea",
+                "value": "Aylık 25.000 tamamlanan sipariş ve %71 terk oranı, ödeme adımına ulaşan yaklaşık 86.200 sepet anlamına gelir (25.000 / 0,29). Terk oranı %71'den %66'ya inerse tamamlanan sipariş 86.200 x 0,34 ≈ 29.300 olur, yani aylık yaklaşık +4.300 sipariş (tahmini). Gerçek etki, mevcut analitikten ödeme adımı hunisi doğrulandıktan sonra netleşecektir."
+              },
+              {
+                "id": "s0f3",
+                "label": "Üst Düzey Çıktı",
+                "type": "textarea",
+                "value": "Tek bir yeni ödeme sağlayıcısı üzerinden kart, taksitli kart, dijital cüzdan ve tek tıkla (tokenize) ödeme kanallarının canlıda çalışması; ödeme hata oranının izlenebilir hale gelmesi."
+              }
+            ]
+          },
+          {
+            "id": "s1",
+            "title": "2. Kapsam ve Kapsam Dışı",
+            "description": "Ekip kapasitesi (1 PM, 3 yazılımcı, 1 test uzmanı, 1 tasarımcı) ve 5 ay kısıtı nedeniyle kapsam sıkı tutulmuştur; kapsam dışı kalemler faz 2 adayıdır.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Kalem",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Durum",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Gerekçe / Not",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Yeni PSP entegrasyonu (kart + 3D Secure)",
+                  "c1": "Kapsam içi",
+                  "c2": "Ödeme hatalarının ana kaynağı; projenin çekirdeği"
+                },
+                {
+                  "c0": "Taksitli ödeme (banka kampanya tabloları)",
+                  "c1": "Kapsam içi",
+                  "c2": "Ev tekstilinde sepet ortalamasını artıran temel kaldıraç"
+                },
+                {
+                  "c0": "Dijital cüzdan ve tek tıkla ödeme (tokenizasyon)",
+                  "c1": "Kapsam içi",
+                  "c2": "Tekrar eden müşteride sürtünmeyi azaltır"
+                },
+                {
+                  "c0": "Ödeme adımı UX yenilemesi (tek sayfa checkout)",
+                  "c1": "Kapsam içi",
+                  "c2": "Tasarımcı kapasitesi tek akışa yetecek şekilde sınırlandı"
+                },
+                {
+                  "c0": "BNPL / kredi ürünleri, çoklu para birimi, pazaryeri ödemeleri",
+                  "c1": "Kapsam dışı",
+                  "c2": "5 ay ve 3 yazılımcı kapasitesini aşar; faz 2'ye bırakıldı"
+                },
+                {
+                  "c0": "ERP ve muhasebe mutabakat modülünün yeniden yazımı",
+                  "c1": "Kapsam dışı",
+                  "c2": "Yalnızca yeni PSP mutabakat dosyası uyarlaması yapılacak"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s2",
+            "title": "3. Hedefler ve Başarı Ölçütleri",
+            "description": "Her hedef ölçülebilir, temel değeri bilinen veya ilk 2 hafta içinde ölçülecek bir metriğe bağlanmıştır. Ölçüm canlı geçişten 30 gün sonra raporlanır.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Hedef",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Metrik",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Mevcut",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Hedef (tahmini)",
+                  "type": "text"
+                },
+                {
+                  "id": "c4",
+                  "label": "Ölçüm Kaynağı",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Sepet terkini azaltmak",
+                  "c1": "Ödeme adımı terk oranı",
+                  "c2": "%71",
+                  "c3": "≤ %66 (geçişten 60 gün sonra)",
+                  "c4": "Web analitik hunisi + PSP işlem logu"
+                },
+                {
+                  "c0": "Ödeme hatalarını düşürmek",
+                  "c1": "Başarısız işlem oranı",
+                  "c2": "Ölçülmüyor (temel değer 2 hafta içinde alınacak)",
+                  "c3": "Temel değerin en az %40 altı",
+                  "c4": "PSP hata kodu raporu / APM"
+                },
+                {
+                  "c0": "Tekrar satın almayı kolaylaştırmak",
+                  "c1": "Tek tıkla ödeme kullanım payı",
+                  "c2": "0",
+                  "c3": "Geçişten 90 gün sonra sipariş adedinin ≥ %15'i",
+                  "c4": "PSP token işlem raporu"
+                },
+                {
+                  "c0": "Sepet ortalamasını artırmak",
+                  "c1": "Taksitli işlem payı ve ortalama sepet",
+                  "c2": "0 / mevcut değer ölçülecek",
+                  "c3": "Taksitli işlem payı ≥ %20",
+                  "c4": "Sipariş yönetim sistemi"
+                },
+                {
+                  "c0": "Kesintisiz geçiş",
+                  "c1": "Canlı geçiş kaynaklı sipariş kaybı",
+                  "c2": "-",
+                  "c3": "0 gün tam kesinti, canary ile kademeli geçiş",
+                  "c4": "Saatlik sipariş izleme panosu"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s3",
+            "title": "4. Bütçe Dağılımı ve Yönetişim",
+            "description": "Bütçe 1,2 milyon TL tavanı içinde dağıtılmıştır; tüm tutarlar tahminidir ve sağlayıcı teklifleri alındıktan sonra 2026-10-23 tarihinde revize edilecektir.",
+            "fields": [
+              {
+                "id": "s3f0",
+                "label": "Yönetişim ve Karar Mekanizması",
+                "type": "textarea",
+                "value": "Sponsor: E-ticaret Direktörü (bütçe ve canlı geçiş onayı). Proje Yöneticisi haftalık durum raporu yayınlar; iki haftada bir sponsor, Finans ve Müşteri Hizmetleri temsilcisiyle yönlendirme toplantısı yapılır. 100.000 TL üzeri ek harcama ve kapsam değişikliği sponsor onayına tabidir."
+              },
+              {
+                "id": "s3f1",
+                "label": "Kaynak Kısıtı Uyarısı",
+                "type": "textarea",
+                "value": "3 yazılımcı ile taksit, cüzdan ve tek tıkla ödemenin aynı sprintlerde geliştirilmesi mümkün değildir; sıralama kart/taksit → cüzdan → tek tık olarak sabitlenmiştir. Kapsama yeni kalem eklenirse takvim veya kapsamdan başka bir kalem düşülmelidir."
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Bütçe Kalemi",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Tutar (TL, tahmini)",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Not",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Geliştirme ve test iş gücü (5 ay, iç ekip)",
+                  "c1": "520.000",
+                  "c2": "3 yazılımcı, 1 test uzmanı, kısmi PM tahsisi"
+                },
+                {
+                  "c0": "PSP entegrasyon/kurulum ve danışmanlık",
+                  "c1": "180.000",
+                  "c2": "İşlem komisyonları operasyonel gider olup bu bütçe dışıdır"
+                },
+                {
+                  "c0": "Güvenlik, PCI uyum danışmanlığı ve yük testi",
+                  "c1": "120.000",
+                  "c2": "SAQ kapsamı belirlendikten sonra netleşir"
+                },
+                {
+                  "c0": "UX araştırması, tasarım ve A/B test aracı",
+                  "c1": "90.000",
+                  "c2": "Tek sayfa checkout akışı"
+                },
+                {
+                  "c0": "İzleme, loglama ve uyarı altyapısı (APM)",
+                  "c1": "110.000",
+                  "c2": "Ödeme hata oranı ölçümü için zorunlu"
+                },
+                {
+                  "c0": "Beklenmeyen giderler yedeği (%15)",
+                  "c1": "180.000",
+                  "c2": "Sponsor onayı ile kullanılır"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s4",
+            "title": "5. Riskler ve Kritik Bağımlılıklar",
+            "description": "Yüksek etkili riskler için sahip ve önlem tanımlanmıştır; risk kaydı iki haftalık yönlendirme toplantısında güncellenir.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Risk / Bağımlılık",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Etki",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Önlem",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Sahip",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Banka taksit kampanya anlaşmalarının gecikmesi",
+                  "c1": "Taksit hedefi kaçar, dönüşüm kazancı gerçekleşmez",
+                  "c2": "Sağlayıcı seçimiyle paralel olarak 2026-10 içinde banka görüşmelerini başlatmak",
+                  "c3": "Finans Yöneticisi"
+                },
+                {
+                  "c0": "Ev tekstili mal grubunda taksit üst sınırına ilişkin mevzuat kısıtı",
+                  "c1": "Vaat edilen taksit sayısı uygulanamaz",
+                  "c2": "Taksit sayısı ilgili banka ve BDDK düzenlemesinden teyit edilmeli; UI parametrik yapılmalı",
+                  "c3": "Proje Yöneticisi"
+                },
+                {
+                  "c0": "Tek tıkla ödeme için kart saklama/PCI kapsamının büyümesi",
+                  "c1": "Ek maliyet ve süre",
+                  "c2": "Tokenizasyon tamamen PSP tarafında tutulacak; SAQ kapsamı denetçiden teyit edilmeli",
+                  "c3": "Teknoloji Lideri"
+                },
+                {
+                  "c0": "Yılbaşı/sezon yoğunluğunda canlı geçiş",
+                  "c1": "Ciro kaybı riski",
+                  "c2": "Aralık kampanya döneminde kod dondurma; geçiş Şubat 2027'ye planlandı",
+                  "c3": "Proje Yöneticisi"
+                },
+                {
+                  "c0": "Tek test uzmanı ile regresyon darboğazı",
+                  "c1": "UAT gecikir, takvim kayar",
+                  "c2": "Ödeme senaryolarının otomasyonu ve sandbox test setinin erken hazırlanması",
+                  "c3": "Test Uzmanı"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s5",
+            "title": "6. Kilometre Taşları ve Uygulama Adımları",
+            "description": "Onay sonrası ilk 5 ayın sahipli ve tarihli aksiyon planıdır; her satırın çıktısı yönlendirme toplantısında kabul edilir.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Adım",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Çıktı",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Sorumlu Rol",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Bitiş Tarihi",
+                  "type": "text"
+                },
+                {
+                  "id": "c4",
+                  "label": "Başarı Kriteri",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Mevcut durum ölçümü: ödeme hunisi ve hata kodu temel değerleri",
+                  "c1": "Temel değer raporu",
+                  "c2": "Proje Yöneticisi + Test Uzmanı",
+                  "c3": "2026-10-09",
+                  "c4": "Terk oranı ve hata oranı adım bazında belgelenir"
+                },
+                {
+                  "c0": "PSP kısa liste değerlendirmesi ve seçim (komisyon, başarı oranı, cüzdan/taksit kapsamı)",
+                  "c1": "Sağlayıcı seçim kararı ve revize bütçe",
+                  "c2": "Sponsor + Proje Yöneticisi",
+                  "c3": "2026-10-23",
+                  "c4": "En az 3 teklif karşılaştırılır, sponsor onayı alınır"
+                },
+                {
+                  "c0": "Sözleşme, sandbox erişimi ve banka taksit anlaşmaları",
+                  "c1": "İmzalı sözleşme + sandbox",
+                  "c2": "Finans Yöneticisi",
+                  "c3": "2026-11-02",
+                  "c4": "Sandbox'ta test işlemi geçilir"
+                },
+                {
+                  "c0": "Kart + 3D Secure + taksit entegrasyonu ve yeni checkout tasarımı",
+                  "c1": "Sandbox'ta çalışan ödeme akışı",
+                  "c2": "Yazılım Ekibi + Tasarımcı",
+                  "c3": "2026-12-11",
+                  "c4": "Tanımlı 40 test senaryosunun tamamı geçer"
+                },
+                {
+                  "c0": "Cüzdan ve tek tıkla ödeme (tokenizasyon) geliştirmesi",
+                  "c1": "İkinci faz özellikleri",
+                  "c2": "Yazılım Ekibi",
+                  "c3": "2027-01-08",
+                  "c4": "Token ile tekrar ödeme senaryosu geçer"
+                },
+                {
+                  "c0": "UAT, yük testi, güvenlik/PCI kapsam doğrulaması ve geri dönüş planı",
+                  "c1": "Test ve uyum onay raporu",
+                  "c2": "Test Uzmanı + Teknoloji Lideri",
+                  "c3": "2027-01-29",
+                  "c4": "Kritik hata sıfır, geri dönüş planı tatbikatı yapılır"
+                },
+                {
+                  "c0": "Trafiğin %10'u ile canary geçiş ve izleme",
+                  "c1": "Canary sonuç raporu",
+                  "c2": "Proje Yöneticisi",
+                  "c3": "2027-02-05",
+                  "c4": "Hata oranı temel değerin altında, sipariş kaybı yok"
+                },
+                {
+                  "c0": "Tam geçiş ve eski sağlayıcının devre dışı bırakılması, 30 gün sonrası fayda ölçümü",
+                  "c1": "Kapanış ve fayda raporu",
+                  "c2": "Sponsor + Proje Yöneticisi",
+                  "c3": "2027-02-19 (fayda raporu 2027-03-23)",
+                  "c4": "Tüm trafik yeni PSP'de, terk oranı ≤ %66 yönünde eğilim"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "personalization": {
+        "model": "claude-opus-5",
+        "keyFindings": [
+          "Ödeme hatalarının mevcut oranı ölçülmüyor; ilk iki hafta içinde temel değer alınmazsa projenin faydası kanıtlanamaz. Bu, 2026-10-09 tarihli ilk kilometre taşıdır.",
+          "Terk oranının %71'den %66'ya inmesi aylık yaklaşık +4.300 sipariş anlamına gelir (25.000/0,29 = 86.200 sepet; 86.200 x 0,34 ≈ 29.300) – tahmini ve analitik doğrulamasına tabidir.",
+          "3 yazılımcı ve 5 ay kısıtı nedeniyle kapsam kart/taksit → cüzdan → tek tık sırasıyla sabitlenmiş, BNPL ve çoklu para birimi kapsam dışı bırakılmıştır; canlı geçiş sezon riskinden korunmak için 2027-02-19'a konumlandırılmıştır."
+        ],
+        "assumptions": [
+          "Aylık 25.000 sipariş tamamlanan (başarılı ödeme yapılan) sipariş sayısıdır ve %71 terk oranı ödeme/sepet adımına aittir.",
+          "Tüm bütçe kalemleri ve fayda hesapları tahminidir; PSP teklifleri ve analitik verisiyle 2026-10-23'te revize edilecektir.",
+          "İşlem komisyonları operasyonel giderdir ve 1,2 milyon TL proje bütçesine dahil değildir.",
+          "Kart verisi PSP tarafında tokenize edileceğinden PCI DSS kapsamı sınırlı (SAQ-A veya A-EP) kalacaktır; kapsam denetçi/PSP tarafından teyit edilmelidir.",
+          "Ekip (1 PM, 3 yazılımcı, 1 test uzmanı, 1 tasarımcı) 5 ay boyunca bu projeye ağırlıklı olarak tahsis edilebilir."
+        ],
+        "openQuestions": [
+          "Mevcut ödeme hatalarının dağılımı nedir (3D Secure, timeout, banka reddi) ve hata oranının bugünkü değeri kaçtır?",
+          "Ortalama sepet tutarı ve tekrar eden müşteri oranı nedir? Taksit ve tek tık faydası bu verilerle hesaplanabilir.",
+          "Ev tekstili mal grubunda uygulanabilir azami taksit sayısı nedir? İlgili banka ve BDDK düzenlemesinden teyit edilmeli.",
+          "Hangi PSP'ler kısa listede ve mevcut sağlayıcı sözleşmesinde cayma/süre kısıtı var mı?",
+          "Eski siparişlerin iade/iptal işlemleri geçiş sonrası hangi sağlayıcıdan yürütülecek?"
+        ]
+      }
+    }
+  ],
+  "missing": [],
+  "context": {
+    "mode": "free",
+    "detail": "summary",
+    "language": "tr",
+    "entries": [
+      {
+        "question": "Kullanıcının kendi anlatımı",
+        "answer": "Ev tekstili satan, aylık 25.000 siparişi olan bir e-ticaret şirketiyiz. Mevcut ödeme altyapımızda sepet terk oranı %71 ve ödeme hataları sık. Yeni bir ödeme sağlayıcısına geçip taksit, cüzdan ve tek tıkla ödeme eklemek istiyoruz. Bütçe 1,2 milyon TL, süre 5 ay. Ekip: 1 proje yöneticisi, 3 yazılımcı, 1 test uzmanı, 1 tasarımcı."
+      }
+    ]
+  },
+  "attachments": []
+}

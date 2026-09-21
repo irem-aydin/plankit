@@ -86,9 +86,15 @@ function swotKey(value: string) {
 }
 
 function detectSwot(columns: ChartColumn[], rows: ChartRow[]): SwotChart | null {
-  const typeColumn = columns.find(
-    (c) => c.type === "select" && (c.options ?? []).length >= 4 && SWOT_KEYS.every((k) => (c.options ?? []).some((o) => k.pattern.test(lower(o)))),
-  );
+  const typeColumn =
+    columns.find(
+      (c) => c.type === "select" && (c.options ?? []).length >= 4 && SWOT_KEYS.every((k) => (c.options ?? []).some((o) => k.pattern.test(lower(o)))),
+    ) ??
+    // Yapay zekânın tasarladığı tablolarda seçenek listesi olmayabilir: değerlerin çoğu SWOT türüyse o sütundur.
+    columns.find((c) => {
+      const values = rows.map((r) => (r[c.id] ?? "").trim()).filter(Boolean);
+      return values.length >= 2 && mostly(values, (v) => Boolean(swotKey(v)));
+    });
   if (!typeColumn) return null;
   const label = labelColumn(columns, [typeColumn.id]);
   if (!label) return null;
@@ -111,37 +117,100 @@ const LEVEL_WORDS: Record<string, 0 | 1 | 2> = {
   yüksek: 2, high: 2, kritik: 2, critical: 2,
 };
 
+/** "Yüksek", "orta risk", "High", ya da 1-5 ölçeğinde puan → 0/1/2 */
 function levelOf(value: string): 0 | 1 | 2 | null {
-  const first = lower(value).split(/[\s/,(—-]+/)[0];
+  const text = lower(value);
+  const score = text.match(/^([1-5])(?:\b|$)/);
+  if (score) {
+    const n = Number(score[1]);
+    return n <= 2 ? 0 : n === 3 ? 1 : 2;
+  }
+  // "Çok yüksek" / "very high" gibi pekiştirmelerde asıl kelimeye bakılır.
+  const first = text.replace(/^(çok|very)\s+/, "").split(/[\s/,(—-]+/)[0];
   return first in LEVEL_WORDS ? LEVEL_WORDS[first] : null;
 }
 
-function isLevelColumn(c: ChartColumn) {
-  const options = c.options ?? [];
-  return c.type === "select" && options.length >= 3 && options.length <= 4 && options.every((o) => levelOf(o) !== null);
+/** Değerlerin en az %80'i koşulu sağlıyor mu? */
+function mostly(values: string[], test: (v: string) => boolean) {
+  return values.length > 0 && values.filter(test).length / values.length >= 0.8;
+}
+
+interface LevelAxis {
+  label: string;
+  /** Eksenin dayandığı sütun (etiket sütunu seçilirken hariç tutulur) */
+  columnId: string;
+  get: (row: ChartRow) => 0 | 1 | 2 | null;
+}
+
+/** "O" / "E" gibi kısaltmaları okunur eksen adına çevirir. */
+function axisName(part: string) {
+  const p = lower(part);
+  if (p === "o" || p === "p") return "Olasılık";
+  if (p === "e" || p === "i") return "Etki";
+  return part.trim();
+}
+
+function levelAxes(columns: ChartColumn[], rows: ChartRow[]): LevelAxis[] {
+  const axes: LevelAxis[] = [];
+  for (const c of columns) {
+    const values = rows.map((r) => (r[c.id] ?? "").trim()).filter(Boolean);
+
+    // Önce birleşik sütun: "Olasılık / Etki" → "Yüksek / Orta", "O/E/Skor" → "3/5/15".
+    // (Bu değerler tek bir seviye gibi de okunabildiği için ilk bakılır.)
+    const parts = c.label.split("/").map((x) => x.trim()).filter(Boolean);
+    if (parts.length >= 2 && values.length >= 2) {
+      const split = (v: string) => v.split("/").map((x) => x.trim());
+      const combined = mostly(values, (v) => {
+        const [a, b] = split(v);
+        return a !== undefined && b !== undefined && levelOf(a) !== null && levelOf(b) !== null;
+      });
+      if (combined) {
+        axes.push({ label: axisName(parts[0]), columnId: c.id, get: (r) => levelOf(split(r[c.id] ?? "")[0] ?? "") });
+        axes.push({ label: axisName(parts[1]), columnId: c.id, get: (r) => levelOf(split(r[c.id] ?? "")[1] ?? "") });
+        continue;
+      }
+    }
+
+    const options = c.options ?? [];
+    const isLevel =
+      (c.type === "select" && options.length >= 3 && options.length <= 4 && options.every((o) => levelOf(o) !== null)) ||
+      (c.type !== "select" &&
+        values.length >= 2 &&
+        // Yalnızca sayı içeren sütunlar (sıra no vb.) ancak adı eksen adıysa seviye sayılır.
+        mostly(values, (v) => levelOf(v) !== null && v.length <= 24 && (!/^\d/.test(v) || isAxisLabel(c.label))));
+    if (isLevel) axes.push({ label: c.label, columnId: c.id, get: (r) => levelOf(r[c.id] ?? "") });
+  }
+  return axes;
 }
 
 /** X ekseni tercihleri: olasılık/ilgi; Y ekseni: etki/güç. */
-const X_AXIS = /olasılık|ihtimal|probab|likelihood|ilgi|interest|maliyet|effort|çaba/;
-const Y_AXIS = /etki|impact|güç|power|değer|value|önem/;
+const X_AXIS = /olasılık|ihtimal|probab|likelihood|ilgi|interest|etkilen|maliyet|effort|çaba/;
+// "güç" çekimlerde "gücü" olur (ç → c); ikisi de aranır.
+const Y_AXIS = /etki|impact|güç|güc|power|değer|value|önem/;
+
+function isAxisLabel(label: string) {
+  const l = lower(label);
+  return X_AXIS.test(l) || Y_AXIS.test(l);
+}
 
 function detectMatrix(columns: ChartColumn[], rows: ChartRow[]): MatrixChart | null {
-  const levels = columns.filter(isLevelColumn);
-  if (levels.length < 2) return null;
-  const x = levels.find((c) => X_AXIS.test(lower(c.label))) ?? levels[0];
-  const y = levels.find((c) => c !== x && Y_AXIS.test(lower(c.label))) ?? levels.find((c) => c !== x)!;
-  const label = labelColumn(columns, [x.id, y.id]);
+  const axes = levelAxes(columns, rows);
+  // Anlamlı bir matris için iki eksen de tanınan adlar taşımalı (ör. olasılık × etki, ilgi × güç).
+  const x = axes.find((a) => X_AXIS.test(lower(a.label)));
+  const y = axes.find((a) => a !== x && Y_AXIS.test(lower(a.label)) && !X_AXIS.test(lower(a.label)));
+  if (!x || !y) return null;
+  const label = labelColumn(columns, [x.columnId, y.columnId]);
   if (!label) return null;
 
   const points: MatrixChart["points"] = [];
   for (const row of rows) {
-    const xv = levelOf(row[x.id] ?? "");
-    const yv = levelOf(row[y.id] ?? "");
+    const xv = x.get(row);
+    const yv = y.get(row);
     const text = (row[label.id] ?? "").trim();
     if (xv !== null && yv !== null && text) points.push({ label: shorten(text, 50), x: xv, y: yv });
   }
   if (points.length < 2) return null;
-  const english = (x.options ?? []).some((o) => /^(low|medium|high)/i.test(o));
+  const english = rows.some((r) => /^(low|medium|high)/i.test((r[x.columnId] ?? "").trim()));
   return {
     kind: "matrix",
     xLabel: x.label,
@@ -308,7 +377,7 @@ export function detectCharts(table: { columns: ChartColumn[]; rows: ChartRow[] }
   const matrix = detectMatrix(table.columns, rows);
   if (matrix) {
     charts.push(matrix);
-    for (const c of table.columns) if (c.label === matrix.xLabel || c.label === matrix.yLabel) used.add(c.id);
+    for (const a of levelAxes(table.columns, rows)) if (a.label === matrix.xLabel || a.label === matrix.yLabel) used.add(a.columnId);
   }
 
   const timeline = detectTimeline(table.columns, rows);

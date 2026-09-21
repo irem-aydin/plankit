@@ -1,0 +1,394 @@
+{
+  "schemaVersion": 1,
+  "title": "SWOT Analizi Örneği: Mahalle Fırını",
+  "generatedAt": "2026-09-21T14:13:12.395Z",
+  "sections": [
+    {
+      "subcategoryId": "custom",
+      "subcategoryName": "Mahalle Fırını SWOT Analizi ve 12 Aylık Strateji Çerçevesi",
+      "categoryId": "10000000-0000-4000-8000-000000000001",
+      "categoryName": "İş Analizi",
+      "templateId": "ai-designed",
+      "templateVersion": 1,
+      "body": {
+        "kind": "template",
+        "summary": "Ankara Çankaya'da 12 yıldır faaliyet gösteren, 6 çalışanlı ve aylık ~450.000 TL ciroya sahip mahalle fırınının iç/dış durumunu SWOT ile analiz eder ve kapasite kısıtını dikkate alan 12 aylık (Ekim 2026 - Eylül 2027) büyüme yönünü somut aksiyonlara bağlar.",
+        "sections": [
+          {
+            "id": "s0",
+            "title": "1. Kapsam ve İş Bağlamı",
+            "description": "Analizin sınırlarını, mevcut işletme profilini ve 1 yıllık hedefi netleştirmek için kullanılır. Rakamlar kullanıcının verdiği verilerden alınmıştır.",
+            "fields": [
+              {
+                "id": "s0f0",
+                "label": "İşletme profili",
+                "type": "textarea",
+                "value": "Ankara Çankaya'da 12 yıldır faaliyette olan, 6 çalışanlı mahalle fırını. Aylık ciro yaklaşık 450.000 TL (yıllık ~5,4 milyon TL tahmini, sezonluk dalgalanma hariç). Ana ürünler ekmek ve simit."
+              },
+              {
+                "id": "s0f1",
+                "label": "Analizin amacı ve kapsamı",
+                "type": "textarea",
+                "value": "Amaç, zincir market taze ekmek reyonları ve online sipariş uygulamalarının yarattığı müşteri kazanım durgunluğuna karşı 12 aylık yön belirlemektir. Kapsam: ürün portföyü, kapasite, fiyat/kanal ve müşteri kazanımı. Kapsam dışı: yeni şube açılışı ve büyük tutarlı fırın yatırımı (kapasite kısıtı ve finansman belirsizliği nedeniyle 2. aşamaya bırakılmıştır)."
+              },
+              {
+                "id": "s0f2",
+                "label": "Karar penceresi",
+                "type": "textarea",
+                "value": "Strateji dönemi 1 Ekim 2026 - 30 Eylül 2027. Ekşi mayalı ekmek ve pastane ürünleri için ilk gerçek karar noktası (devam/dur) 31 Aralık 2026'da pilot sonuçlarına göre verilecektir."
+              }
+            ]
+          },
+          {
+            "id": "s1",
+            "title": "2. Mevcut Durum ve Talep Sinyalleri",
+            "description": "Karar öncesi doğrulanması gereken mevcut durum göstergelerini listeler. 'Mevcut değer' alanı kullanıcının verdiği bilgiyle sınırlıdır; boş kalanlar ölçüm gerektirir.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Gösterge",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Mevcut durum",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Kaynak / Doğrulama yöntemi",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Değerlendirme",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Aylık ciro",
+                  "c1": "~450.000 TL",
+                  "c2": "Kullanıcı beyanı; muhasebe/POS raporu ile teyit",
+                  "c3": "Sabit; büyüme kaynağı yok"
+                },
+                {
+                  "c0": "Ürün kırılımı (ekmek/simit payı)",
+                  "c1": "Bilinmiyor",
+                  "c2": "1 hafta POS veya elle satış fişi sayımı (Ekim 2026)",
+                  "c3": "Kritik eksik; portföy kararı buna bağlı"
+                },
+                {
+                  "c0": "Günlük fırın kapasitesi (hamur/pişirim)",
+                  "c1": "Sınırlı, sayısal veri yok",
+                  "c2": "Pişirim turu sayısı x tur kapasitesi ölçümü",
+                  "c3": "Yeni ürünün ana kısıtı"
+                },
+                {
+                  "c0": "Yeni ürün talebi (ekşi maya, pastane)",
+                  "c1": "Müşteri talebi var, ölçülmemiş",
+                  "c2": "2 hafta tezgah üstü talep kaydı + 30 müşteri anketi",
+                  "c3": "Fırsat sinyali, doğrulanmalı"
+                },
+                {
+                  "c0": "Rekabet baskısı",
+                  "c1": "Zincir market taze ekmek reyonları, online sipariş uygulamaları",
+                  "c2": "Yakın çevre 3 market + 2 uygulama fiyat taraması",
+                  "c3": "Fiyatta değil, farklılaşmada yarışılmalı"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s2",
+            "title": "3. SWOT Analizi",
+            "description": "Her maddeyi işletmeye özgü ve mümkün olduğunca ölçülebilir tutun. Bu tablo 4. bölümdeki strateji eşleştirmesinin girdisidir.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Boyut",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Bulgu",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "İş etkisi",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Güçlü yön",
+                  "c1": "12 yıllık mahalle itibarı ve tekrar eden müşteri tabanı",
+                  "c2": "Yeni ürünlerde deneme maliyeti düşük; sadakat programı için hazır zemin"
+                },
+                {
+                  "c0": "Güçlü yön",
+                  "c1": "Günlük taze üretim ve yerinde pişirim; 6 kişilik yerleşik ekip",
+                  "c2": "Market reyonuna karşı 'aynı gün, elde yapım' konumlandırması mümkün"
+                },
+                {
+                  "c0": "Zayıf yön",
+                  "c1": "Sınırlı fırın kapasitesi ve tek vardiya kurgusu",
+                  "c2": "Ekşi maya ve pastane büyümesi ekmek üretimini sıkıştırma riski taşır"
+                },
+                {
+                  "c0": "Zayıf yön",
+                  "c1": "Ürün ve satış verisinin tutulmaması, dijital kanalın olmaması",
+                  "c2": "Karlı ürün bilinmiyor; online talep tamamen kaçıyor"
+                },
+                {
+                  "c0": "Fırsat",
+                  "c1": "Ekşi mayalı ekmek ve pastane ürünlerine gelen organik talep",
+                  "c2": "Kilogram başı katma değeri ekmekten yüksek ürünlerle ciro/marj artışı"
+                },
+                {
+                  "c0": "Fırsat",
+                  "c1": "Çankaya'da ofis/apartman kahvaltı ve kurumsal sipariş potansiyeli",
+                  "c2": "Sabah dışı saatlerde kapasite kullanımı ve öngörülebilir sipariş"
+                },
+                {
+                  "c0": "Tehdit",
+                  "c1": "Zincir marketlerin taze ekmek reyonları ve fiyat baskısı",
+                  "c2": "Standart ekmekte hacim ve fiyat erozyonu"
+                },
+                {
+                  "c0": "Tehdit",
+                  "c1": "Un, yağ, enerji maliyetlerindeki artış ve ekmek fiyatındaki kamu/oda sınırları",
+                  "c2": "Standart ekmekte marj daralması; fiyat artışı serbest değil (ilgili esnaf odasından teyit edilmeli)"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s3",
+            "title": "4. SWOT Tabanlı Strateji Eşleştirmesi",
+            "description": "Güçlü yön-fırsat (SO), zayıf yön-fırsat (WO), güçlü yön-tehdit (ST) ve zayıf yön-tehdit (WT) eşleştirmeleriyle strateji seçenekleri üretilir.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Eşleştirme",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Strateji",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Kapasite/bütçe etkisi",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Öncelik",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "SO",
+                  "c1": "İtibarı ekşi mayalı ekmekte primli ürüne çevirmek: haftada 3 gün, günde 40-60 adet sınırlı üretim",
+                  "c2": "Mevcut fırında akşam/gece mayalanma; ek fırın gerekmez",
+                  "c3": "Yüksek (1. çeyrek)"
+                },
+                {
+                  "c0": "SO",
+                  "c1": "Pastane ürünlerinde daraltılmış menü (3-4 kalem: poğaça, kurabiye, tatlı çörek) ile öğle sonrası satış",
+                  "c2": "Var olan pişirim boşluğu kullanılır",
+                  "c3": "Yüksek (1-2. çeyrek)"
+                },
+                {
+                  "c0": "WO",
+                  "c1": "Ürün bazlı satış ve maliyet takibi kurmak; karlılığa göre menü budamak",
+                  "c2": "Düşük maliyetli POS/tablet çözümü (tahmini 15.000-30.000 TL)",
+                  "c3": "Yüksek (hemen)"
+                },
+                {
+                  "c0": "ST",
+                  "c1": "Mahalle sadakat kartı ve WhatsApp ön sipariş hattı ile marketten müşteri tutma",
+                  "c2": "Personel zamanı; nakit yatırım minimal",
+                  "c3": "Orta-yüksek"
+                },
+                {
+                  "c0": "WT",
+                  "c1": "Kapasite ölçümü sonrası düşük marjlı/yavaş dönen ürünleri çıkarıp yerine primli ürün koymak",
+                  "c2": "Kapasite yaratır, yatırım gerektirmez",
+                  "c3": "Orta"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s4",
+            "title": "5. Önerilen Yön ve Gerekçe",
+            "description": "Seçilen stratejiyi, alternatiflerin neden ertelendiğini ve kapasite kısıtının nasıl yönetileceğini karara bağlar.",
+            "fields": [
+              {
+                "id": "s4f0",
+                "label": "Ana yön",
+                "type": "textarea",
+                "value": "Hacim değil katma değer stratejisi: ekmek-simit tabanını koruyup, sınırlı kapasiteyi ekşi mayalı ekmek ve dar menülü pastane ürünlerine kaydırmak. Amaç, 12 ayda aylık ciroyu ~450.000 TL'den yaklaşık 540.000 TL'ye (%20 artış, tahmini) çıkarmak ve artışın ağırlığını primli ürünlerden sağlamak."
+              },
+              {
+                "id": "s4f1",
+                "label": "Kapasite kısıtının yönetimi",
+                "type": "textarea",
+                "value": "Yeni fırın yatırımı 1. aşamada kapsam dışıdır; bunun yerine ekşi maya için gece mayalanma + sabah erken pişirim turu, pastane için öğle sonrası boş pişirim turu kullanılır. Kapasite ölçümü (Ekim 2026) yeni ürünlerin ekmek üretimini kesmediğini göstermezse ürün adetleri düşürülür."
+              },
+              {
+                "id": "s4f2",
+                "label": "Ertelenen seçenekler",
+                "type": "textarea",
+                "value": "- Online sipariş uygulamalarına tam entegrasyon: komisyon ve paketleme maliyeti ölçülmeden girilmemeli, 2027 2. çeyreğe bırakıldı.\n- İkinci şube veya büyük fırın yatırımı: finansman ve kapasite verisi netleşmeden değerlendirilmeyecek.\n- Geniş pastane menüsü: 6 kişilik ekipte iş gücü kısıtını zorlar."
+              },
+              {
+                "id": "s4f3",
+                "label": "Başarı ölçütleri",
+                "type": "textarea",
+                "value": "Aralık 2026'da: ekşi maya haftalık satışı en az 120 adet, pastane kalemlerinin ciro payı %5+. Eylül 2027'de: primli ürünlerin ciro payı %20-25, sadakat kartı aktif üye 400+."
+              }
+            ]
+          },
+          {
+            "id": "s5",
+            "title": "6. Riskler ve Uygulama Planı",
+            "description": "İlk olarak ana riskler ve önlemleri, ardından sahibi ve tarihi belirli aksiyonlar listelenir. Tarihler bugünden (21 Eylül 2026) ileriye kurgulanmıştır.",
+            "fields": [
+              {
+                "id": "s5f0",
+                "label": "Ana riskler",
+                "type": "textarea",
+                "value": "- Kapasite çakışması: yeni ürün, ekmek pişirimini geciktirip temel müşteriyi kaybettirebilir. Önlem: adet tavanı ve haftalık pişirim çizelgesi.\n- Fire ve bozulma: pastane ve ekşi mayada satılamayan ürün maliyeti. Önlem: ön sipariş ağırlıklı üretim, günlük fire kaydı, fire %5 üstündeyse adet düşürme.\n- Personel yükü: 6 kişilik ekipte ustalık ve mesai sıkışması. Önlem: 1 kişinin ekşi maya konusunda eğitilmesi, iş dağılımının yazılı çizelgeye bağlanması.\n- Mevzuat: gıda işletmesi kayıt/izin kapsamının pastane ürünleriyle genişlemesi yasal olarak zorunlu olabilir; İlçe Tarım ve Orman Müdürlüğü ile belediyeden teyit edilmeli."
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Aksiyon",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Sorumlu (rol)",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Tarih",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Başarı ölçütü",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Ürün bazlı satış ve fire kaydını başlatmak (basit POS veya tablet)",
+                  "c1": "İşletme sahibi",
+                  "c2": "1-15 Ekim 2026",
+                  "c3": "4 hafta kesintisiz ürün bazlı satış verisi"
+                },
+                {
+                  "c0": "Günlük fırın kapasitesini ölçmek (tur sayısı x tur kapasitesi, boş saatler)",
+                  "c1": "Fırın ustası",
+                  "c2": "1-10 Ekim 2026",
+                  "c3": "Yazılı kapasite tablosu ve boş pişirim turlarının tespiti"
+                },
+                {
+                  "c0": "Ekşi mayalı ekmek pilotu: haftada 3 gün, günde 40-60 adet",
+                  "c1": "Fırın ustası + sahibi",
+                  "c2": "20 Ekim - 20 Aralık 2026",
+                  "c3": "Haftalık 120+ adet satış, fire %5'in altında"
+                },
+                {
+                  "c0": "Dar pastane menüsü (3-4 kalem) ile öğle sonrası satış denemesi",
+                  "c1": "Tezgah sorumlusu",
+                  "c2": "1 Kasım - 31 Aralık 2026",
+                  "c3": "Pastane kalemlerinin ciro payı %5+"
+                },
+                {
+                  "c0": "WhatsApp ön sipariş hattı ve mahalle sadakat kartı kurulumu",
+                  "c1": "Tezgah sorumlusu",
+                  "c2": "1-30 Kasım 2026",
+                  "c3": "200 kayıtlı müşteri, haftada 30+ ön sipariş"
+                },
+                {
+                  "c0": "Pilot değerlendirme ve devam/dur kararı; menü budaması",
+                  "c1": "İşletme sahibi",
+                  "c2": "31 Aralık 2026",
+                  "c3": "Ürün bazlı marj tablosu ve yazılı karar"
+                },
+                {
+                  "c0": "Kurumsal/ofis kahvaltı siparişi için Çankaya'da 10 potansiyel müşteri görüşmesi",
+                  "c1": "İşletme sahibi",
+                  "c2": "1 Şubat - 31 Mart 2027",
+                  "c3": "En az 3 düzenli kurumsal sipariş"
+                },
+                {
+                  "c0": "Online kanal ve kapasite yatırımı iş gerekçesinin hazırlanması",
+                  "c1": "İşletme sahibi",
+                  "c2": "1 Nisan - 31 Mayıs 2027",
+                  "c3": "Komisyon, fire ve yatırım geri dönüş hesabı içeren 2 sayfalık değerlendirme"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "personalization": {
+        "model": "claude-opus-5",
+        "keyFindings": [
+          "Sorun hacim değil farklılaşma: standart ekmekte zincir marketlerle fiyat rekabeti kazanılamaz, büyüme ekşi mayalı ekmek ve dar menülü pastane gibi primli ürünlerden gelmelidir.",
+          "Ürün bazlı satış/maliyet verisi ve ölçülmüş fırın kapasitesi olmadan hiçbir yatırım kararı verilmemeli; bu iki ölçüm Ekim 2026'da tamamlanmalı.",
+          "Kapasite kısıtı nedeniyle yeni ürünler adet tavanlı pilot olarak, mevcut boş pişirim turlarında başlatılmalı; 31 Aralık 2026'daki devam/dur kararı pilot verisine bağlanmalı."
+        ],
+        "assumptions": [
+          "Aylık ~450.000 TL ciro istikrarlı kabul edilmiş, sezonluk dalgalanma verisi olmadığı için yıllık ~5,4 milyon TL doğrusal tahmin edilmiştir.",
+          "Hedeflenen %20 ciro artışı (450.000 TL x 1,20 = ~540.000 TL/ay) tahmini bir hedeftir; pilot marj verisiyle revize edilmelidir.",
+          "Mevcut fırında gece mayalanma ve öğle sonrası boş pişirim turu bulunduğu varsayılmıştır; kapasite ölçümü bunu doğrulamalıdır.",
+          "POS/satış takibi için 15.000-30.000 TL tahmini yatırım, piyasa teklifleriyle doğrulanmalıdır.",
+          "6 çalışanın mevcut vardiya düzeninde pilot ürünler için haftalık ek iş gücü yaratılabileceği varsayılmıştır."
+        ],
+        "openQuestions": [
+          "Cironun ekmek, simit ve diğer ürünler arasındaki dağılımı ve ürün bazlı marjlar nedir?",
+          "Günlük fırın kapasitesi somut olarak kaç pişirim turu ve kaç kilogram hamurdur?",
+          "Yeni ürünler için ayrılabilecek yatırım bütçesi ve nakit rezervi ne kadardır?",
+          "6 çalışan içinde ekşi maya veya pastane deneyimi olan personel var mı, dışarıdan usta alınması gerekir mi?",
+          "Pastane ürünleri için mevcut gıda işletmesi kaydı ve belediye izinleri kapsam olarak yeterli mi (ilgili kurumdan teyit edilmeli)?"
+        ]
+      }
+    }
+  ],
+  "missing": [],
+  "context": {
+    "mode": "free",
+    "detail": "summary",
+    "language": "tr",
+    "entries": [
+      {
+        "question": "Kullanıcının kendi anlatımı",
+        "answer": "Ankara Çankaya'da 12 yıldır açık, 6 çalışanlı bir mahalle fırınıyız. Ekmek ve simit satışlarımız sabit ama zincir marketlerin taze ekmek reyonları ve online sipariş uygulamaları nedeniyle yeni müşteri kazanamıyoruz. Aylık ciromuz yaklaşık 450.000 TL. Ekşi mayalı ekmek ve pastane ürünlerine talep görüyoruz ama fırın kapasitemiz sınırlı. Önümüzdeki 1 yıl için yön belirlemek istiyoruz."
+      }
+    ]
+  },
+  "attachments": []
+}

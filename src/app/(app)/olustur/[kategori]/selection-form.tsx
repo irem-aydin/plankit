@@ -50,6 +50,7 @@ export function SelectionForm({
   profiles,
   defaultProfileId,
   defaultDetail,
+  initialRequest = "",
 }: {
   categoryId: string;
   categoryName: string;
@@ -61,6 +62,8 @@ export function SelectionForm({
   profiles: ProfileOption[];
   defaultProfileId: string | null;
   defaultDetail: DetailLevel;
+  /** Ana sayfadaki önizlemeden veya örnek plandan gelen istek */
+  initialRequest?: string;
 }) {
   const [state, formAction] = useActionState(generateAction, {});
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -70,7 +73,7 @@ export function SelectionForm({
   const [language, setLanguage] = useState<Language>("tr");
   const [profileId, setProfileId] = useState<string>(defaultProfileId ?? profiles[0]?.id ?? "");
   const [saveAsProfile, setSaveAsProfile] = useState(false);
-  const [customRequest, setCustomRequest] = useState("");
+  const [customRequest, setCustomRequest] = useState(initialRequest.slice(0, 500));
   const [showAll, setShowAll] = useState(false);
   const fileSelection = useFileSelection();
   const selectedProfile = profiles.find((p) => p.id === profileId);

@@ -240,6 +240,48 @@ describe("paylaşım bağlantısı", () => {
   });
 });
 
+describe("kayıtsız önizleme kotası", () => {
+  const consume = async (visitor: string, perVisitor = 3, global = 5) => {
+    const [{ ok }] = await rows<{ ok: boolean }>("select public.consume_preview_quota($1, $2, $3) as ok", [visitor, perVisitor, global]);
+    return ok;
+  };
+
+  it("ziyaretçi başına günlük sınırda durur", async () => {
+    const results = [];
+    for (let i = 0; i < 4; i++) results.push(await consume("ziyaretci-a", 3, 100));
+    expect(results).toEqual([true, true, true, false]);
+  });
+
+  it("site geneli sınır dolunca yeni ziyaretçiye de izin vermez", async () => {
+    await db.exec("delete from preview_quota");
+    const results = [];
+    for (let i = 0; i < 3; i++) results.push(await consume(`kisi-${i}`, 3, 2));
+    expect(results).toEqual([true, true, false]);
+  });
+
+  it("reddedilen istek sayacı artırmaz", async () => {
+    await db.exec("delete from preview_quota");
+    await consume("b", 1, 100);
+    await consume("b", 1, 100);
+    const [global] = await rows<{ used: number }>("select used from preview_quota where bucket like 'global:%'");
+    expect(global.used).toBe(1);
+  });
+
+  it("eski günlerin kayıtlarını temizler", async () => {
+    await db.query("insert into preview_quota(bucket, day, used) values ('visitor:eski', current_date - 5, 3)");
+    await consume("c");
+    expect(await rows("select 1 from preview_quota where bucket = 'visitor:eski'")).toHaveLength(0);
+  });
+
+  it("ziyaretçi veya kullanıcı kota tablosunu göremez, fonksiyonu çağıramaz", async () => {
+    await db.exec("set role anon");
+    expect(await rows("select * from preview_quota")).toHaveLength(0);
+    expect(await allowed("select public.consume_preview_quota('x', 99, 99)")).toBe(false);
+    await asUser(alice);
+    expect(await allowed("select public.consume_preview_quota('x', 99, 99)")).toBe(false);
+  });
+});
+
 describe("kısıtlar", () => {
   it("geçersiz iş durumu ve türü reddedilir", async () => {
     expect(await allowed(`insert into generation_jobs(user_id, kind, title) values ($1, 'hack', 'x')`, [alice])).toBe(false);

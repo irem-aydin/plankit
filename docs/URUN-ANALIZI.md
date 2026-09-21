@@ -141,6 +141,11 @@ Uygulama içinde sağ altta sabit "Öneri / Şikâyet" düğmesi. Kullanıcı t�
 - **Ana sayfa:** canlı ürün önizlemesi (istek yazılır → plan belirir), görsel plan örnekleri, kimler için, sık sorulanlar.
 - **Kalan:** karanlık mod (tüm sayfalara dokunduğu için ayrı iş).
 
+### 3.13 ✅ Kullanıcı kazanımı: kayıtsız deneme ve örnek galerisi (21.09.2026)
+- **Kayıt olmadan dene (ana sayfa):** ziyaretçi durumunu yazar, ~15 sn'de kısa önizleme (bulgular, ilk adımlar, açık soru) görür; "Planın tamamını oluştur" kayda götürür ve isteği plan formuna hazır taşır. Model: Sonnet 5 (Haiku denendi, Türkçe yazım hataları nedeniyle bırakıldı); istek başına ~0,01-0,02 $. Kota: ziyaretçi başına günde 3, site geneli günde 200 (en kötü durumda ~3 $/gün). Metin saklanmaz; IP'nin günlük değişen özeti 2 gün tutulur.
+- **Örnek plan galerisi (/ornekler):** 4 alanda 8 örnek + kahve örneği; her biri arama motorlarına açık, açıklamalı, yapılandırılmış veri (JSON-LD) içeren ayrı sayfa. Örnekler gerçek plan motoruyla üretildi (scripts/generate-examples.mts). sitemap.xml ve robots.txt eklendi (kullanıcıya özel sayfalar ve paylaşım bağlantıları taranmaz).
+- **Grafik algılayıcı geliştirildi:** yapay zekânın düz metin tablolarında da SWOT, "Olasılık / Etki" birleşik sütunları, 1-5 puanları ve "Çok yüksek" gibi ifadeler tanınıyor.
+
 ### 3.10 Mobil deneyim
 Sayfalar mobil uyumlu ama uzun tabloların düzenlenmesi telefonda zor. Öncelik düşük: bu ürün masaüstünde kullanılır.
 

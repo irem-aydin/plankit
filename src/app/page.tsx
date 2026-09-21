@@ -21,9 +21,12 @@ import { CategoryIcon } from "@/components/category-icon";
 import { Logo } from "@/components/logo";
 import { TableCharts } from "@/components/table-charts";
 import { APP_NAME } from "@/config/app";
+import { EXAMPLES } from "@/content/examples";
 import { SAMPLE_PLAN } from "@/content/sample-plan";
+import { CATEGORY_NAMES } from "@/core/ai/preview";
 import { TRIAL_GENERATION_LIMIT } from "@/core/billing/entitlements";
 import { HeroDemo } from "./hero-demo";
+import { TryPreview } from "./try-preview";
 
 const STEPS: { Icon: LucideIcon; title: string; text: string }[] = [
   { Icon: PenLine, title: "Ne istediğini yaz", text: "Kendi cümlelerinle anlat ya da hazır başlıklardan seç. İstersen rapor, tablo veya ekran görüntüsü ekle." },
@@ -87,8 +90,8 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
             <a href="#nasil-calisir" className="hidden rounded-lg px-3 py-2 font-medium text-slate-600 hover:bg-slate-100 md:inline">
               Nasıl çalışır?
             </a>
-            <Link href="/ornek-plan" className="hidden rounded-lg px-3 py-2 font-medium text-slate-600 hover:bg-slate-100 md:inline">
-              Örnek plan
+            <Link href="/ornekler" className="hidden rounded-lg px-3 py-2 font-medium text-slate-600 hover:bg-slate-100 md:inline">
+              Örnekler
             </Link>
             <Link href="/giris" className="rounded-lg px-3 py-2 font-medium text-slate-700 hover:bg-slate-100">
               Giriş yap
@@ -134,9 +137,9 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
                   İlk {TRIAL_GENERATION_LIMIT} plan ücretsiz
                   <ArrowRight className="size-4" aria-hidden />
                 </Link>
-                <Link href="/ornek-plan" className="rounded-lg px-5 py-3 font-semibold text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50">
-                  Örnek planı gör
-                </Link>
+                <a href="#dene" className="rounded-lg px-5 py-3 font-semibold text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50">
+                  Kayıt olmadan dene
+                </a>
               </div>
               <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-500">
                 <li className="flex items-center gap-1.5">
@@ -151,6 +154,21 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
               </ul>
             </div>
             <HeroDemo />
+          </div>
+        </section>
+
+        {/* Kayıt olmadan dene */}
+        <section id="dene" className="scroll-mt-20 border-y border-rose-100 bg-gradient-to-b from-rose-50/60 to-white">
+          <div className="mx-auto max-w-6xl px-4 py-16">
+            <p className="text-sm font-semibold text-rose-600">Kayıt olmadan dene</p>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">Planının önizlemesini birkaç saniyede gör</h2>
+            <p className="mt-2 max-w-2xl text-slate-600">
+              Durumunu yaz; öne çıkan bulguları ve ilk adımları hemen görelim. Beğenirsen tam planı ücretsiz hesabınla
+              oluşturursun.
+            </p>
+            <div className="mt-8">
+              <TryPreview />
+            </div>
           </div>
         </section>
 
@@ -249,6 +267,28 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
           </div>
         </section>
 
+        {/* Örnekler */}
+        <section className="mx-auto max-w-6xl px-4 pb-20">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-rose-600">Örnek planlar</p>
+              <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">Hazırlanmış örneklere göz at</h2>
+            </div>
+            <Link href="/ornekler" className="inline-flex items-center gap-1.5 font-semibold text-rose-600 hover:underline">
+              Tüm örnekler <ArrowRight className="size-4" aria-hidden />
+            </Link>
+          </div>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {EXAMPLES.filter((_, i) => i % 2 === 0).map((e) => (
+              <Link key={e.slug} href={`/ornekler/${e.slug}`} className="group rounded-2xl border border-slate-200 p-5 transition hover:-translate-y-0.5 hover:border-rose-300 hover:shadow-md">
+                <CategoryIcon name={CATEGORY_NAMES[e.category]} />
+                <p className="mt-3 font-semibold text-slate-900 group-hover:text-rose-700">{e.title}</p>
+                <p className="mt-1 line-clamp-2 text-sm text-slate-600">{e.description}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
         {/* SSS */}
         <section className="mx-auto max-w-3xl px-4 pb-20">
           <h2 className="text-3xl font-bold tracking-tight text-slate-900">Sık sorulanlar</h2>
@@ -292,8 +332,8 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
             <span>© {new Date().getFullYear()}</span>
           </span>
           <span className="flex flex-wrap items-center gap-4">
-            <Link href="/ornek-plan" className="font-medium text-slate-600 hover:underline">
-              Örnek plan
+            <Link href="/ornekler" className="font-medium text-slate-600 hover:underline">
+              Örnek planlar
             </Link>
             <Link href="/yasal" className="font-medium text-slate-600 hover:underline">
               Yasal bilgiler

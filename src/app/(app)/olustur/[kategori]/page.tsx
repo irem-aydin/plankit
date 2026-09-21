@@ -21,8 +21,10 @@ export async function generateMetadata({ params }: PageProps<"/olustur/[kategori
   return { title: data?.category.name ?? "Kategori" };
 }
 
-export default async function SubcategorySelectionPage({ params }: PageProps<"/olustur/[kategori]">) {
+export default async function SubcategorySelectionPage({ params, searchParams }: PageProps<"/olustur/[kategori]">) {
   const { kategori } = await params;
+  const { istek } = await searchParams;
+  const initialRequest = typeof istek === "string" ? istek.slice(0, 500) : "";
   const [data, session] = await Promise.all([getCategoryWithSubcategories(kategori), getCurrentSession()]);
   if (!data) notFound();
 
@@ -72,6 +74,7 @@ export default async function SubcategorySelectionPage({ params }: PageProps<"/o
           profiles.some((p) => p.id === preferences?.defaultProfileId) ? preferences!.defaultProfileId : null
         }
         defaultDetail={preferences?.defaultDetail ?? "summary"}
+        initialRequest={initialRequest}
       />
     </div>
   );

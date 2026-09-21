@@ -1,0 +1,500 @@
+{
+  "schemaVersion": 1,
+  "title": "Satış Stratejisi Örneği: Endüstriyel Ekipman Distribütörü",
+  "generatedAt": "2026-09-21T14:13:12.395Z",
+  "sections": [
+    {
+      "subcategoryId": "custom",
+      "subcategoryName": "Endüstriyel Kompresör Distribütörlüğü – 2 Yıllık Satış ve İş Geliştirme Strateji",
+      "categoryId": "10000000-0000-4000-8000-000000000004",
+      "categoryName": "İş Geliştirme",
+      "templateId": "ai-designed",
+      "templateVersion": 1,
+      "body": {
+        "kind": "template",
+        "summary": "Bursa merkezli endüstriyel kompresör ve yedek parça distribütörlüğünün 85 milyon TL cirosunu 2 yılda %40 büyütmesi için segment çeşitlendirme (gıda ve ilaç), bakım sözleşmesi gelir modeli ve saha satış ekibinin yeniden kurgulanmasını kapsayan çalışma dokümanıdır. Mevcut durum analizi, öncelik kararları, riskler ve tarihli uygulama adımlarını içerir.",
+        "sections": [
+          {
+            "id": "s0",
+            "title": "1. Kapsam ve Büyüme Hedefi",
+            "description": "Stratejinin sayısal hedefini ve kapsamını netleştirir. Tablodaki tutarlar mevcut 85 milyon TL ciro üzerinden hesaplanmış tahmini kırılımdır; yıllık bütçe onayında güncellenir.",
+            "fields": [
+              {
+                "id": "s0f0",
+                "label": "Hedefin sayısallaştırılması",
+                "type": "textarea",
+                "value": "85 milyon TL ciro 2 yılda %40 büyüyerek 119 milyon TL'ye çıkacak; gerekli ek ciro 34 milyon TL, yıllık bileşik büyüme yaklaşık %18,3'tür (nominal, enflasyon arındırılmamıştır). Hedef tarihi 30.09.2028'dir."
+              },
+              {
+                "id": "s0f1",
+                "label": "Kapsam",
+                "type": "textarea",
+                "value": "Kapsam içi: gıda ve ilaç sektörüne yeni müşteri kazanımı, bakım sözleşmesi (servis) gelirinin büyütülmesi, 4 kişilik saha ekibinin segment bazlı yeniden yapılandırılması. Kapsam dışı: yeni şube açılışı, yeni marka distribütörlüğü alınması ve ihracat."
+              },
+              {
+                "id": "s0f2",
+                "label": "Büyümenin mantığı",
+                "type": "textarea",
+                "value": "34 milyon TL'lik artışın tamamı mevcut otomotiv yan sanayi müşterilerinden beklenemez; tekrar satış doygunluğa yakındır. Bu nedenle artışın çoğunluğu yeni segment ve sözleşmeli servis gelirinden planlanmıştır."
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Gelir kaynağı",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "2026 tahmini (mn TL)",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "2028 hedef (mn TL)",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Artış (mn TL)",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Otomotiv yan sanayi (mevcut müşteri)",
+                  "c1": "59,5",
+                  "c2": "70,0",
+                  "c3": "10,5"
+                },
+                {
+                  "c0": "Diğer mevcut sektörler",
+                  "c1": "25,5",
+                  "c2": "31,0",
+                  "c3": "5,5"
+                },
+                {
+                  "c0": "Gıda ve ilaç (yeni segment)",
+                  "c1": "0 (yok sayıldı)",
+                  "c2": "10,0",
+                  "c3": "10,0"
+                },
+                {
+                  "c0": "Bakım sözleşmesi ve servis geliri",
+                  "c1": "Ayrıştırılmamış",
+                  "c2": "8,0",
+                  "c3": "8,0"
+                },
+                {
+                  "c0": "Toplam",
+                  "c1": "85,0",
+                  "c2": "119,0",
+                  "c3": "34,0"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s1",
+            "title": "2. Mevcut Gelir Yapısı ve Satış Kapasitesi Analizi",
+            "description": "Bugünkü satış modelinin güçlü ve kırılgan yanlarını gösterir. Her satır için bulgu ve stratejik sonuç birlikte okunmalıdır.",
+            "fields": [
+              {
+                "id": "s1f0",
+                "label": "Kapasite kısıtı",
+                "type": "textarea",
+                "value": "4 kişilik saha ekibi hem mevcut hesap yönetimi hem yeni segment avını aynı anda yapamaz; yeni segment ayrı bir zaman bloğu veya ayrı bir kişi olmadan başlamaz."
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Alan",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Mevcut durum",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Risk / fırsat",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Stratejik sonuç",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Müşteri konsantrasyonu",
+                  "c1": "Cironun %70'i otomotiv yan sanayi",
+                  "c2": "Otomotiv yatırım döngüsüne aşırı bağımlılık",
+                  "c3": "Segment çeşitlendirme zorunlu"
+                },
+                {
+                  "c0": "Satış modeli",
+                  "c1": "Ağırlıklı mevcut müşteriye tekrar satış",
+                  "c2": "Yeni müşteri kazanım kası zayıf",
+                  "c3": "Ayrı av (hunter) rolü tanımlanmalı"
+                },
+                {
+                  "c0": "Ekip",
+                  "c1": "4 saha satışçısı, segment ayrımı yok",
+                  "c2": "Zaman yeni işe değil acil işe gidiyor",
+                  "c3": "Portföy ve hedef ayrıştırması"
+                },
+                {
+                  "c0": "Gelir türü",
+                  "c1": "Makine + yedek parça ağırlıklı",
+                  "c2": "Tekrarlayan gelir düşük, ciro dalgalı",
+                  "c3": "Sözleşmeli servis geliri kurulmalı"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s2",
+            "title": "3. Yeni Segment Önceliklendirmesi: Gıda ve İlaç",
+            "description": "Gıda ve ilaç segmentleri aynı hızda açılamaz. Tablo, giriş engeli ve kazanma süresine göre önceliği gösterir; puanlar tahminidir ve ilk 3 ziyaret sonrası güncellenmelidir.",
+            "fields": [
+              {
+                "id": "s2f0",
+                "label": "Öncelik kararı",
+                "type": "textarea",
+                "value": "Önce gıda (süt, içecek, un/unlu mamul, paketleme) segmentine girilmeli; Bursa ve Karacabey–İnegöl hattındaki gıda tesisleri hem yakın hem karar süreci kısa. İlaç segmenti 2027 ikinci yarısında, gıda referansları oluştuktan sonra açılmalı."
+              },
+              {
+                "id": "s2f1",
+                "label": "Teknik ve belge ayrımı",
+                "type": "textarea",
+                "value": "Gıdada hava ürüne temas ediyorsa yağsız (oil-free) kompresör ve ISO 8573-1 Sınıf 0 hava kalitesi pazarın ve müşteri denetimlerinin beklediği standarttır; HACCP/ISO 22000 yükümlülüğü müşteri tesisine aittir. İlaçta GMP kapsamında IQ/OQ/PQ kalifikasyon dokümantasyonu ve kalibrasyon izlenebilirliği talep edilir. Hangi belgenin yasal zorunlu olduğu ürün grubuna göre değişir; Tarım ve Orman Bakanlığı ile TİTCK tarafında teyit edilmelidir."
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Segment",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Giriş engeli",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Tahmini satış döngüsü",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Öncelik",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Gıda – içecek/süt/paketleme",
+                  "c1": "Yağsız hava, hijyen beklentisi",
+                  "c2": "3-6 ay",
+                  "c3": "1 (Q4 2026 başla)"
+                },
+                {
+                  "c0": "Gıda – un, yem, tahıl",
+                  "c1": "Orta; basınçlı hava taşıma uygulamaları",
+                  "c2": "2-4 ay",
+                  "c3": "2 (Q1 2027)"
+                },
+                {
+                  "c0": "İlaç / medikal",
+                  "c1": "GMP, kalifikasyon dokümantasyonu, referans şartı",
+                  "c2": "6-12 ay",
+                  "c3": "3 (Q3 2027)"
+                },
+                {
+                  "c0": "Otomotiv yan sanayi (mevcut)",
+                  "c1": "Yok; ilişki mevcut",
+                  "c2": "1-3 ay",
+                  "c3": "Koruma + servis çapraz satışı"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s3",
+            "title": "4. Bakım Sözleşmesi Gelir Modeli",
+            "description": "Tekrarlayan gelir yaratmak için üç kademeli sözleşme paketi önerilir. Fiyatlar kurulmamıştır; tablo kapsam ve hedef adet çerçevesidir, fiyatlandırma servis maliyet analizinden sonra yapılmalıdır.",
+            "fields": [
+              {
+                "id": "s3f0",
+                "label": "Model mantığı",
+                "type": "textarea",
+                "value": "Sahada çalışan mevcut kompresör parkı en güçlü varlıktır; her satılmış makine bir sözleşme adayıdır. Hedef, 2028 sonunda 8 milyon TL sözleşme ve servis geliri (toplam cironun tahmini %7'si) ve sözleşmeli park oranının %30'a çıkarılmasıdır."
+              },
+              {
+                "id": "s3f1",
+                "label": "Satışa bağlama kuralı",
+                "type": "textarea",
+                "value": "1 Ocak 2027'den itibaren her yeni kompresör teklifi, ilk yıl bakım paketi fiyatı teklifin içinde olacak şekilde verilir; sözleşmesiz satış satış müdürü onayına tabidir."
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Paket",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Kapsam",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Hedef müşteri",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "2028 hedef sözleşme adedi",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Temel",
+                  "c1": "Yıllık 2 periyodik bakım, filtre/yağ, öncelikli parça",
+                  "c2": "Küçük otomotiv yan sanayi",
+                  "c3": "60 (tahmini)"
+                },
+                {
+                  "c0": "Gelişmiş",
+                  "c1": "4 bakım, uzaktan izleme, 24 saat müdahale taahhüdü",
+                  "c2": "Orta-büyük üretim tesisleri",
+                  "c3": "35 (tahmini)"
+                },
+                {
+                  "c0": "Kritik proses",
+                  "c1": "Tam kapsam, yedek makine taahhüdü, hava kalitesi raporu",
+                  "c2": "Gıda ve ilaç tesisleri",
+                  "c3": "15 (tahmini)"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s4",
+            "title": "5. Riskler ve Önlemler",
+            "description": "Hedefi tehdit eden başlıca riskler ve tetik göstergeleri. Aylık satış toplantısında gözden geçirilir.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Risk",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Etki",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Önlem",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Sorumlu",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Otomotiv talebinde daralma",
+                  "c1": "Cironun %70'i etkilenir",
+                  "c2": "Gıda hedefini öne çekmek, servis gelirini artırmak",
+                  "c3": "Genel Müdür"
+                },
+                {
+                  "c0": "Ekip yeni segmente zaman ayıramaz",
+                  "c1": "Yeni müşteri kazanımı durur",
+                  "c2": "1 satışçıyı %100 yeni segmente ayırmak veya 1 kişi almak",
+                  "c3": "Satış Müdürü"
+                },
+                {
+                  "c0": "Gıda/ilaçta yağsız ürün ve referans eksikliği",
+                  "c1": "Teklif aşamasında elenme",
+                  "c2": "Tedarikçi ile yağsız seri eğitimi, 2 pilot referans",
+                  "c3": "Teknik Satış"
+                },
+                {
+                  "c0": "Servis kapasitesi sözleşmeleri karşılamaz",
+                  "c1": "Taahhüt ihlali, itibar kaybı",
+                  "c2": "Sözleşme adedini teknisyen kapasitesine göre sınırlamak",
+                  "c3": "Servis Sorumlusu"
+                },
+                {
+                  "c0": "Kur ve stok maliyeti",
+                  "c1": "Marj erimesi",
+                  "c2": "Fiyat geçerlilik süresi ve kur klozu",
+                  "c3": "Finans"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s5",
+            "title": "6. Uygulama Yol Haritası (Q4 2026 – Q3 2028)",
+            "description": "Her adım sahipli, tarihli ve ölçülebilirdir. Tarihler 21.09.2026 itibarıyla planlanmıştır; çeyrek sonlarında gözden geçirilir.",
+            "fields": [
+              {
+                "id": "s5f0",
+                "label": "Karar eşiği",
+                "type": "textarea",
+                "value": "31.03.2027 itibarıyla gıda segmentinde en az 2 kazanılmış referans yoksa, ilaç segmentine geçiş 6 ay ertelenir ve kaynak bakım sözleşmelerine aktarılır."
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Adım",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Ne yapılacak",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Sorumlu (rol)",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Tarih",
+                  "type": "text"
+                },
+                {
+                  "id": "c4",
+                  "label": "Başarı ölçüsü",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "1",
+                  "c1": "Mevcut kompresör parkı envanteri ve sözleşme adayı listesi çıkarılması",
+                  "c2": "Servis Sorumlusu",
+                  "c3": "01–30.11.2026",
+                  "c4": "En az 150 makinenin listelenmesi"
+                },
+                {
+                  "c0": "2",
+                  "c1": "3 kademeli bakım paketinin kapsam ve fiyatının belirlenmesi",
+                  "c2": "Satış Müdürü + Finans",
+                  "c3": "01–31.12.2026",
+                  "c4": "Onaylı fiyat listesi ve marj hedefi"
+                },
+                {
+                  "c0": "3",
+                  "c1": "Saha ekibinin portföy ayrıştırması; 1 kişinin yeni segment avına tam zamanlı atanması",
+                  "c2": "Genel Müdür",
+                  "c3": "01–15.01.2027",
+                  "c4": "Yazılı portföy ve kota dağılımı"
+                },
+                {
+                  "c0": "4",
+                  "c1": "Bursa bölgesi gıda tesisleri hedef listesi (60 tesis) ve ilk 20 ziyaret",
+                  "c2": "Saha Satış (yeni segment)",
+                  "c3": "15.01–31.03.2027",
+                  "c4": "20 ziyaret, 8 teklif, 2 kazanım"
+                },
+                {
+                  "c0": "5",
+                  "c1": "Yağsız kompresör ve hava kalitesi (ISO 8573-1) teknik eğitimi",
+                  "c2": "Teknik Satış + tedarikçi",
+                  "c3": "Şubat 2027",
+                  "c4": "4 satışçının eğitim tamamlaması"
+                },
+                {
+                  "c0": "6",
+                  "c1": "Her yeni makine teklifine bakım paketinin zorunlu eklenmesi",
+                  "c2": "Satış Müdürü",
+                  "c3": "01.01.2027'den itibaren sürekli",
+                  "c4": "Tekliflerin %90'ında paket yer alması"
+                },
+                {
+                  "c0": "7",
+                  "c1": "İlaç/medikal segment hazırlığı: kalifikasyon dokümantasyon seti ve pilot müşteri",
+                  "c2": "Teknik Satış",
+                  "c3": "01.07–31.12.2027",
+                  "c4": "1 pilot ilaç tesisinde teklif aşaması"
+                },
+                {
+                  "c0": "8",
+                  "c1": "Çeyreklik strateji gözden geçirme ve hedef revizyonu",
+                  "c2": "Genel Müdür",
+                  "c3": "Her çeyrek son haftası (ilk: Aralık 2026)",
+                  "c4": "Ciro ve sözleşme hedefine sapma raporu"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "personalization": {
+        "model": "claude-opus-5",
+        "keyFindings": [
+          "34 milyon TL'lik büyümenin mevcut otomotiv müşterilerinden karşılanması gerçekçi değil; planın yaklaşık 18 milyon TL'si yeni segment ve bakım sözleşmesi gelirinden gelmelidir.",
+          "4 kişilik ekip bugünkü kurguyla yeni segment avı yapamaz; en az 1 kişinin tam zamanlı yeni müşteri kazanımına ayrılması stratejinin ön şartıdır.",
+          "Gıda ve ilaç aynı anda açılmamalıdır: gıda Q4 2026'da, ilaç ise gıda referansları ve kalifikasyon dokümantasyonu hazır olduktan sonra Q3 2027'de başlatılmalıdır."
+        ],
+        "assumptions": [
+          "Ciro kırılımı, verilen %70 otomotiv payı üzerinden hesaplanmıştır: 85 mn TL x %70 = 59,5 mn TL otomotiv, 25,5 mn TL diğer.",
+          "%40 büyüme nominal TL olarak varsayılmıştır (85 mn x 1,40 = 119 mn TL); enflasyon arındırılmamıştır.",
+          "Bakım sözleşmesi gelirinin bugün ayrı izlenmediği ve önemsiz düzeyde olduğu varsayılmıştır; 8 mn TL hedefi tahminidir.",
+          "Sözleşme adetleri ve satış döngüsü süreleri sektör deneyimine dayalı tahmindir, kendi servis kapasiteniz ve kazanma oranınızla doğrulanmalıdır.",
+          "Yeni segment için yağsız (oil-free) kompresör ürün grubunun mevcut distribütörlük sözleşmenizde yer aldığı varsayılmıştır."
+        ],
+        "openQuestions": [
+          "Mevcut bakım/servis geliri bugün kaç TL ve hangi marjla çalışıyor?",
+          "Sahada çalışan kaç makinelik park var ve kaçı sizin servisinizde?",
+          "Kaç servis teknisyeniniz var; kaç ek sözleşmeyi kapasite aşmadan üstlenebilirsiniz?",
+          "Distribütörlüğünü yaptığınız markanın yağsız ve GMP uyumlu ürün serisi ile dokümantasyon desteği mevcut mu?",
+          "2 yıllık büyüme için ayrılabilecek ek personel ve pazarlama bütçesi nedir?"
+        ]
+      }
+    }
+  ],
+  "missing": [],
+  "context": {
+    "mode": "free",
+    "detail": "summary",
+    "language": "tr",
+    "entries": [
+      {
+        "question": "Kullanıcının kendi anlatımı",
+        "answer": "Bursa'da endüstriyel kompresör ve yedek parça distribütörüyüz. Yıllık ciromuz 85 milyon TL, müşterilerimizin %70'i otomotiv yan sanayi. 4 kişilik saha satış ekibimiz var ve satışlar büyük ölçüde mevcut müşterilere tekrar satıştan geliyor. Gıda ve ilaç sektörüne açılmak, bakım sözleşmesi gelirlerini artırmak istiyoruz. Hedef: 2 yılda ciroyu %40 büyütmek."
+      }
+    ]
+  },
+  "attachments": []
+}

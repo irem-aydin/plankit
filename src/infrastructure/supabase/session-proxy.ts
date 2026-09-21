@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { safeInternalPath } from "@/core/account/security";
 
 const PROTECTED_PREFIXES = ["/panel", "/olustur", "/ciktilar", "/abonelik", "/profiller", "/ayarlar"];
 /** Oturum açıkken gösterilmeyen sayfalar (şifre yenileme bilinçli olarak dahil değil) */
@@ -47,10 +48,8 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (isSignedIn && AUTH_PAGES.includes(pathname)) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/panel";
-    url.search = "";
-    return redirectWithCookies(url, response);
+    const target = new URL(safeInternalPath(request.nextUrl.searchParams.get("sonra"), "/panel"), request.url);
+    return redirectWithCookies(target, response);
   }
 
   return response;

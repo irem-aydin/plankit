@@ -1,0 +1,440 @@
+{
+  "schemaVersion": 1,
+  "title": "Risk Yönetim Planı Örneği: Ofis Taşınma Projesi",
+  "generatedAt": "2026-09-21T14:13:12.395Z",
+  "sections": [
+    {
+      "subcategoryId": "custom",
+      "subcategoryName": "Maslak–Levent Ofis Taşınma Projesi: Risk Yönetim Planı ve Risk Kaydı",
+      "categoryId": "10000000-0000-4000-8000-000000000002",
+      "categoryName": "Proje Yönetimi",
+      "templateId": "ai-designed",
+      "templateVersion": 1,
+      "body": {
+        "kind": "template",
+        "summary": "120 çalışanlı yazılım şirketinin Maslak ofisinden Levent'teki yeni ofise 2026 Aralık ayında planlanan taşınması için PMBOK risk yönetimi süreçlerine dayalı özet risk yönetim planı ve risk kaydıdır. Odak, müşteri hizmetlerinde sıfır kesinti, 2,5 milyon TL bütçeye uyum ve çalışan uyumudur.",
+        "sections": [
+          {
+            "id": "s0",
+            "title": "1. Proje Bağlamı ve Risk Yönetimi Kapsamı",
+            "description": "Risk yönetiminin sınırlarını, hedeflerini ve kabul edilmeyecek sonuçları tanımlar. Proje başlangıcında doldurulur, kapsam değişiminde güncellenir.",
+            "fields": [
+              {
+                "id": "s0f0",
+                "label": "Proje tanımı",
+                "type": "textarea",
+                "value": "120 çalışanın Maslak ofisinden Levent'teki yeni ofise taşınması; sunucu odası ve ağ altyapısının devri, mobilya tedarik/taşıması, mevcut kira sözleşmesinin devri ve çalışan uyumu iş paketlerini kapsar. Hedef taşınma tarihi 2026-12-19/21 hafta sonu (tahmini pencere), toplam bütçe 2,5 milyon TL."
+              },
+              {
+                "id": "s0f1",
+                "label": "Risk yönetimi hedefleri",
+                "type": "textarea",
+                "value": "- Müşteriye dönük hizmetlerde planlı bakım penceresi dışında sıfır kesinti\n- Bütçenin %10'unu (250.000 TL) aşan sapma olmaması\n- Taşınma sonrası ilk iş günü (2026-12-22) en az %90 çalışanın verimli çalışabilmesi"
+              },
+              {
+                "id": "s0f2",
+                "label": "Kapsam dışı",
+                "type": "textarea",
+                "value": "Yeni ofisin mimari tadilat işleri (mal sahibi sorumluluğunda varsayıldı) ve bulut sağlayıcı altyapısındaki kesintiler bu risk kaydının doğrudan kapsamında değildir; yalnızca bağımlılık olarak izlenir."
+              }
+            ]
+          },
+          {
+            "id": "s1",
+            "title": "2. Risk Yönetimi Yaklaşımı ve Ölçekler",
+            "description": "Olasılık/etki ölçeği, risk skoru eşikleri ve tırmandırma kurallarını tanımlar. Tüm risklerin puanlanmasında bu ölçek kullanılır.",
+            "fields": [
+              {
+                "id": "s1f0",
+                "label": "Skorlama ve eşikler",
+                "type": "textarea",
+                "value": "Risk skoru = Olasılık (1-5) x Etki (1-5). 15-25 kritik (Yönetim Kurulu/CTO onayı ve yazılı azaltım planı), 8-12 yüksek (Proje Yöneticisi haftalık takip), 1-6 düşük (izleme listesi)."
+              },
+              {
+                "id": "s1f1",
+                "label": "Yönetişim",
+                "type": "textarea",
+                "value": "Haftalık 45 dakikalık taşınma komitesi toplantısı (PM, IT Altyapı Lideri, İdari İşler, HR, Hukuk); taşınma haftasında günlük 15 dakikalık stand-up. Kritik riskte 2 saat içinde CTO'ya tırmandırma."
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Etki alanı",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "1 - Çok düşük",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "3 - Orta",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "5 - Çok yüksek",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Müşteri hizmeti",
+                  "c1": "<5 dk iç kesinti",
+                  "c2": "30-120 dk kesinti, SLA uyarısı",
+                  "c3": "> 4 saat kesinti, SLA cezası"
+                },
+                {
+                  "c0": "Bütçe",
+                  "c1": "< 25.000 TL",
+                  "c2": "100.000-250.000 TL",
+                  "c3": "> 250.000 TL (bütçe aşımı)"
+                },
+                {
+                  "c0": "Takvim",
+                  "c1": "< 2 gün gecikme",
+                  "c2": "1-2 hafta gecikme",
+                  "c3": "> 1 ay gecikme, çifte kira"
+                },
+                {
+                  "c0": "İnsan kaynağı",
+                  "c1": "Lokal şikayet",
+                  "c2": "Verim kaybı 1-2 hafta",
+                  "c3": "Kritik personel kaybı"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s2",
+            "title": "3. Risk Kaydı (Öncelikli Riskler)",
+            "description": "Tanımlanmış riskler, skorları, yanıt stratejileri ve sahipleri. Haftalık komitede güncellenir; yeni risk eklendiğinde ID sıradan devam eder.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "ID",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Risk",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "O/E/Skor",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Yanıt stratejisi ve önlem",
+                  "type": "text"
+                },
+                {
+                  "id": "c4",
+                  "label": "Sahip",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "R-01",
+                  "c1": "Sunucu odası taşınmasında donanım arızası veya fiziksel hasar nedeniyle müşteriye dönük serviste kesinti",
+                  "c2": "3/5/15",
+                  "c3": "Azalt: kritik servisler taşınmadan önce buluta/colocation'a geçici taşınır, fiziksel sunucular yalnızca yedek rolde taşınır; 2026-12-19 22:00-06:00 planlı bakım penceresi müşterilere 10 gün önce duyurulur",
+                  "c4": "IT Altyapı Lideri"
+                },
+                {
+                  "c0": "R-02",
+                  "c1": "Levent ofisinde fiber/internet devrelerinin taşınma tarihine kadar aktif olmaması (operatör teslim süresi tahmini 6-10 hafta)",
+                  "c2": "4/5/20",
+                  "c3": "Azalt/Transfer: iki farklı operatörden yedekli devre siparişi 2026-09-28'e kadar verilir, sözleşmeye gecikme cezası eklenir; yedek olarak 5G router havuzu (20 adet) kiralanır",
+                  "c4": "IT Altyapı Lideri"
+                },
+                {
+                  "c0": "R-03",
+                  "c1": "Maslak kira sözleşmesinin devri/fesih koşullarının uyuşmaması nedeniyle çifte kira veya depozito kaybı",
+                  "c2": "3/4/12",
+                  "c3": "Azalt: hukuk incelemesi 2026-10-05'e kadar tamamlanır, devralacak kiracı bulunamazsa 1 ay örtüşmeli çıkış senaryosu bütçelenir",
+                  "c4": "Hukuk / İdari İşler"
+                },
+                {
+                  "c0": "R-04",
+                  "c1": "Mobilya tedarik ve montaj gecikmesi; 120 kişilik düzenin ilk iş günü hazır olmaması",
+                  "c2": "3/3/9",
+                  "c3": "Azalt: sipariş 2026-10-12'ye kadar kesinleşir, teslim 2026-12-10, sözleşmeye kademeli teslim ve gecikme cezası; ilk hafta için hibrit/uzaktan çalışma opsiyonu",
+                  "c4": "İdari İşler Yöneticisi"
+                },
+                {
+                  "c0": "R-05",
+                  "c1": "Çalışan direnci ve ulaşım kaygısı nedeniyle verim düşüşü veya istifa (özellikle kıdemli geliştiriciler)",
+                  "c2": "3/4/12",
+                  "c3": "Azalt: 2026-10-01'de bilgilendirme toplantısı, ulaşım/otopark anketi, taşınma haftası esnek çalışma, shuttle veya yol desteği değerlendirmesi",
+                  "c4": "HR Direktörü"
+                },
+                {
+                  "c0": "R-06",
+                  "c1": "Bütçe aşımı: 2,5 milyon TL'nin kur/fiyat artışı ve sürpriz IT maliyetleriyle aşılması",
+                  "c2": "3/4/12",
+                  "c3": "Azalt: %10 (250.000 TL) yönetim rezervi ayrılır, 100.000 TL üzeri harcamalar PM onayına tabidir, kritik kalemlerde TL sabit fiyat sözleşmesi",
+                  "c4": "Proje Yöneticisi / Finans"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s3",
+            "title": "4. Hizmet Sürekliliği Risklerine Özel Kontroller",
+            "description": "Sıfır kesinti hedefini korumak için teknik geçiş kontrolleri. Taşınma öncesi imzalı kontrol listesi olarak kullanılır.",
+            "fields": [
+              {
+                "id": "s3f0",
+                "label": "Geri dönüş (rollback) kuralı",
+                "type": "textarea",
+                "value": "Taşınma gecesi 04:00'te servisler doğrulanmamışsa trafik Maslak/geçici bulut ortamına geri alınır; Maslak'taki devreler taşınmadan sonra en az 2 hafta (2027-01-05'e kadar) açık tutulur."
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Kontrol",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Ne zaman",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Kabul kriteri",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Sorumlu",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Kritik servislerin bulut/colocation'a geçişi ve yük testi",
+                  "c1": "2026-11-16 – 2026-11-30",
+                  "c2": "Üretim trafiği %100 yeni ortamdan, hata oranı <%0,1",
+                  "c3": "DevOps Ekibi"
+                },
+                {
+                  "c0": "Yedekleme ve tam geri yükleme provası",
+                  "c1": "2026-12-05",
+                  "c2": "Kritik veritabanları test ortamına 2 saat içinde geri yüklendi",
+                  "c3": "IT Altyapı Lideri"
+                },
+                {
+                  "c0": "Levent ağ altyapısı kabul testi (kablolama, Wi-Fi, güvenlik duvarı)",
+                  "c1": "2026-12-12",
+                  "c2": "Tüm katlarda ölçüm raporu onaylı, yedek devre failover başarılı",
+                  "c3": "IT Altyapı Lideri"
+                },
+                {
+                  "c0": "Müşteri bilgilendirmesi ve SLA bakım penceresi onayı",
+                  "c1": "2026-12-09",
+                  "c2": "Tüm kurumsal müşterilere yazılı bildirim gönderildi",
+                  "c3": "Müşteri Başarı Yöneticisi"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s4",
+            "title": "5. Risk İzleme, Rezerv ve Raporlama",
+            "description": "Rezervin nasıl kullanılacağı ve risklerin nasıl izleneceği. Aylık yönetim raporunun eki olarak kullanılır.",
+            "fields": [
+              {
+                "id": "s4f0",
+                "label": "Rezerv kullanımı",
+                "type": "textarea",
+                "value": "2,5 milyon TL bütçe içinden 250.000 TL (%10) yönetim rezervi risk gerçekleşmelerine ayrılır; kullanım yalnızca PM onayı ve risk ID referansı ile yapılır. Rakamlar tahmini olup tedarikçi teklifleriyle doğrulanacaktır."
+              },
+              {
+                "id": "s4f1",
+                "label": "Erken uyarı göstergeleri",
+                "type": "textarea",
+                "value": "- Operatör devre teslim tarihinde 1 haftalık kayma\n- Mobilya üretim onayının 2026-10-20'yi geçmesi\n- Çalışan anketinde ulaşım memnuniyetinin %60 altına inmesi\n- Rezervin taşınmadan önce %50'sinin harcanması"
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Rapor",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Sıklık",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Alıcı",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "İçerik",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Risk durum raporu",
+                  "c1": "Haftalık (Pazartesi)",
+                  "c2": "Taşınma Komitesi",
+                  "c3": "Skor değişimi, yeni riskler, geciken aksiyonlar"
+                },
+                {
+                  "c0": "Yönetim özeti",
+                  "c1": "Aylık (ayın son iş günü)",
+                  "c2": "CTO / CEO",
+                  "c3": "Kritik riskler, bütçe-rezerv durumu, karar talepleri"
+                },
+                {
+                  "c0": "Taşınma haftası durum notu",
+                  "c1": "Günlük",
+                  "c2": "Tüm şirket",
+                  "c3": "Servis durumu, ertesi gün planı"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s5",
+            "title": "6. Uygulama Adımları",
+            "description": "Bugünden taşınma sonrasına kadar sahipli ve tarihli aksiyonlar. Tarihler 2026-12-19/21 taşınma penceresine göre geriye doğru planlanmıştır.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Adım",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Sorumlu rol",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Bitiş tarihi",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Başarı ölçütü",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Risk kaydının komiteyle doğrulanması ve sahiplerin atanması",
+                  "c1": "Proje Yöneticisi",
+                  "c2": "2026-09-28",
+                  "c3": "Tüm riskler sahipli ve skorlu, kayıt onaylı"
+                },
+                {
+                  "c0": "İki operatörden yedekli fiber siparişi ve gecikme cezalı sözleşme",
+                  "c1": "IT Altyapı Lideri",
+                  "c2": "2026-09-30",
+                  "c3": "İmzalı sözleşme ve yazılı teslim tarihi"
+                },
+                {
+                  "c0": "Maslak kira sözleşmesi devir/fesih hukuki analizi ve senaryo kararı",
+                  "c1": "Hukuk / İdari İşler",
+                  "c2": "2026-10-05",
+                  "c3": "Çifte kira riski için yazılı senaryo ve maliyet"
+                },
+                {
+                  "c0": "Çalışan bilgilendirme toplantısı ve ulaşım anketi",
+                  "c1": "HR Direktörü",
+                  "c2": "2026-10-09",
+                  "c3": "Katılım >%85, anket yanıt oranı >%70"
+                },
+                {
+                  "c0": "Mobilya siparişinin kesinleşmesi (teslim 2026-12-10)",
+                  "c1": "İdari İşler Yöneticisi",
+                  "c2": "2026-10-12",
+                  "c3": "Sabit TL fiyatlı sözleşme, kademeli teslim planı"
+                },
+                {
+                  "c0": "Kritik servislerin bulut/colocation'a geçişi ve yük testi",
+                  "c1": "DevOps Ekibi",
+                  "c2": "2026-11-30",
+                  "c3": "Üretim trafiği yeni ortamda, kesinti 0 dk"
+                },
+                {
+                  "c0": "Taşınma provası: yedek geri yükleme + ağ kabul testi",
+                  "c1": "IT Altyapı Lideri",
+                  "c2": "2026-12-12",
+                  "c3": "Kontrol listesi imzalı, rollback planı test edildi"
+                },
+                {
+                  "c0": "Taşınma sonrası risk kapanışı ve öğrenilen dersler raporu",
+                  "c1": "Proje Yöneticisi",
+                  "c2": "2027-01-16",
+                  "c3": "Açık risk yok veya operasyona devredildi"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "personalization": {
+        "model": "claude-opus-5",
+        "keyFindings": [
+          "En yüksek riskli kalem fiber/internet devre teslim süresidir (skor 20); operatör siparişi bu hafta (2026-09-30'a kadar) verilmezse 3 aylık takvim tutmaz.",
+          "Sıfır kesinti hedefi fiziksel sunucu odasını taşırken sağlanamaz; kritik servisler taşınmadan önce bulut/colocation'a alınmalı, fiziksel donanım yalnızca yedek rolüyle taşınmalıdır.",
+          "2,5 milyon TL bütçeden 250.000 TL (%10) yönetim rezervi ayrılmalı; Maslak kira devri gerçekleşmezse ortaya çıkacak 1 aylık çifte kira bu rezervin büyük kısmını tüketebilir."
+        ],
+        "assumptions": [
+          "Taşınma penceresi 2026-12-19/21 hafta sonu olarak varsayıldı (\"3 ay sonra\" ifadesinden türetildi); kesin tarih teyit edilmeli.",
+          "Yeni Levent ofisinin tadilat ve kaba işleri mal sahibi tarafından taşınma öncesi tamamlanacak varsayıldı.",
+          "Rezerv tutarı 2.500.000 TL x %10 = 250.000 TL olarak hesaplandı; kullanıcı tarafından belirlenmiş bir rezerv oranı bildirilmemiştir.",
+          "Şirketin kurumsal müşterileriyle SLA'larında planlı bakım penceresi hakkı bulunduğu varsayıldı.",
+          "Operatör fiber teslim süresi 6-10 hafta olarak tahmin edildi; ilgili operatörlerden yazılı teyit alınmalı."
+        ],
+        "openQuestions": [
+          "Kesin taşınma tarihi ve yeni ofis anahtar teslim tarihi nedir?",
+          "Maslak sözleşmesinin fesih/devir şartları (ihbar süresi, ceza, depozito) nedir ve devralacak kiracı var mı?",
+          "Kritik servisler şu anda kendi sunucu odasında mı, kısmen bulutta mı çalışıyor; bulut geçişi için ek bütçe var mı?",
+          "Müşteri SLA'larında izin verilen planlı bakım penceresi süresi ve bildirim süresi nedir?",
+          "2,5 milyon TL bütçenin kalemler arası dağılımı (IT, mobilya, nakliye, hukuk) daha önce karara bağlandı mı?"
+        ]
+      }
+    }
+  ],
+  "missing": [],
+  "context": {
+    "mode": "free",
+    "detail": "summary",
+    "language": "tr",
+    "entries": [
+      {
+        "question": "Kullanıcının kendi anlatımı",
+        "answer": "120 çalışanlı bir yazılım şirketiyiz. 3 ay sonra İstanbul Maslak'taki ofisimizden Levent'teki yeni ofise taşınacağız. Sunucu odası, ağ altyapısı, mobilya, kira sözleşmesi devri ve çalışanların uyumu gibi konular var. Taşınma sırasında müşterilerimize hizmet kesintisi olmamalı. Taşınma bütçesi 2,5 milyon TL."
+      }
+    ]
+  },
+  "attachments": []
+}

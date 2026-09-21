@@ -1,0 +1,476 @@
+{
+  "schemaVersion": 1,
+  "title": "Paydaş Analizi Örneği: Hastane Randevu Sistemi Yenileme",
+  "generatedAt": "2026-09-21T14:13:12.395Z",
+  "sections": [
+    {
+      "subcategoryId": "custom",
+      "subcategoryName": "Randevu Sistemi Yenileme: Paydaş Analizi ve İletişim Planı",
+      "categoryId": "10000000-0000-4000-8000-000000000001",
+      "categoryName": "İş Analizi",
+      "templateId": "ai-designed",
+      "templateVersion": 1,
+      "body": {
+        "kind": "template",
+        "summary": "İzmir'deki 180 yataklı özel hastanenin 10 yıllık randevu sisteminin bulut tabanlı yeni çözüme geçişinde etkilenen paydaşların BABOK yaklaşımıyla haritalanması, direnç noktalarının yönetimi ve 8 aylık proje süresince uygulanacak iletişim planını içerir. Doküman, Bilgi İşlem Müdürlüğü'nün proje yönetişim ve değişim yönetimi çalışma belgesi olarak kullanılır.",
+        "sections": [
+          {
+            "id": "s0",
+            "title": "1. Proje Bağlamı ve Kapsam",
+            "description": "Projenin sınırlarını, sürekliliğini ve iş analizi odağını netleştirir. Kapsam dışı kararlar burada kayda geçirilir.",
+            "fields": [
+              {
+                "id": "s0f0",
+                "label": "Proje Tanımı",
+                "type": "textarea",
+                "value": "10 yıldır kullanılan yerinde (on-premise) randevu sistemi, bulut tabanlı yeni bir randevu yönetim çözümüyle değiştirilecektir. Proje süresi 8 ay olarak belirlenmiş olup 2026-10-01 başlangıç ve 2027-05-31 bitiş varsayımıyla planlanmıştır."
+              },
+              {
+                "id": "s0f1",
+                "label": "İş Analizi Odağı",
+                "type": "textarea",
+                "value": "Odak; poliklinik randevu akışlarının mevcut durum (as-is) haritası, hekim bazlı çizelge kurallarının yeni sisteme taşınması ve çağrı merkezi ile hasta self-servis kanallarının paralel çalışmasıdır."
+              },
+              {
+                "id": "s0f2",
+                "label": "Kapsam Dışı (Bu Fazda)",
+                "type": "textarea",
+                "value": "- Hastane bilgi yönetim sisteminin (HBYS) diğer modüllerinin değişimi\n- Yatan hasta ve ameliyat planlama modülleri\n- Fatura/SGK mutabakat süreçlerinin yeniden tasarımı"
+              },
+              {
+                "id": "s0f3",
+                "label": "Başarı Ölçütleri",
+                "type": "textarea",
+                "value": "Canlıya geçiş sonrası 60 gün içinde: randevu oluşturma süresinde azalma, hekim çizelge hatası kaynaklı iptal oranında düşüş ve hasta hakları birimine gelen randevu şikâyetinin geçiş öncesi seviyeye dönmesi. Mevcut taban değerler ölçülmediği için hedef yüzdeler ilk ay içinde belirlenecektir."
+              }
+            ]
+          },
+          {
+            "id": "s1",
+            "title": "2. Paydaş Envanteri ve Etki/Güç Analizi",
+            "description": "Her paydaş grubu için güç, etki ve mevcut tutum değerlendirilir; buna göre yönetim stratejisi (yakın yönet / memnun tut / bilgilendir / izle) atanır.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Paydaş",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Etkilenme Düzeyi",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Karar Gücü",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Mevcut Tutum",
+                  "type": "text"
+                },
+                {
+                  "id": "c4",
+                  "label": "Strateji",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Hekimler (özellikle kıdemli hekimler)",
+                  "c1": "Yüksek",
+                  "c2": "Yüksek",
+                  "c3": "Dirençli / kararsız",
+                  "c4": "Yakın yönet: birebir görüşme ve çizelge kurallarının korunması taahhüdü"
+                },
+                {
+                  "c0": "Çağrı merkezi ekibi",
+                  "c1": "Çok yüksek",
+                  "c2": "Düşük",
+                  "c3": "Kaygılı (iş yükü artışı)",
+                  "c4": "Yakın yönet: erken eğitim, süper kullanıcı rolü, çift sistem döneminde destek"
+                },
+                {
+                  "c0": "Yönetim kurulu",
+                  "c1": "Orta",
+                  "c2": "Çok yüksek",
+                  "c3": "Destekleyici (bütçe hassas)",
+                  "c4": "Memnun tut: aylık tek sayfa ilerleme ve risk raporu"
+                },
+                {
+                  "c0": "BT ekibi",
+                  "c1": "Çok yüksek",
+                  "c2": "Orta",
+                  "c3": "Destekleyici",
+                  "c4": "Yakın yönet: entegrasyon, veri göçü ve kesinti planının sahibi"
+                },
+                {
+                  "c0": "Yazılım tedarikçisi",
+                  "c1": "Yüksek",
+                  "c2": "Orta",
+                  "c3": "Ticari olarak istekli",
+                  "c4": "Sözleşme/SLA üzerinden yönet: haftalık teslim takibi"
+                },
+                {
+                  "c0": "Hasta hakları birimi",
+                  "c1": "Orta",
+                  "c2": "Düşük",
+                  "c3": "Temkinli",
+                  "c4": "Bilgilendir: şikâyet kanalı ve geçiş dönemi senaryoları"
+                },
+                {
+                  "c0": "Hastalar",
+                  "c1": "Yüksek",
+                  "c2": "Düşük",
+                  "c3": "Farkında değil",
+                  "c4": "Bilgilendir: SMS, web ve resepsiyon duyuruları"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s2",
+            "title": "3. Direnç ve İhtiyaç Analizi",
+            "description": "Kritik paydaşların altındaki gerçek endişe, gözlemlenebilir direnç belirtisi ve karşı önlem eşleştirilir. Kıdemli hekim direnci projenin birinci sıra riski olarak ele alınır.",
+            "fields": [
+              {
+                "id": "s2f0",
+                "label": "Direncin Kök Nedeni Değerlendirmesi",
+                "type": "textarea",
+                "value": "Kıdemli hekimlerdeki direnç genellikle sisteme değil, 10 yılda oluşmuş kişisel çizelge alışkanlıklarının ve muayene süresi esnekliğinin kaybedilme korkusuna dayanır. Bu nedenle iletişim mesajı teknoloji faydası değil, 'mevcut çalışma düzeninin korunması ve kontrolün hekimde kalması' olmalıdır."
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Paydaş",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Temel Endişe",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Direnç Belirtisi",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Karşı Önlem",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Kıdemli hekimler",
+                  "c1": "Kendi randevu düzeninin bozulması, ekran alışkanlığının kaybı",
+                  "c2": "Eğitime katılmama, sekreter üzerinden kullanım",
+                  "c3": "Hekim başına 30 dakikalık birebir konfigürasyon görüşmesi; 2 gönüllü hekimle pilot"
+                },
+                {
+                  "c0": "Çağrı merkezi",
+                  "c1": "Yeni ekranda çağrı süresinin uzaması, performans baskısı",
+                  "c2": "Eski sisteme dönme talebi, hata bildirimi artışı",
+                  "c3": "Geçiş ayında çağrı hedeflerinin geçici gevşetilmesi; vardiya başına 1 süper kullanıcı"
+                },
+                {
+                  "c0": "Hasta hakları birimi",
+                  "c1": "Geçişte kaybolan/çift randevu kaynaklı şikâyet dalgası",
+                  "c2": "Yazılı risk itirazı",
+                  "c3": "Geçiş haftası için özel şikâyet akışı ve 48 saat içinde çözüm taahhüdü"
+                },
+                {
+                  "c0": "Yönetim kurulu",
+                  "c1": "Bütçe aşımı ve poliklinik gelir kaybı",
+                  "c2": "Onay gecikmesi",
+                  "c3": "Kesinti penceresinin hafta sonuna alınması; aylık maliyet/ilerleme raporu"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s3",
+            "title": "4. İletişim Planı (8 Aylık)",
+            "description": "Her paydaş için kanal, sıklık, içerik ve sorumlu rol tanımlanır. Tablo proje boyunca canlı doküman olarak güncellenir.",
+            "fields": [
+              {
+                "id": "s3f0",
+                "label": "Mesaj Çerçevesi",
+                "type": "textarea",
+                "value": "Tek ve tutarlı üç mesaj kullanılır: (1) hasta randevusuna daha hızlı ulaşacak, (2) hekimin çizelge kontrolü aynen korunacak, (3) geçişte kimse yalnız bırakılmayacak, destek masası hazır olacak."
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Paydaş",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Kanal / Format",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Sıklık",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "İçerik Odağı",
+                  "type": "text"
+                },
+                {
+                  "id": "c4",
+                  "label": "Sorumlu",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Hekimler",
+                  "c1": "Birebir görüşme + branş toplantısı",
+                  "c2": "Aylık, geçiş ayında haftalık",
+                  "c3": "Çizelge kuralları, pilot sonuçları, eğitim takvimi",
+                  "c4": "Bilgi İşlem Müdürü + Başhekim"
+                },
+                {
+                  "c0": "Çağrı merkezi",
+                  "c1": "Vardiya brifingi + hızlı kılavuz",
+                  "c2": "Haftalık",
+                  "c3": "Ekran değişiklikleri, sık hata çözümleri",
+                  "c4": "Çağrı Merkezi Sorumlusu"
+                },
+                {
+                  "c0": "Yönetim kurulu",
+                  "c1": "Tek sayfa yönetici raporu",
+                  "c2": "Aylık (ay sonu)",
+                  "c3": "İlerleme, bütçe, ilk 3 risk, karar talepleri",
+                  "c4": "Bilgi İşlem Müdürü"
+                },
+                {
+                  "c0": "BT ekibi",
+                  "c1": "Günlük kısa toplantı + görev panosu",
+                  "c2": "Haftalık / geçiş haftası günlük",
+                  "c3": "Entegrasyon, veri göçü, kesinti planı",
+                  "c4": "BT Takım Lideri"
+                },
+                {
+                  "c0": "Yazılım tedarikçisi",
+                  "c1": "Proje toplantısı + yazılı aksiyon listesi",
+                  "c2": "Haftalık",
+                  "c3": "Teslim takvimi, açık hata listesi, SLA",
+                  "c4": "Bilgi İşlem Müdürü"
+                },
+                {
+                  "c0": "Hastalar",
+                  "c1": "SMS, web sitesi, resepsiyon afişi",
+                  "c2": "Geçişten 3 hafta, 1 hafta ve 1 gün önce",
+                  "c3": "Yeni randevu kanalı, geçiş günü uyarısı",
+                  "c4": "Hasta İlişkileri / Pazarlama"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s4",
+            "title": "5. Riskler ve Yönetişim",
+            "description": "Paydaş kaynaklı riskler olasılık-etki ile derecelendirilir ve sahibi atanır. Kırmızı riskler yönetim kurulu raporunda ayrıca gösterilir.",
+            "fields": [
+              {
+                "id": "s4f0",
+                "label": "Karar Mekanizması",
+                "type": "textarea",
+                "value": "Haftalık proje toplantısı operasyonel kararları alır; kapsam, bütçe ve canlıya geçiş tarihi değişiklikleri yönetim kurulu onayına taşınır. Canlıya geçiş için hekim eğitim katılımı ve veri göçü doğrulaması ön koşuldur."
+              }
+            ],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Risk",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Olasılık / Etki",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Sahip",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Önlem",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Kıdemli hekimlerin yeni sistemi kullanmaması",
+                  "c1": "Yüksek / Yüksek",
+                  "c2": "Başhekim",
+                  "c3": "Pilot hekim referansı, birebir kurulum desteği, ilk 2 hafta masa başı destek"
+                },
+                {
+                  "c0": "Veri göçünde randevu kaybı veya çift kayıt",
+                  "c1": "Orta / Çok yüksek",
+                  "c2": "BT Takım Lideri",
+                  "c3": "İki kez prova göçü, mutabakat raporu, geri dönüş (rollback) planı"
+                },
+                {
+                  "c0": "Bulut erişiminde internet/hat kesintisi",
+                  "c1": "Orta / Yüksek",
+                  "c2": "BT Takım Lideri",
+                  "c3": "Yedek hat, çevrimdışı randevu formu prosedürü"
+                },
+                {
+                  "c0": "Tedarikçinin teslim gecikmesi",
+                  "c1": "Orta / Yüksek",
+                  "c2": "Bilgi İşlem Müdürü",
+                  "c3": "Sözleşmede kilometre taşı bazlı ödeme ve gecikme maddesi (hukuk ile teyit edilmeli)"
+                },
+                {
+                  "c0": "Kişisel veri/KVKK uyum eksiği (bulut, veri yeri, aydınlatma metni)",
+                  "c1": "Orta / Çok yüksek",
+                  "c2": "Bilgi İşlem Müdürü + KVKK Sorumlusu",
+                  "c3": "Veri işleyen sözleşmesi ve yurt dışı aktarım koşulları; yasal zorunluluk olduğu için hukuk müşaviri ve ilgili kurumdan teyit edilmeli"
+                }
+              ]
+            }
+          },
+          {
+            "id": "s5",
+            "title": "6. Uygulama Adımları",
+            "description": "Somut, sahipli ve tarihli aksiyonlar. Tarihler 2026-10-01 proje başlangıcı varsayımıyla verilmiştir ve kick-off sonrası teyit edilmelidir.",
+            "fields": [],
+            "table": {
+              "columns": [
+                {
+                  "id": "c0",
+                  "label": "Adım",
+                  "type": "text"
+                },
+                {
+                  "id": "c1",
+                  "label": "Sorumlu Rol",
+                  "type": "text"
+                },
+                {
+                  "id": "c2",
+                  "label": "Tarih",
+                  "type": "text"
+                },
+                {
+                  "id": "c3",
+                  "label": "Çıktı / Ölçüt",
+                  "type": "text"
+                }
+              ],
+              "exampleRows": [],
+              "rows": [
+                {
+                  "c0": "Paydaş kaydının doğrulanması ve hekim listesinin tutum bazında sınıflandırılması",
+                  "c1": "Bilgi İşlem Müdürü",
+                  "c2": "2026-10-09",
+                  "c3": "Onaylı paydaş matrisi; tüm poliklinik hekimleri sınıflandırılmış"
+                },
+                {
+                  "c0": "Kıdemli hekimlerle birebir görüşme turu (çizelge kuralları kaydı)",
+                  "c1": "Bilgi İşlem Müdürü + Başhekim",
+                  "c2": "2026-10-12 – 2026-11-06",
+                  "c3": "Hekim başına yazılı çizelge gereksinim formu"
+                },
+                {
+                  "c0": "Mevcut durum randevu akışı ve taban ölçüm değerlerinin çıkarılması",
+                  "c1": "İş Analisti / BT ekibi",
+                  "c2": "2026-11-13",
+                  "c3": "As-is akış şeması + taban KPI seti (çağrı süresi, iptal oranı)"
+                },
+                {
+                  "c0": "2 gönüllü hekim branşında pilot kurulum ve geri bildirim",
+                  "c1": "BT Takım Lideri + Tedarikçi",
+                  "c2": "2026-12-01 – 2027-01-15",
+                  "c3": "Pilot değerlendirme raporu ve düzeltme listesi"
+                },
+                {
+                  "c0": "Çağrı merkezi ve sekreterlik eğitimleri, süper kullanıcı atamaları",
+                  "c1": "Çağrı Merkezi Sorumlusu",
+                  "c2": "2027-02-02 – 2027-02-27",
+                  "c3": "Vardiya başına en az 1 süper kullanıcı; katılım %90"
+                },
+                {
+                  "c0": "Veri göçü provası ve mutabakat doğrulaması",
+                  "c1": "BT Takım Lideri",
+                  "c2": "2027-03-20",
+                  "c3": "Kayıp/çift kayıt oranı sıfıra yakın mutabakat raporu"
+                },
+                {
+                  "c0": "Hasta bilgilendirme kampanyası (SMS, web, afiş)",
+                  "c1": "Hasta İlişkileri",
+                  "c2": "2027-04-06 itibarıyla kademeli",
+                  "c3": "Geçişten 1 gün önce son hatırlatma gönderimi tamamlanmış"
+                },
+                {
+                  "c0": "Canlıya geçiş (hafta sonu penceresi) ve 2 hafta yoğun destek",
+                  "c1": "Bilgi İşlem Müdürü",
+                  "c2": "2027-05-08 hafta sonu",
+                  "c3": "Geçiş kontrol listesi tamam; kritik hata sayısı sıfır"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "personalization": {
+        "model": "claude-opus-5",
+        "keyFindings": [
+          "Projenin birinci sıra riski teknoloji değil, kıdemli hekim direncidir; bu nedenle iletişim mesajı 'hekimin çizelge kontrolü aynen korunacak' ekseninde kurulmalı ve birebir görüşmelerle desteklenmelidir.",
+          "Çağrı merkezi en yüksek operasyonel etkiye sahip ama karar gücü en düşük gruptur; geçiş ayında performans hedeflerinin geçici gevşetilmesi ve vardiya başına süper kullanıcı atanması kritik başarı koşuludur.",
+          "Bulut geçişi KVKK açısından veri işleyen sözleşmesi ve veri yeri/yurt dışı aktarım kontrolünü yasal zorunluluk haline getirir; bu, canlıya geçiş öncesi tamamlanması gereken bir ön koşuldur ve hukuk müşaviri ile ilgili kurumdan teyit edilmelidir."
+        ],
+        "assumptions": [
+          "Proje 2026-10-01'de başlayıp 2027-05-31'de tamamlanacak şekilde 8 ay olarak planlanmıştır; gerçek kick-off tarihi farklıysa tüm tarihler kaydırılmalıdır.",
+          "Canlıya geçişin poliklinik yoğunluğunun düşük olduğu bir hafta sonunda (2027-05-08 hafta sonu, tahmini) yapılacağı varsayılmıştır.",
+          "Tedarikçi sözleşmesinin imzalandığı ve bütçenin yönetim kurulu tarafından onaylandığı varsayılmıştır.",
+          "Eğitim ve destek için ek personel alımı yapılmayacağı, mevcut BT ve çağrı merkezi kadrosunun kullanılacağı varsayılmıştır.",
+          "Mevcut sistemin geçiş sonrası en az 3 ay salt-okunur arşiv olarak erişilebilir tutulacağı varsayılmıştır."
+        ],
+        "openQuestions": [
+          "Poliklinik hekim sayısı ve bunların kaçının 'kıdemli/dirençli' grupta olduğu nedir?",
+          "Yeni sistem HBYS, SGK/MHRS ve SMS altyapısıyla hangi entegrasyonları zorunlu kılıyor; tedarikçi bunları sözleşmede taahhüt etti mi?",
+          "Onaylanmış proje bütçesi ve eğitim/destek için ayrılmış pay nedir?",
+          "Geçiş stratejisi kesin geçiş (big bang) mi, branş bazlı kademeli geçiş mi olacak; yönetim kurulunun tercihi var mı?",
+          "Verinin barındırılacağı bulut bölgesi Türkiye içinde mi; yurt dışı aktarım varsa KVKK uyum yolu belirlendi mi?"
+        ]
+      }
+    }
+  ],
+  "missing": [],
+  "context": {
+    "mode": "free",
+    "detail": "summary",
+    "language": "tr",
+    "entries": [
+      {
+        "question": "Kullanıcının kendi anlatımı",
+        "answer": "İzmir'de 180 yataklı özel bir hastanede bilgi işlem müdürüyüm. 10 yıllık randevu sistemimizi yeni bir bulut tabanlı sistemle değiştireceğiz. Hekimler, çağrı merkezi, hasta hakları birimi, yönetim kurulu, BT ekibi, yazılım tedarikçisi ve hastalar etkilenecek. Bazı kıdemli hekimler değişime dirençli. Proje 8 ay sürecek."
+      }
+    ]
+  },
+  "attachments": []
+}
