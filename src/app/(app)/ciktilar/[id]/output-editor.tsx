@@ -254,7 +254,12 @@ export function OutputEditor({
           <DecisionsPanel outputId={outputId} doc={doc} profiles={profiles} />
         )}
 
-        <form action={deleteOutputAction} className="mt-10 text-right print:hidden">
+        <p className="mt-10 border-t border-slate-200 pt-4 text-xs text-slate-500">
+          Bu doküman yapay zekâ desteğiyle hazırlanmıştır ve karar desteği amaçlıdır. Tahmini rakamlar, tarihler ve
+          mevzuat bilgileri uygulamaya geçmeden önce ilgili kurumdan veya bir uzmandan teyit edilmelidir.
+        </p>
+
+        <form action={deleteOutputAction} className="mt-6 text-right print:hidden">
           <input type="hidden" name="id" value={outputId} />
           <button
             type="submit"

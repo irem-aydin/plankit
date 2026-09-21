@@ -119,8 +119,10 @@ export async function generateOutput(
   const missing: GeneratedDocument["missing"] = [];
 
   const toDesign: CatalogEntry[] = [];
+  // Hazır şablonlar Türkçedir; başka dilde plan istenirse çerçeveyi de yapay zekâ kurar.
+  const aiDesignsAll = parsed.data.context !== undefined && parsed.data.context.language !== "tr";
   for (const entry of ordered) {
-    if (!entry.template) {
+    if (!entry.template || aiDesignsAll) {
       // Hazır içerik yok: bağlam verildiyse yapay zekâ tasarlar, verilmediyse atlanır.
       if (parsed.data.context) toDesign.push(entry);
       else missing.push({ subcategoryId: entry.subcategory.id, name: entry.subcategory.name });

@@ -8,6 +8,15 @@ import { z } from "zod";
 export const INTAKE_MODES = ["quick", "detailed", "free"] as const;
 export type IntakeMode = (typeof INTAKE_MODES)[number];
 
+/** Planın yazılacağı dil */
+export const LANGUAGES = ["tr", "en"] as const;
+export type Language = (typeof LANGUAGES)[number];
+
+export const LANGUAGE_LABELS: Record<Language, string> = {
+  tr: "Türkçe",
+  en: "English",
+};
+
 /** Üretilecek planın uzunluğu (kullanıcı seçer) */
 export const DETAIL_LEVELS = ["summary", "detailed"] as const;
 export type DetailLevel = (typeof DETAIL_LEVELS)[number];
@@ -122,6 +131,7 @@ const MAX_FREE_TEXT_CHARS = 12_000;
 export const intakeContextSchema = z.object({
   mode: z.enum(INTAKE_MODES),
   detail: z.enum(DETAIL_LEVELS).default("summary"),
+  language: z.enum(LANGUAGES).default("tr"),
   /** Soru-cevaplar (kısa/detaylı modda) veya tek serbest metin girdisi */
   entries: z
     .array(
@@ -142,6 +152,7 @@ export function buildIntakeContext(
   mode: IntakeMode,
   answers: Record<string, string>,
   detail: DetailLevel = "summary",
+  language: Language = "tr",
 ): { ok: true; context: IntakeContext } | { ok: false; error: string } {
   const entries =
     mode === "free"
@@ -161,5 +172,5 @@ export function buildIntakeContext(
     };
   }
 
-  return { ok: true, context: { mode, detail, entries: filled } };
+  return { ok: true, context: { mode, detail, language, entries: filled } };
 }

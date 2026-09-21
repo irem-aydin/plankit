@@ -57,6 +57,17 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       </header>
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 print:max-w-none print:p-0">{children}</main>
+
+      <footer className="border-t border-slate-200 print:hidden">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-slate-500">
+          <span>
+            Yapay zekâ çıktıları karar desteği içindir; mevzuat ve tutar içeren konularda uzmandan teyit alın.
+          </span>
+          <Link href="/yasal" className="font-medium hover:underline">
+            Yasal bilgiler
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 }

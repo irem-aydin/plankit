@@ -5,6 +5,7 @@ import {
   type DetailLevel,
   type IntakeContext,
   type IntakeMode,
+  type Language,
 } from "@/core/ai/intake";
 import {
   MAX_MEMORIES_PER_PROFILE,
@@ -17,15 +18,12 @@ import { PreferencesRepository } from "@/infrastructure/supabase/preferences-rep
 import { ProfileRepository } from "@/infrastructure/supabase/profile-repository";
 import { createSupabaseServerClient } from "@/infrastructure/supabase/server";
 
-export type ContextRequest =
-  | { source: "profile"; profileId: string; extra: string; detail: DetailLevel }
-  | {
-      source: "intake";
-      mode: IntakeMode;
-      answers: Record<string, string>;
-      detail: DetailLevel;
-      saveAsProfileName?: string;
-    };
+export type ContextRequest = { detail: DetailLevel; language: Language } & (
+  | { source: "profile"; profileId: string; extra: string }
+  /** Kullanıcı "ne oluşturmak istiyorsun" kutusuna yazdı: soruları tekrar sormayız */
+  | { source: "request"; requestText: string; extra: string }
+  | { source: "intake"; mode: IntakeMode; answers: Record<string, string>; saveAsProfileName?: string }
+);
 
 type ContextResult = { ok: true; context: IntakeContext } | { ok: false; error: string };
 
@@ -65,13 +63,27 @@ export async function buildContextForUser(userId: string, request: ContextReques
       context: {
         mode: "free",
         detail: request.detail,
+        language: request.language,
         entries,
         profile: { id: profile.id, name: profile.name },
       },
     };
   }
 
-  const built = buildIntakeContext(request.mode, request.answers, request.detail);
+  if (request.source === "request") {
+    // Serbest istek tek başına bağlamdır; ek bilgi verilmişse eklenir.
+    const entries = [{ question: "Kullanıcının isteği", answer: request.requestText.trim().slice(0, 8_000) }];
+    const extra = request.extra.trim().slice(0, 8_000);
+    if (extra) entries.push({ question: "Ek bilgi", answer: extra });
+
+    const chars = entries.reduce((n, e) => n + e.answer.length, 0);
+    if (chars < MIN_CONTEXT_CHARS) {
+      return { ok: false, error: "Ne istediğini biraz daha açık yazar mısın? (En az birkaç cümle)" };
+    }
+    return { ok: true, context: { mode: "free", detail: request.detail, language: request.language, entries } };
+  }
+
+  const built = buildIntakeContext(request.mode, request.answers, request.detail, request.language);
   if (!built.ok) return built;
 
   const name = request.saveAsProfileName?.trim();

@@ -8,7 +8,7 @@ import {
   type Attachment,
 } from "@/core/ai/attachments";
 import { customRequestSchema } from "@/core/ai/custom-document";
-import { DETAIL_LEVELS, INTAKE_MODES, type DetailLevel, type IntakeMode } from "@/core/ai/intake";
+import { DETAIL_LEVELS, INTAKE_MODES, LANGUAGES, type DetailLevel, type IntakeMode, type Language } from "@/core/ai/intake";
 import { GenerationError } from "@/core/output/errors";
 import { getAuthenticatedUser } from "@/infrastructure/supabase/server";
 import { buildContextForUser } from "@/services/context-service";
@@ -56,19 +56,29 @@ export async function generateAction(
       ? (detailValue as DetailLevel)
       : "summary";
 
+    const languageValue = String(formData.get("language"));
+    const language: Language = (LANGUAGES as readonly string[]).includes(languageValue)
+      ? (languageValue as Language)
+      : "tr";
+
     const profileId = String(formData.get("profileId") ?? "");
+    const extra = String(formData.get("extra") ?? "");
+
     const result = await buildContextForUser(
       user.id,
       profileId
-        ? { source: "profile", profileId, extra: String(formData.get("extra") ?? ""), detail }
-        : {
-            source: "intake",
-            mode,
-            answers,
-            detail,
-            saveAsProfileName:
-              formData.get("saveAsProfile") === "1" ? String(formData.get("newProfileName") ?? "") : undefined,
-          },
+        ? { source: "profile", profileId, extra, detail, language }
+        : customText
+          ? { source: "request", requestText: customText, extra, detail, language }
+          : {
+              source: "intake",
+              mode,
+              answers,
+              detail,
+              language,
+              saveAsProfileName:
+                formData.get("saveAsProfile") === "1" ? String(formData.get("newProfileName") ?? "") : undefined,
+            },
     );
     if (!result.ok) return { error: result.error };
     context = result.context;

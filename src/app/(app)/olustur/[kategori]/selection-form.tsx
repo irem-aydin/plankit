@@ -3,7 +3,15 @@
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { OutputTypeBadge } from "@/components/output-type-badge";
-import { FREE_TEXT_HINTS, INTAKE_QUESTIONS, type DetailLevel, type IntakeMode } from "@/core/ai/intake";
+import {
+  FREE_TEXT_HINTS,
+  INTAKE_QUESTIONS,
+  LANGUAGES,
+  LANGUAGE_LABELS,
+  type DetailLevel,
+  type IntakeMode,
+  type Language,
+} from "@/core/ai/intake";
 import type { SubcategoryOption } from "@/infrastructure/supabase/catalog-queries";
 import { generateAction } from "../actions";
 import { FileInput, FilePicker, useFileSelection } from "./file-picker";
@@ -57,6 +65,7 @@ export function SelectionForm({
   const [step, setStep] = useState<"select" | "context">("select");
   const [mode, setMode] = useState<IntakeMode>("quick");
   const [detail, setDetail] = useState<DetailLevel>(defaultDetail);
+  const [language, setLanguage] = useState<Language>("tr");
   const [profileId, setProfileId] = useState<string>(defaultProfileId ?? profiles[0]?.id ?? "");
   const [saveAsProfile, setSaveAsProfile] = useState(false);
   const [customRequest, setCustomRequest] = useState("");
@@ -70,6 +79,8 @@ export function SelectionForm({
   const hasCustom = customRequest.trim().length > 0;
   const canUseWithoutAi = readyToFill.length === selectedSubs.length && selectedSubs.length > 0 && !hasCustom;
   const hasSelection = selectedSubs.length > 0 || hasCustom;
+  // Profil seçiliyse veya kullanıcı ne istediğini zaten yazdıysa soruları tekrar sormayız.
+  const contextFromUser = Boolean(selectedProfile) || hasCustom;
 
   function toggle(id: string) {
     setSelected((prev) => {
@@ -218,8 +229,16 @@ export function SelectionForm({
 
           <p className="mt-4 text-sm font-medium text-violet-700">Adım 3</p>
           <div className="mt-1 rounded-2xl border border-violet-200 bg-gradient-to-br from-violet-50 to-white p-5 sm:p-6">
-            <h2 className="text-xl font-bold text-slate-900">Durumunu anlat, planını birlikte hazırlayalım</h2>
-            <p className="mt-1 text-sm text-slate-600">
+            <h2 className="text-xl font-bold text-slate-900">
+              {contextFromUser ? "Son ayarlar" : "Durumunu anlat, planını birlikte hazırlayalım"}
+            </h2>
+            {hasCustom && !selectedProfile && (
+              <p className="mt-1 text-sm text-slate-600">
+                İsteğini aldık: <span className="font-medium text-slate-900">&ldquo;{customRequest.trim()}&rdquo;</span>{" "}
+                Tekrar soru sormuyoruz; istersen aşağıya ek bilgi ekleyebilirsin.
+              </p>
+            )}
+            <p className="mt-1 text-sm text-slate-600" hidden={hasCustom && !selectedProfile}>
               Yapay zekâ anlattıklarına göre{" "}
               <strong>
                 {[...selectedSubs.map((s) => s.name), ...(hasCustom ? ["kendi isteğin"] : [])].join(", ")}
@@ -278,7 +297,7 @@ export function SelectionForm({
             <div
               role="radiogroup"
               aria-label="Anlatım şekli"
-              hidden={Boolean(selectedProfile)}
+              hidden={contextFromUser}
               className="mt-5 grid gap-2 sm:grid-cols-3"
             >
               {MODES.map((m) => (
@@ -300,6 +319,30 @@ export function SelectionForm({
               ))}
             </div>
             <input type="hidden" name="mode" value={mode} />
+
+            <p className="mt-5 text-sm font-medium text-slate-800">Plan dili</p>
+            <div role="radiogroup" aria-label="Plan dili" className="mt-2 grid gap-2 sm:grid-cols-2">
+              {LANGUAGES.map((code) => (
+                <button
+                  key={code}
+                  type="button"
+                  role="radio"
+                  aria-checked={language === code}
+                  onClick={() => setLanguage(code)}
+                  className={`rounded-xl border p-3 text-left transition ${
+                    language === code
+                      ? "border-violet-500 bg-white ring-2 ring-violet-500/20"
+                      : "border-slate-200 bg-white/60 hover:border-slate-300"
+                  }`}
+                >
+                  <span className="block text-sm font-semibold text-slate-900">{LANGUAGE_LABELS[code]}</span>
+                  <span className="block text-xs text-slate-500">
+                    {code === "tr" ? "Hazır şablonlar Türkçedir" : "Çerçeveyi de yapay zekâ İngilizce kurar"}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <input type="hidden" name="language" value={language} />
 
             <p className="mt-5 text-sm font-medium text-slate-800">Plan ne kadar detaylı olsun?</p>
             <div role="radiogroup" aria-label="Plan uzunluğu" className="mt-2 grid gap-2 sm:grid-cols-2">
@@ -324,14 +367,15 @@ export function SelectionForm({
             <input type="hidden" name="detail" value={detail} />
           </div>
 
-          {selectedProfile && (
+          {contextFromUser && (
             <div className="mt-6">
               <label htmlFor="extra" className="block text-sm font-medium text-slate-800">
-                Bu plana özel eklemek istediğin bir şey var mı? <span className="font-normal text-slate-500">(isteğe bağlı)</span>
+                Eklemek istediğin bir şey var mı? <span className="font-normal text-slate-500">(isteğe bağlı)</span>
               </label>
               <p className="mt-1 text-xs text-slate-500">
-                &quot;{selectedProfile.name}&quot; profilindeki bilgiler ve hafıza otomatik kullanılacak. Sadece bu plana özel
-                durumu yaz; ör. &quot;Yeni şube açma kararı için değerlendirme yapıyoruz.&quot;
+                {selectedProfile
+                  ? `"${selectedProfile.name}" profilindeki bilgiler ve hafıza otomatik kullanılacak. Sadece bu plana özel durumu yaz.`
+                  : "Rakam, tarih, kısıt gibi ayrıntılar planı belirgin şekilde iyileştirir."}
               </p>
               <textarea
                 id="extra"
@@ -343,7 +387,7 @@ export function SelectionForm({
             </div>
           )}
 
-          <div className="mt-6 space-y-5" hidden={Boolean(selectedProfile)}>
+          <div className="mt-6 space-y-5" hidden={contextFromUser}>
             {/* Tüm modların alanları DOM'da kalır; kullanıcı mod değiştirince yazdıkları kaybolmaz. */}
             {(["quick", "detailed"] as const).map((m) => (
               <div key={m} hidden={mode !== m} className="space-y-5">
@@ -390,7 +434,7 @@ export function SelectionForm({
 
           <FilePicker selection={fileSelection} id="files-context" />
 
-          {personalizationEnabled && !selectedProfile && (
+          {personalizationEnabled && !contextFromUser && (
             <div className="mt-6 rounded-xl border border-slate-200 bg-white p-4">
               <label className="flex cursor-pointer items-start gap-3">
                 <input

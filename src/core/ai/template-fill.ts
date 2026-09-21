@@ -5,7 +5,7 @@
 import { z } from "zod";
 import type { TemplateInstance } from "../output/document";
 import { attachmentsPromptNote } from "./attachments";
-import type { DetailLevel } from "./intake";
+import type { DetailLevel, Language } from "./intake";
 import type { PersonalizationRequest } from "./personalizer";
 
 export const TEMPLATE_FILL_SYSTEM_PROMPT = `Sen iş analizi, strateji, proje ve ürün yönetimi alanlarında 20 yıllık deneyime sahip kıdemli bir yönetim danışmanısın. Görevin, kullanıcının anlattığı gerçek durumdan yola çıkarak verilen profesyonel şablonu, doğrudan uygulanabilir bir çalışma dokümanı olarak doldurmak.
@@ -30,6 +30,7 @@ Biçim:
 - Metin alanlarında kısa paragraflar ve gerektiğinde madde işaretleri ("- ") kullan. Markdown başlığı, kalın yazı veya tablo sözdizimi kullanma.
 - Aynı bilgiyi bölümler arasında tekrarlama.
 - Tüm içeriği profesyonel, açık, akıcı ve yazım hatası olmayan Türkçe ile yaz.
+- Çıktının dili sana ayrıca bildirilir; belirtilen dilde yaz. Kullanıcının kendi anlatımı başka bir dilde olsa bile çıktı istenen dilde olmalıdır. Özel isimler ve alıntılar korunur.
 
 Yanıtı vermeden önce son kontrol yap: hesaplar ve birimler doğru mu, tarihler tutarlı mı, aynı rol her yerde aynı adla mı geçiyor, yazım ve imla hatası var mı, tahminler işaretli mi? Hatayı düzelterek yanıtla.`;
 
@@ -83,6 +84,7 @@ export function buildTemplateFillPrompt(request: PersonalizationRequest): string
   }
 
   lines.push(DETAIL_GUIDANCE[request.context.detail]);
+  lines.push(languageInstruction(request.context.language));
   lines.push("");
 
   lines.push(`<sablon kategori="${request.categoryName}" baslik="${request.subcategoryName}">`);
@@ -147,6 +149,13 @@ export function buildTemplateFillPrompt(request: PersonalizationRequest): string
   lines.push(format.join("\n"));
 
   return lines.join("\n");
+}
+
+/** Çıktı dili talimatı. Şablon başlıkları Türkçe olduğu için çeviri kuralı da verilir. */
+export function languageInstruction(language: Language): string {
+  return language === "en"
+    ? 'Çıktı dili: İNGİLİZCE. Tüm alan içeriklerini İngilizce yaz (şablonun bölüm ve alan başlıkları Türkçe verilmiş olsa bile içerik İngilizce olmalı). Seçenek listesindeki değerler Türkçe kalır.'
+    : "Çıktı dili: TÜRKÇE.";
 }
 
 export function normalizeOption(value: string, options: string[] | undefined): string {

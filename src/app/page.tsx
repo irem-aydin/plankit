@@ -133,7 +133,7 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
 
         {/* Kategoriler */}
         <section className="mx-auto max-w-6xl px-4 py-20">
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900">4 alan, 37 başlık</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900">4 alan, 46 başlık</h2>
           <p className="mt-2 text-slate-600">Uluslararası kabul görmüş çerçevelere dayalı içerikler.</p>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {CATEGORIES.map((c) => (
@@ -162,7 +162,12 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
       <footer className="border-t border-slate-100">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-6 text-sm text-slate-500">
           <span>© {new Date().getFullYear()} {APP_NAME}</span>
-          <span>Yapay zekâ önerileri karar desteği içindir; önemli kararlardan önce uzman görüşü alın.</span>
+          <span className="flex flex-wrap items-center gap-3">
+            <Link href="/yasal" className="font-medium text-slate-600 hover:underline">
+              Yasal bilgiler
+            </Link>
+            <span>Yapay zekâ önerileri karar desteği içindir; önemli kararlardan önce uzman görüşü alın.</span>
+          </span>
         </div>
       </footer>
     </div>

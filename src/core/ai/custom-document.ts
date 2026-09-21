@@ -41,7 +41,7 @@ Doğruluk kuralları:
 Biçim:
 - Metin alanlarında kısa paragraflar ve gerektiğinde madde işaretleri ("- ") kullan. Markdown başlığı, kalın yazı veya tablo sözdizimi kullanma.
 - Tablo satırları sütun sayısıyla birebir aynı uzunlukta olsun.
-- Tüm içeriği profesyonel, açık, akıcı ve yazım hatası olmayan Türkçe ile yaz.
+- Çıktının dili sana ayrıca bildirilir; bölüm başlıkları, sütun adları ve tüm içerik o dilde olmalıdır. Kullanıcının anlatımı başka bir dilde olsa bile çıktı istenen dilde yazılır; özel isimler korunur.
 
 Yanıtı vermeden önce son kontrol yap: yapı konuya uygun mu, hesaplar ve birimler doğru mu, tarihler tutarlı mı, yazım hatası var mı, tahminler işaretli mi?`;
 
@@ -110,6 +110,12 @@ export function buildCustomDocumentPrompt(request: CustomDocumentRequest): strin
   }
 
   lines.push(DETAIL_GUIDANCE[request.context.detail], "");
+  lines.push(
+    request.context.language === "en"
+      ? "Çıktı dili: İNGİLİZCE. Bölüm başlıkları, sütun adları, yönergeler ve içeriğin tamamı İngilizce olmalıdır."
+      : "Çıktı dili: TÜRKÇE.",
+    "",
+  );
   lines.push(
     [
       `Görev: "${request.topic}" konusu için ${request.categoryName} alanına uygun profesyonel bir çalışma dokümanının yapısını tasarla ve bu kullanıcının durumuna göre doldur.`,
