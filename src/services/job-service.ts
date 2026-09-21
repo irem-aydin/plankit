@@ -75,12 +75,17 @@ export async function startGenerationJob(
     run: async () => {
       try {
         await jobs.markRunning(jobId);
+        // İlerleme yazımları sırayla yapılır ve üretimi bekletmez; bitişten önce tamamlanması beklenir
+        // (aksi hâlde geç kalan bir ilerleme kaydı "hazır" mesajının üzerine yazabilir).
+        let progressWrites = Promise.resolve();
         const { outputId } = await generateForUser(userId, input, attachments, {
           onProgress: ({ completed, total, finished }) => {
-            // Beklemeden yaz; ilerleme kaydı üretimi yavaşlatmamalı.
-            jobs.setProgress(jobId, progressMessage(completed, total, finished)).catch(() => {});
+            progressWrites = progressWrites
+              .then(() => jobs.setProgress(jobId, progressMessage(completed, total, finished)))
+              .catch(() => {});
           },
         });
+        await progressWrites;
         await jobs.markSucceeded(jobId, outputId, "Planın hazır");
       } catch (error) {
         await jobs.markFailed(jobId, userMessage(error)).catch((e) => console.error("İş durumu yazılamadı:", e));
