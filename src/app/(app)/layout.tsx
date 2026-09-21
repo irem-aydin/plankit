@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { APP_NAME } from "@/config/app";
 import { getCurrentSession } from "@/services/session";
 import { AppNav } from "./app-nav";
+import { FeedbackBox } from "./feedback-box";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const session = await getCurrentSession();
@@ -59,7 +60,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 print:max-w-none print:p-0">{children}</main>
 
       <footer className="border-t border-slate-200 print:hidden">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-slate-500">
+        {/* Alt boşluk: sağ alttaki sabit "Öneri / Şikâyet" düğmesi bağlantıların üstüne binmesin */}
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 pt-4 pb-20 text-xs text-slate-500">
           <span>
             Yapay zekâ çıktıları karar desteği içindir; mevzuat ve tutar içeren konularda uzmandan teyit alın.
           </span>
@@ -68,6 +70,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           </Link>
         </div>
       </footer>
+
+      <FeedbackBox />
     </div>
   );
 }

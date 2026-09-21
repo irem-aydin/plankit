@@ -3,6 +3,16 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { GeneratedDocument } from "@/core/output/document";
 import { isCatalogSection } from "@/core/output/generator";
 
+export interface OutputSummary {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  category: string | null;
+  profile: string | null;
+  language: "tr" | "en";
+}
+
 export interface StoredOutput {
   id: string;
   title: string;
@@ -34,7 +44,8 @@ const toStored = (r: OutputRow): StoredOutput => ({
 export class OutputRepository {
   constructor(private readonly client: SupabaseClient) {}
 
-  async create(userId: string, document: GeneratedDocument): Promise<string> {
+  /** trackSelections=false: kopyalarda raporlama verisi çiftlenmesin. */
+  async create(userId: string, document: GeneratedDocument, { trackSelections = true } = {}): Promise<string> {
     const { data, error } = await this.client
       .from("generated_outputs")
       .insert({
@@ -48,7 +59,7 @@ export class OutputRepository {
     if (error) throw new Error(`Çıktı kaydedilemedi: ${error.message}`);
 
     // Serbest istekle üretilen bölümler kataloğa bağlı değildir; raporlamaya girmez.
-    const selections = document.sections.filter(isCatalogSection).map((s) => ({
+    const selections = (trackSelections ? document.sections : []).filter(isCatalogSection).map((s) => ({
       subcategory_id: s.subcategoryId,
       category_id: s.categoryId,
     }));
@@ -85,6 +96,31 @@ export class OutputRepository {
       title: r.title,
       createdAt: r.created_at,
       updatedAt: r.updated_at,
+    }));
+  }
+
+  /**
+   * Planlarım sayfası için özet liste. Dokümanın tamamı yerine yalnızca
+   * filtrelemede gereken alanlar JSON yolu ile okunur (bir plan tek kategori
+   * sayfasından üretildiği için ilk bölümün kategorisi planın kategorisidir).
+   */
+  async listSummaries(limit = 300): Promise<OutputSummary[]> {
+    const { data, error } = await this.client
+      .from("generated_outputs")
+      .select(
+        "id, title, created_at, updated_at, category:document->sections->0->>categoryName, profile:document->context->profile->>name, language:document->context->>language",
+      )
+      .order("created_at", { ascending: false })
+      .limit(limit);
+    if (error) throw new Error(`Çıktılar okunamadı: ${error.message}`);
+    return (data ?? []).map((r) => ({
+      id: r.id,
+      title: r.title,
+      createdAt: r.created_at,
+      updatedAt: r.updated_at,
+      category: r.category ?? null,
+      profile: r.profile ?? null,
+      language: r.language === "en" ? "en" : "tr",
     }));
   }
 

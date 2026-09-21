@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
+import { GENERATE_STAGES, GenerationProgress } from "@/components/generation-progress";
 import { OutputTypeBadge } from "@/components/output-type-badge";
 import {
   FREE_TEXT_HINTS,
@@ -550,16 +551,5 @@ function SubmitButton({
 function PendingOverlay() {
   const { pending, data } = useFormStatus();
   if (!pending || data?.get("ai") !== "1") return null;
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm">
-      <div className="max-w-sm rounded-2xl bg-white p-6 text-center shadow-xl">
-        <div className="mx-auto size-10 animate-spin rounded-full border-4 border-violet-200 border-t-violet-600" />
-        <p className="mt-4 font-semibold text-slate-900">Planın hazırlanıyor</p>
-        <p className="mt-1 text-sm text-slate-600">
-          Yapay zekâ durumunu analiz edip stratejik adımları oluşturuyor. Bu işlem 2-4 dakika sürebilir; lütfen sayfayı
-          kapatma.
-        </p>
-      </div>
-    </div>
-  );
+  return <GenerationProgress title="Planın hazırlanıyor" stages={GENERATE_STAGES} expectedSeconds={150} />;
 }

@@ -72,9 +72,9 @@ Türkiye'de kişisel veri işleyen bir hizmet için asgari gereksinimler:
 
 **Kalan iş:** köşeli parantezli alanların (unvan, adres, e-posta) doldurulması ve yayın öncesi hukukçu kontrolü. Ücret tahsil edilmeye başlandığında mesafeli satış sözleşmesi ve iptal/iade koşulları eklenmeli.
 
-### 2.4 🟠 Hata ve yükleniyor ekranları yok
+### 2.4 ✅ Hata ve yükleniyor ekranları (21.09.2026'da eklendi)
 
-Bir sayfa yüklenirken veya bir hata olduğunda kullanıcı **boş ekran** görüyor. Next.js'in `loading` ve `error` sayfaları tanımlı değil. Yarım günlük iş, algılanan kaliteyi çok artırır.
+Sayfa geçişlerinde iskelet görünüm, beklenmeyen hatalarda "Tekrar dene" düğmeli Türkçe hata ekranı, olmayan sayfa ve silinmiş plan için Türkçe "bulunamadı" sayfaları eklendi.
 
 ### 2.5 🟠 Otomatik test yok
 
@@ -85,23 +85,31 @@ Bir sayfa yüklenirken veya bir hata olduğunda kullanıcı **boş ekran** gör�
 ## 2.6 ✅ Çözülen iki sorun (21.09.2026)
 
 - **Tekrar soru sorma:** "Ne oluşturmak istiyorsun?" kutusuna yazan kullanıcıya bir sonraki adımda aynı sorular tekrar soruluyordu. Artık isteğin kendisi bağlam sayılıyor; yalnızca "eklemek istediğin bir şey var mı?" diye tek bir isteğe bağlı alan gösteriliyor.
-- **Dil seçeneği:** Plan dili (Türkçe / English) eklendi. İngilizce seçilirse hazır Türkçe şablonlar kullanılmaz; çerçeveyi de yapay zekâ İngilizce kurar. **Not:** arayüz hâlâ yalnızca Türkçedir; arayüzün de İngilizceye çevrilmesi ayrı bir iştir (bkz. 3.9).
+- **Dil seçeneği:** Plan dili (Türkçe / English) eklendi. İngilizce seçilirse hazır Türkçe şablonlar kullanılmaz; çerçeveyi de yapay zekâ İngilizce kurar. **Not:** arayüz hâlâ yalnızca Türkçedir; arayüzün de İngilizceye çevrilmesi ayrı bir iştir (bkz. 3.8).
 
 ## 3. Ürün olarak eksikler
 
 Öncelik sırasına göre:
 
-### 3.1 İlk kullanım deneyimi
-Yeni kullanıcı giriş yapınca boş bir panel görüyor. Ne yapacağını anlatan kısa bir karşılama akışı ve **örnek bir plan** (hazır, okunabilir) dönüşümü ciddi artırır. Şu an kullanıcı "bu ne üretecek?" sorusunun cevabını ancak hakkını harcayarak öğreniyor.
+### 3.1 ✅ İlk kullanım deneyimi (21.09.2026)
+**Yapıldı:** panelde "Başlarken" rehberi (örnek plan → profil → ilk plan) ve herkese açık `/ornek-plan` sayfası (kurgusal kahve dükkânı). Ana sayfada da "Örnek planı gör" bağlantısı var.
 
-### 3.2 Üretim sırasında ilerleme
-4 dakikalık dönen çarkı izlemek uzun. "Durum analizi yapılıyor → alternatifler değerlendiriliyor → aksiyon planı yazılıyor" gibi aşamalı mesajlar beklemeyi kısaltır. (Madde 2.1'deki arka plan işiyle birlikte yapılmalı.)
+Eski durum: yeni kullanıcı giriş yapınca boş bir panel görüyordu. Ne yapacağını anlatan kısa bir karşılama akışı ve **örnek bir plan** (hazır, okunabilir) dönüşümü ciddi artırır. Şu an kullanıcı "bu ne üretecek?" sorusunun cevabını ancak hakkını harcayarak öğreniyor.
 
-### 3.3 Planlarım sayfası
-11 plana kadar idare eder, 50 planda kaybolur. Eksikler: **arama**, kategoriye/profile göre **filtre**, **kopyalama** ("geçen ayki planı güncelle"), yeniden adlandırma.
+### 3.2 ✅ Üretim sırasında ilerleme (21.09.2026)
+**Yapıldı:** plan hazırlanırken ve güncellenirken aşamalı ilerleme kartı (geçen süre, ilerleme çubuğu, aşama listesi). Aşamalar süreye göre ilerler; gerçek ilerleme bilgisi arka plan üretimiyle (2.1) gelecek.
+
+Eski durum: 4 dakikalık dönen çarkı izlemek uzun. "Durum analizi yapılıyor → alternatifler değerlendiriliyor → aksiyon planı yazılıyor" gibi aşamalı mesajlar beklemeyi kısaltır. (Madde 2.1'deki arka plan işiyle birlikte yapılmalı.)
+
+### 3.3 ✅ Planlarım sayfası (21.09.2026)
+**Yapıldı:** arama (Türkçe karakter duyarsız), alana ve profile göre filtre, sıralama, yeniden adlandırma ve kopyalama (kopyalama hak düşürmez).
+
+Eski durum: 11 plana kadar idare eder, 50 planda kaybolur. Eksikler: **arama**, kategoriye/profile göre **filtre**, **kopyalama** ("geçen ayki planı güncelle"), yeniden adlandırma.
 
 ### 3.4 Paylaşım ve dışa aktarma
-Bugün yalnızca PDF ve Markdown var. Eklenebilecekler: **bağlantıyla paylaşma** (salt okunur), **Word (.docx)** çıktısı, e-posta ile gönderme. İş dünyasında Word hâlâ standart.
+**Word (.docx) indirme 21.09.2026'da eklendi.** Kalanlar: bağlantıyla paylaşma, e-posta ile gönderme.
+
+İlk durumda yalnızca PDF ve Markdown vardı. Eklenebilecekler: **bağlantıyla paylaşma** (salt okunur), **Word (.docx)** çıktısı, e-posta ile gönderme. İş dünyasında Word hâlâ standart.
 
 ### 3.5 Düzenleme geçmişi
 Kullanıcı planı düzenleyip kaydedince eski hali kayboluyor. Sürüm geçmişi ve "geri al" eklenebilir.
@@ -112,15 +120,18 @@ Bugün her hesap tek kişilik. Şirketler için: aynı profili paylaşan ekip ü
 ### 3.7 Kalan 38 başlık için hazır şablon
 Şu an 8 başlığın elle hazırlanmış şablonu var; diğerlerinde çerçeveyi yapay zekâ kuruyor. Kalite farkı var: elle hazırlanmışlar daha tutarlı ve örnek satırlı. En çok kullanılanlardan devam edilmeli.
 
-### 3.8 Arayüz dili (i18n)
+### 3.8 Arayüz dili (i18n) — sonraya bırakıldı (21.09.2026 kararı)
 Plan dili seçilebiliyor ama **arayüz metinleri hâlâ Türkçe sabit.** Yurt dışı kullanıcı hedefleniyorsa tüm metinlerin çeviri dosyalarına taşınması gerekir (yaklaşık 400-500 metin, 2-3 günlük iş). Öncelik, hedef pazara göre belirlenmeli: yalnızca Türkiye ise ertelenebilir.
 
-### 3.9 Mobil deneyim
+### 3.9 ✅ Öneri ve şikâyet kutusu (21.09.2026)
+Uygulama içinde sağ altta sabit "Öneri / Şikâyet" düğmesi. Kullanıcı türü seçer (öneri, şikâyet, hata, diğer), mesajını yazar, isterse e-postayla dönüş ister. Mesajlar Supabase'deki `feedback` tablosunda toplanır (Table Editor'den okunur). Hesap silinince kullanıcının mesajları da silinir.
+
+### 3.10 Mobil deneyim
 Sayfalar mobil uyumlu ama uzun tabloların düzenlenmesi telefonda zor. Öncelik düşük: bu ürün masaüstünde kullanılır.
 
 ---
 
-## 3.10 Çıkarılması veya sadeleştirilmesi gerekenler
+## 3.11 Çıkarılması veya sadeleştirilmesi gerekenler
 
 Ürüne eklemek kadar, gereksiz olanı çıkarmak da önemli. Bugün fazlalık gördüklerim:
 
@@ -129,7 +140,7 @@ Sayfalar mobil uyumlu ama uzun tabloların düzenlenmesi telefonda zor. Öncelik
 | "Boş şablon olarak al" seçeneği | Yapay zekâsız boş şablon, ürünün değer önerisiyle çelişiyor; kullanıcı doldurmak için zaten uğraşmak istemiyor | Gizlenebilir veya "şablonu önizle" haline getirilebilir |
 | Çıktı tipi rozetleri (Şablon / Checklist / Rehber) | Kullanıcı için anlam taşımıyor; hepsi sonuçta "doküman" | Kaldırılabilir; yerine "hazır şablon" / "yapay zekâ kurar" ayrımı gösterilebilir |
 | Rehber (guide) çıktı tipi | Artık aktif kullanılan içerik yok; tüm başlıklar template/checklist | İleride kullanılmayacaksa koddan çıkarılabilir |
-| Markdown indirme | İş kullanıcısı Markdown bilmiyor | PDF + Word yeterli; Markdown geliştirici kullanımı için kalabilir |
+| Markdown indirme | İş kullanıcısı Markdown bilmiyor | Word eklendi; Markdown küçük bir ".md" düğmesine indirildi, tamamen kaldırılabilir |
 | 46 başlığın tamamının listelenmesi | Uzun liste seçim yorgunluğu yaratıyor | En çok kullanılan 6-8 başlık öne çıkarılıp gerisi "tümünü gör" altına alınabilir |
 
 ## 4. İş modeli analizi
@@ -158,27 +169,29 @@ Dikkat edilecekler:
 1. ~~Yasal metinler~~ ✅ (21.09.2026)
 2. ~~Serbest istekte tekrar soru sorulmaması~~ ✅ (21.09.2026)
 3. ~~Plan dili seçeneği~~ ✅ (21.09.2026)
-4. Hata ve yükleniyor ekranları
-5. İlk kullanım rehberi + örnek plan
-6. Planlarım: arama, filtre, kopyalama
-7. Arayüzün sadeleştirilmesi (3.10'daki çıkarmalar)
-8. Çekirdek katman için otomatik testler
+4. ~~Hata ve yükleniyor ekranları~~ ✅ (21.09.2026)
+5. ~~İlk kullanım rehberi + örnek plan~~ ✅ (21.09.2026)
+6. ~~Planlarım: arama, filtre, kopyalama~~ ✅ (21.09.2026)
+7. ~~Aşamalı ilerleme ekranı~~ ✅ · ~~Word indirme~~ ✅ · ~~Öneri/şikâyet kutusu~~ ✅ (21.09.2026)
+8. Arayüzün sadeleştirilmesi (3.11'deki çıkarmalar)
+9. Çekirdek katman için otomatik testler
 
 **Aşama 2 — Yayın hazırlığı**
-5. Arka plan üretimi + ilerleme göstergesi (**zorunlu**)
-6. Maliyet koruması: aylık tavan, hız sınırı, Anthropic harcama limiti
-7. Yasal metinler
-8. Vercel'e yayın + alan adı
+10. Arka plan üretimi (**zorunlu**; aşamalı ilerleme ekranı hazır, gerçek ilerlemeye bağlanacak)
+11. Maliyet koruması: aylık tavan, hız sınırı, Anthropic harcama limiti
+12. Yasal metinlerin doldurulması ve hukukçu kontrolü
+13. Vercel'e yayın + alan adı
 
 **Aşama 3 — Para kazanma**
-9. Stripe bağlantısı ve fiyat planları
-10. Word dışa aktarma, bağlantıyla paylaşma
-11. Kalan başlıklar için hazır şablonlar
+14. Stripe bağlantısı ve fiyat planları
+15. Bağlantıyla paylaşma
+16. Kalan başlıklar için hazır şablonlar
+17. Arayüzün İngilizceye çevrilmesi (hedef pazara göre)
 
 **Aşama 4 — Büyüme**
-12. Ekip hesapları ve yorumlar
-13. Düzenleme geçmişi
-14. Kurumsal API
+18. Ekip hesapları ve yorumlar
+19. Düzenleme geçmişi
+20. Kurumsal API
 
 ---
 
@@ -197,6 +210,6 @@ Yayına alınca ilk günden izlenmesi gerekenler:
 
 Ürünün çekirdeği — kullanıcının durumunu anlayıp profesyonel çerçevede somut plan üretmesi — **çalışıyor ve iyi çalışıyor.** Testlerde yapay zekâ, verilen rakamlardan doğru çıkarımlar yaptı, eksik bilgiyi sordu, mevzuat ayrımını gözetti ve gereksiz bir yatırımı planın dışına çıkardı.
 
-Eksikler ürünün özünde değil, **çevresinde**: bekleme deneyimi, maliyet koruması, yasal zemin ve ilk kullanım. Bunlar tamamlanmadan yayına alınırsa ürün teknik olarak çalışsa bile kullanıcıya kötü görünür.
+Eksikler ürünün özünde değil, **çevresinde**. İlk kullanım, bekleme ekranı, hata ekranları ve yasal zemin (taslak) tamamlandı; kalan kritik konular maliyet koruması ve arka plan üretimi. Bunlar tamamlanmadan yayına alınırsa ürün teknik olarak çalışsa bile kullanıcıya kötü görünür.
 
 En kritik tek madde: **plan üretiminin arka plana alınması.** Bu yapılmadan yayına alınamaz.

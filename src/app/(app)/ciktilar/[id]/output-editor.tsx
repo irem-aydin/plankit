@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
+import { GenerationProgress, REFINE_STAGES } from "@/components/generation-progress";
 import { OutputTypeBadge } from "@/components/output-type-badge";
+import { APP_NAME } from "@/config/app";
 import type { DocumentSection, GeneratedDocument, SectionBody } from "@/core/output/document";
 import { renderDocumentMarkdown } from "@/core/output/markdown";
 import { deleteOutputAction, refineSectionAction, saveOutputAction } from "../actions";
@@ -24,6 +26,7 @@ export function OutputEditor({
   const [status, setStatus] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
   const [isSaving, startSaving] = useTransition();
   const [refiningIndex, setRefiningIndex] = useState<number | null>(null);
+  const [exporting, setExporting] = useState(false);
   const router = useRouter();
 
   async function refine(index: number, answers: { question: string; answer: string }[]) {
@@ -78,13 +81,21 @@ export function OutputEditor({
   }
 
   function downloadMarkdown() {
-    const blob = new Blob([renderDocumentMarkdown(doc)], { type: "text/markdown;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${slugify(doc.title)}.md`;
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadBlob(new Blob([renderDocumentMarkdown(doc)], { type: "text/markdown;charset=utf-8" }), `${slugify(doc.title)}.md`);
+  }
+
+  async function downloadWord() {
+    setExporting(true);
+    try {
+      // Kütüphane büyük; yalnızca butona basılınca yüklenir.
+      const [{ Packer }, { buildDocx }] = await Promise.all([import("docx"), import("@/core/output/docx")]);
+      downloadBlob(await Packer.toBlob(buildDocx(doc, APP_NAME)), `${slugify(doc.title)}.docx`);
+    } catch (error) {
+      console.error(error);
+      setStatus({ kind: "error", text: "Word dosyası oluşturulamadı. Lütfen tekrar dene." });
+    } finally {
+      setExporting(false);
+    }
   }
 
   // Kaydedilmemiş değişiklik uyarısı + Ctrl/Cmd+S
@@ -121,10 +132,19 @@ export function OutputEditor({
           {dirty && !status && <span className="text-sm text-amber-700">Kaydedilmemiş değişiklikler</span>}
           <button
             type="button"
-            onClick={downloadMarkdown}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            onClick={downloadWord}
+            disabled={exporting}
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
           >
-            Markdown indir
+            {exporting ? "Hazırlanıyor…" : "Word indir"}
+          </button>
+          <button
+            type="button"
+            onClick={downloadMarkdown}
+            title="Markdown (.md) metin dosyası"
+            className="rounded-lg px-2 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100"
+          >
+            .md
           </button>
           <button
             type="button"
@@ -145,15 +165,7 @@ export function OutputEditor({
       </div>
 
       {refiningIndex !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm">
-          <div className="max-w-sm rounded-2xl bg-white p-6 text-center shadow-xl">
-            <div className="mx-auto size-10 animate-spin rounded-full border-4 border-violet-200 border-t-violet-600" />
-            <p className="mt-4 font-semibold text-slate-900">Planın güncelleniyor</p>
-            <p className="mt-1 text-sm text-slate-600">
-              Yapay zekâ cevaplarını plana işliyor. Bu işlem 2-4 dakika sürebilir; lütfen sayfayı kapatma.
-            </p>
-          </div>
-        </div>
+        <GenerationProgress title="Planın güncelleniyor" stages={REFINE_STAGES} expectedSeconds={210} />
       )}
 
       <article className="mx-auto max-w-4xl">
@@ -364,6 +376,15 @@ function PersonalizationNotes({
       </div>
     </div>
   );
+}
+
+function downloadBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 function slugify(value: string) {

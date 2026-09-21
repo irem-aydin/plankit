@@ -5,6 +5,7 @@ import { GenerationError } from "@/core/output/errors";
 import type { RefineSectionInput } from "@/core/output/refiner";
 import { redirect } from "next/navigation";
 import { generatedDocumentSchema, type GeneratedDocument } from "@/core/output/document";
+import { createSupabaseAdminClient } from "@/infrastructure/supabase/admin";
 import { OutputRepository } from "@/infrastructure/supabase/output-repository";
 import { createSupabaseServerClient, getAuthenticatedUser } from "@/infrastructure/supabase/server";
 import type { ExtractedDecision } from "@/core/ai/decisions";
@@ -34,6 +35,51 @@ export async function deleteOutputAction(formData: FormData) {
   await new OutputRepository(supabase).delete(id);
   revalidatePath("/ciktilar");
   redirect("/ciktilar");
+}
+
+export type ListActionResult = { ok: true; id?: string } | { ok: false; error: string };
+
+/** Planın adını değiştirir (liste sayfasından). */
+export async function renameOutputAction(outputId: string, title: string): Promise<ListActionResult> {
+  const clean = title.trim().slice(0, 200);
+  if (!clean) return { ok: false, error: "Plan adı boş olamaz." };
+
+  const supabase = await createSupabaseServerClient();
+  const outputs = new OutputRepository(supabase);
+  const output = await outputs.findById(outputId);
+  if (!output) return { ok: false, error: "Plan bulunamadı." };
+
+  await outputs.updateDocument(outputId, { ...output.document, title: clean });
+  revalidatePath("/ciktilar");
+  revalidatePath("/panel");
+  return { ok: true };
+}
+
+/**
+ * Planın bir kopyasını oluşturur ("geçen ayki planı güncelle" senaryosu).
+ * Kullanım hakkından düşmez: yapay zekâ çağrılmaz.
+ */
+export async function copyOutputAction(outputId: string): Promise<ListActionResult> {
+  const user = await getAuthenticatedUser();
+  if (!user) return { ok: false, error: "Oturumunuz sona ermiş. Lütfen tekrar giriş yapın." };
+
+  // Sahiplik: RLS yalnızca kullanıcının kendi planını döndürür.
+  const source = await new OutputRepository(await createSupabaseServerClient()).findById(outputId);
+  if (!source) return { ok: false, error: "Plan bulunamadı." };
+
+  const parsed = generatedDocumentSchema.safeParse(source.document);
+  if (!parsed.success) return { ok: false, error: "Bu plan kopyalanamadı." };
+
+  const title = `${parsed.data.title} (kopya)`.slice(0, 200);
+  // Kullanıcıların doğrudan ekleme yetkisi yok (RLS); kayıt sunucu tarafında, kullanıcının adına açılır.
+  const id = await new OutputRepository(createSupabaseAdminClient()).create(
+    user.id,
+    { ...parsed.data, title, generatedAt: new Date().toISOString() },
+    { trackSelections: false },
+  );
+  revalidatePath("/ciktilar");
+  revalidatePath("/panel");
+  return { ok: true, id };
 }
 
 export type RefineResult =

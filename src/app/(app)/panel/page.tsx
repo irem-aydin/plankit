@@ -20,6 +20,65 @@ function greeting(date = new Date()) {
   return "İyi akşamlar";
 }
 
+/** İlk plan oluşturulana kadar gösterilen başlangıç rehberi. */
+function GettingStarted({ hasProfile, showProfiles }: { hasProfile: boolean; showProfiles: boolean }) {
+  const steps = [
+    {
+      title: "Örnek bir planı incele",
+      text: "Hakkını harcamadan ne alacağını gör: analiz, alternatifler, aksiyon planı ve riskler.",
+      href: "/ornek-plan",
+      cta: "Örnek planı aç",
+      done: false,
+    },
+    ...(showProfiles
+      ? [
+          {
+            title: "Profilini oluştur (isteğe bağlı)",
+            text: "İşini ya da hedeflerini bir kez anlat; sonraki planlarda baştan yazman gerekmez.",
+            href: "/profiller/yeni",
+            cta: "Profil oluştur",
+            done: hasProfile,
+          },
+        ]
+      : []),
+    {
+      title: "İlk planını oluştur",
+      text: "Bir alan seç, “Ne oluşturmak istiyorsun?” kutusuna ihtiyacını yaz. Birkaç dakikada hazır.",
+      href: "/olustur",
+      cta: "Plan oluştur",
+      done: false,
+    },
+  ];
+
+  return (
+    <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+      <p className="font-semibold text-slate-900">🚀 Başlarken</p>
+      <ol className="mt-4 space-y-4">
+        {steps.map((s, i) => (
+          <li key={s.title} className="flex gap-3">
+            <span
+              className={`flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+                s.done ? "bg-emerald-100 text-emerald-700" : "bg-indigo-100 text-indigo-700"
+              }`}
+            >
+              {s.done ? "✓" : i + 1}
+            </span>
+            <div className="min-w-0">
+              <p className={`font-medium ${s.done ? "text-slate-500 line-through" : "text-slate-900"}`}>{s.title}</p>
+              <p className="mt-0.5 text-sm text-slate-600">{s.text}</p>
+              {!s.done && (
+                <Link href={s.href} className="mt-1 inline-block text-sm font-semibold text-indigo-600 hover:underline">
+                  {s.cta} →
+                </Link>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
 export default async function DashboardPage({ searchParams }: PageProps<"/panel">) {
   const session = await getCurrentSession();
   if (!session) redirect("/giris");
@@ -87,15 +146,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/panel"
             )}
           </div>
           {outputs.length === 0 ? (
-            <div className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center">
-              <p className="font-medium text-slate-900">Henüz bir planın yok</p>
-              <p className="mt-1 text-sm text-slate-600">
-                Örneğin İş Analizi → Strateji Analizi ile başlayabilirsin.
-              </p>
-              <Link href="/olustur" className="mt-4 inline-block text-sm font-semibold text-indigo-600 hover:underline">
-                İlk planını oluştur →
-              </Link>
-            </div>
+            <GettingStarted hasProfile={profiles.length > 0} showProfiles={showProfiles} />
           ) : (
             <ul className="mt-4 divide-y divide-slate-200 overflow-hidden rounded-2xl border border-slate-200 bg-white">
               {outputs.map((o) => (

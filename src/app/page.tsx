@@ -32,7 +32,7 @@ const FEATURES = [
   {
     icon: "✏️",
     title: "Düzenle, paylaş",
-    text: "Her tabloyu ve metni düzenleyebilirsin. PDF veya Markdown olarak dışa aktar, ekibinle paylaş.",
+    text: "Her tabloyu ve metni düzenleyebilirsin. PDF veya Word olarak indir, ekibinle paylaş.",
   },
   {
     icon: "🔒",
@@ -94,7 +94,10 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
               <Link href="/kayit" className="rounded-lg bg-indigo-600 px-6 py-3 font-semibold text-white shadow-sm hover:bg-indigo-500">
                 Hemen dene — ilk {TRIAL_GENERATION_LIMIT} plan ücretsiz
               </Link>
-              <span className="text-sm text-slate-500">Kredi kartı gerekmez.</span>
+              <Link href="/ornek-plan" className="rounded-lg px-4 py-3 font-semibold text-indigo-700 hover:bg-indigo-50">
+                Örnek planı gör →
+              </Link>
+              <span className="w-full text-sm text-slate-500">Kredi kartı gerekmez.</span>
             </div>
           </div>
         </section>
