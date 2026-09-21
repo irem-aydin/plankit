@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import { GenerationError } from "@/core/output/errors";
 import type { RefineSectionInput } from "@/core/output/refiner";
 import { redirect } from "next/navigation";
@@ -10,9 +11,9 @@ import { OutputRepository } from "@/infrastructure/supabase/output-repository";
 import { createSupabaseServerClient, getAuthenticatedUser } from "@/infrastructure/supabase/server";
 import type { ExtractedDecision } from "@/core/ai/decisions";
 import { ProfileRepository } from "@/infrastructure/supabase/profile-repository";
-import { rememberAnswers } from "@/services/context-service";
 import { proposeDecisionsForProfile, saveDecisionsToProfile } from "@/services/memory-service";
-import { EntitlementError, refineSectionForUser } from "@/services/generation-service";
+import { EntitlementError } from "@/services/generation-service";
+import { JobLimitError, startRefineJob } from "@/services/job-service";
 
 export type SaveResult = { ok: true; savedAt: string } | { ok: false; error: string };
 
@@ -83,10 +84,13 @@ export async function copyOutputAction(outputId: string): Promise<ListActionResu
 }
 
 export type RefineResult =
-  | { ok: true; document: GeneratedDocument; remembered: number }
+  | { ok: true; jobId: string }
   | { ok: false; error: string; needsSubscription?: boolean };
 
-/** Açık soruların cevaplarıyla bir bölümü yapay zekâ ile günceller ve kaydeder. */
+/**
+ * Açık soruların cevaplarıyla bir bölümü güncelleme işini başlatır. Güncelleme
+ * arka planda çalışır ve bitince plana kaydedilir; ekran işi takip eder.
+ */
 export async function refineSectionAction(
   outputId: string,
   document: GeneratedDocument,
@@ -97,28 +101,32 @@ export async function refineSectionAction(
 
   const parsed = generatedDocumentSchema.safeParse(document);
   if (!parsed.success) return { ok: false, error: "Doküman biçimi geçersiz." };
+  if (!parsed.data.sections[input.sectionIndex]) return { ok: false, error: "Bölüm bulunamadı." };
 
   // Sahiplik kontrolü: RLS yalnızca kullanıcının kendi çıktısını döndürür.
   const supabase = await createSupabaseServerClient();
-  const outputs = new OutputRepository(supabase);
-  if (!(await outputs.findById(outputId))) {
+  if (!(await new OutputRepository(supabase).findById(outputId))) {
     return { ok: false, error: "Çıktı bulunamadı veya erişim yetkiniz yok." };
   }
 
-  let updated: GeneratedDocument;
   try {
-    updated = await refineSectionForUser(user.id, parsed.data, input);
+    const job = await startRefineJob(user.id, outputId, parsed.data, input);
+    after(job.run);
+    return { ok: true, jobId: job.jobId };
   } catch (error) {
     if (error instanceof EntitlementError) return { ok: false, error: error.message, needsSubscription: true };
-    if (error instanceof GenerationError) return { ok: false, error: error.message };
-    console.error("Plan güncellemesi başarısız:", error);
+    if (error instanceof JobLimitError || error instanceof GenerationError) return { ok: false, error: error.message };
+    console.error("Plan güncellemesi başlatılamadı:", error);
     return { ok: false, error: "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin." };
   }
+}
 
-  await outputs.updateDocument(outputId, updated);
-  const remembered = await rememberAnswers(user.id, updated.context?.profile?.id, input.answers);
-  revalidatePath("/ciktilar");
-  return { ok: true, document: updated, remembered };
+/** Planın kayıtlı son hâli (arka plan güncellemesi bittikten sonra ekranı yenilemek için). */
+export async function loadOutputAction(outputId: string): Promise<GeneratedDocument | null> {
+  const output = await new OutputRepository(await createSupabaseServerClient()).findById(outputId);
+  if (!output) return null;
+  const parsed = generatedDocumentSchema.safeParse(output.document);
+  return parsed.success ? parsed.data : null;
 }
 
 export type DecisionProposal =

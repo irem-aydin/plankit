@@ -4,6 +4,7 @@ import { getEntitlement, TRIAL_GENERATION_LIMIT } from "@/core/billing/entitleme
 import {
   generateOutput,
   type GenerateOutputInput,
+  type GenerateOutputOptions,
 } from "@/core/output/generator";
 import type { GeneratedDocument } from "@/core/output/document";
 import { GenerationError } from "@/core/output/errors";
@@ -39,6 +40,7 @@ export async function generateForUser(
   userId: string,
   input: GenerateOutputInput,
   attachments: Attachment[] = [],
+  options: Pick<GenerateOutputOptions, "onProgress"> = {},
 ): Promise<GenerateForUserResult> {
   const admin = createSupabaseAdminClient();
   const accounts = new AccountRepository(admin);
@@ -52,6 +54,7 @@ export async function generateForUser(
   const document = await generateOutput(input, new SupabaseCatalogRepository(admin), {
     personalizer: input.context && isAiConfigured() ? new ClaudePersonalizer() : undefined,
     attachments,
+    onProgress: options.onProgress,
   });
 
   const allowed = await accounts.consumeGenerationCredit(userId, TRIAL_GENERATION_LIMIT);

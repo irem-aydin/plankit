@@ -7,6 +7,7 @@ import { OutputRepository } from "@/infrastructure/supabase/output-repository";
 import { ProfileRepository } from "@/infrastructure/supabase/profile-repository";
 import { createSupabaseServerClient } from "@/infrastructure/supabase/server";
 import { getCurrentSession } from "@/services/session";
+import { ActiveJobs } from "../ciktilar/active-jobs";
 
 export const metadata: Metadata = { title: "Panel" };
 
@@ -144,6 +145,9 @@ export default async function DashboardPage({ searchParams }: PageProps<"/panel"
                 Tümü →
               </Link>
             )}
+          </div>
+          <div className="mt-4 empty:hidden">
+            <ActiveJobs />
           </div>
           {outputs.length === 0 ? (
             <GettingStarted hasProfile={profiles.length > 0} showProfiles={showProfiles} />

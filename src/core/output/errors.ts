@@ -5,7 +5,8 @@ export type GenerationErrorCode =
   | "NO_CONTENT"
   | "INVALID_CONTENT"
   | "AI_UNAVAILABLE"
-  | "AI_FAILED";
+  | "AI_FAILED"
+  | "NOT_FOUND";
 
 /**
  * Çıktı üretim motorunun beklenen (kullanıcıya gösterilebilir) hataları.

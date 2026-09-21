@@ -53,16 +53,27 @@ src/
 
 ### Çıktı üretim akışı
 
+Üretim **arka plan işi** olarak çalışır: istek işi kaydeder ve hemen yanıt döner,
+plan yanıt gönderildikten sonra sunucuda hazırlanır. Kullanıcı sayfayı kapatsa da
+plan hazırlanmaya devam eder.
+
 ```
 Web formu ──► server action (app/(app)/olustur/actions.ts)
-                    │
+                    │  startGenerationJob → generation_jobs kaydı (services/job-service.ts)
+                    │  after(job.run)     → yanıt sonrası çalışır (maxDuration = 300 sn)
+                    │  redirect           → /ciktilar/hazirlaniyor/[jobId]
+                    │                        (bekleme ekranı GET /api/isler/[id] ile durumu sorar)
                     ▼
-         services/generation-service.ts ── generateForUser(userId, { subcategoryIds })
+         services/generation-service.ts ── generateForUser(userId, { subcategoryIds }, ek, { onProgress })
             1. hesap + hak kontrolü           (core/billing/entitlements)
             2. generateOutput(...)            (core/output/generator — yan etkisiz)
             3. consume_generation_credit RPC  (atomik; eşzamanlı istekte limit aşılamaz)
             4. generated_outputs + user_selections kaydı
+         iş durumu: queued → running → succeeded | failed
+         (15 dk içinde bitmeyen iş "yarıda kesildi" sayılır; hak yalnızca başarıda düşer)
 ```
+
+"Cevaplarımla planı güncelle" de aynı şekilde arka plan işi olarak çalışır (`startRefineJob`).
 
 **İleride şirket entegrasyonu (API)** için yeni iş mantığı yazmak gerekmez; yalnızca yeni bir taşıma katmanı eklenir. Örnek:
 
@@ -195,5 +206,5 @@ Repoyu Vercel'e bağla, `.env.example`'daki tüm değişkenleri **Project Settin
 
 - **PDF dışa aktarma** şu an tarayıcının yazdırma → "PDF olarak kaydet" özelliğini, yazdırmaya özel CSS ile kullanır (bağımlılık yok, Türkçe karakterler sorunsuz). Sunucu tarafında PDF dosyası üretmek gerekirse (ör. API çıktısı) `@react-pdf/renderer` veya headless Chromium eklenebilir.
 - Word/Excel dosyaları doğrudan desteklenmez (PDF'e çevirip yüklemek gerekir); gerekirse sunucu tarafı dönüştürme eklenebilir.
-- Otomatik test altyapısı henüz kurulmadı; `core/` katmanı saf olduğundan Vitest ile birim testleri doğrudan yazılabilir.
+- **Testler:** `npm test` (Vitest). `tests/core` çekirdek kuralları ve plan motorunu sahte yapay zekâ ile, `tests/db` tüm migration'ları bellek içi Postgres'e (PGlite) uygulayıp RLS izolasyonunu ve deneme hakkı fonksiyonunu test eder. Değişiklikten sonra ve GitHub'a kaydetmeden önce çalıştırılmalı.
 - İçerik yönetimi için basit bir admin paneli (output_templates CRUD + şema doğrulama) sonraki mantıklı adımdır.

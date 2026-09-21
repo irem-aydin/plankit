@@ -67,6 +67,15 @@ export interface GenerateOutputOptions {
   attachments?: Attachment[];
   /** input.context verildiğinde zorunlu */
   personalizer?: ContentPersonalizer;
+  /** Her yapay zekâ bölümü bittiğinde çağrılır (ilerleme göstergesi için) */
+  onProgress?: (progress: GenerationProgress) => void;
+}
+
+export interface GenerationProgress {
+  completed: number;
+  total: number;
+  /** Son biten bölümün adı */
+  finished: string;
 }
 
 export async function generateOutput(
@@ -148,7 +157,21 @@ export async function generateOutput(
       throw new GenerationError("AI_UNAVAILABLE", "Yapay zekâ özelliği şu anda kullanılamıyor.");
     }
 
-    const designed = await designSections(
+    const total =
+      toDesign.length +
+      (parsed.data.customRequest ? 1 : 0) +
+      sections.filter((s) => supportsPersonalization(s.body.kind)).length;
+    let completed = 0;
+    const tick = (finished: string) => {
+      completed += 1;
+      try {
+        options.onProgress?.({ completed, total, finished });
+      } catch {
+        // İlerleme bildirimi üretimi hiçbir zaman bozmamalı.
+      }
+    };
+
+    const designing = designSections(
       toDesign,
       parsed.data.customRequest,
       [...sections, ...toDesign.map((e) => ({ subcategoryName: e.subcategory.name }))],
@@ -157,8 +180,12 @@ export async function generateOutput(
       repository,
       now,
       options.attachments,
+      tick,
     );
-    await personalizeSections(sections, context, personalizer, now, options.attachments);
+    const [designed] = await Promise.all([
+      designing,
+      personalizeSections(sections, context, personalizer, now, options.attachments, tick),
+    ]);
     sections.push(...designed);
   }
 
@@ -191,6 +218,7 @@ async function designSections(
   repository: CatalogRepository,
   now: Date,
   attachments?: Attachment[],
+  onDone: (name: string) => void = () => {},
 ): Promise<DocumentSection[]> {
   const jobs: { topic: string; description?: string; category: CatalogEntry["category"]; subcategoryId: string }[] =
     entries.map((e) => ({
@@ -223,6 +251,7 @@ async function designSections(
           today,
           attachments,
         });
+        onDone(job.subcategoryId === CUSTOM_SECTION_ID ? result.title : job.topic);
 
         return {
           subcategoryId: job.subcategoryId,
@@ -254,6 +283,7 @@ async function personalizeSections(
   personalizer: ContentPersonalizer | undefined,
   now: Date,
   attachments?: Attachment[],
+  onDone: (name: string) => void = () => {},
 ) {
   const targets = sections.filter((s) => supportsPersonalization(s.body.kind));
   if (targets.length === 0) return;
@@ -282,6 +312,7 @@ async function personalizeSections(
           assumptions: result.assumptions,
           openQuestions: result.openQuestions,
         };
+        onDone(section.subcategoryName);
       }),
     );
   } catch (error) {

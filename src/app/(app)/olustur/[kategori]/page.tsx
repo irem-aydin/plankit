@@ -9,6 +9,12 @@ import { createSupabaseServerClient } from "@/infrastructure/supabase/server";
 import { getCurrentSession } from "@/services/session";
 import { SelectionForm } from "./selection-form";
 
+/**
+ * Arka plan işleri (after) bu sayfanın sunucu işlevlerinin süre sınırıyla
+ * çalışır. Vercel'de Fluid Compute ile ücretsiz planda en fazla 300 sn.
+ */
+export const maxDuration = 300;
+
 export async function generateMetadata({ params }: PageProps<"/olustur/[kategori]">): Promise<Metadata> {
   const { kategori } = await params;
   const data = await getCategoryWithSubcategories(kategori);

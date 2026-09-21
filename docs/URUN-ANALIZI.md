@@ -36,7 +36,13 @@ Bugüne kadar 11 plan üretildi (hepsi test amaçlı).
 
 ## 2. Yayına almadan önce çözülmesi gerekenler
 
-### 2.1 🔴 Sunucu zaman sınırı — yayını engelleyen tek teknik sorun
+### 2.1 🟡 Sunucu zaman sınırı — büyük ölçüde çözüldü (21.09.2026)
+
+**Yapıldı (seçenek B):** plan üretimi ve güncellemesi artık **arka plan işi** olarak çalışıyor. İstek yalnızca işi kaydeder (`generation_jobs` tablosu) ve kullanıcıyı bekleme sayfasına yönlendirir; üretim yanıt gönderildikten sonra sunucuda sürer (Next.js `after`). Kullanıcı sayfayı kapatabilir, bağlantısı kopabilir; plan hazırlanmaya devam eder ve Planlarım'da görünür. Bekleme ekranı gerçek ilerlemeyi gösterir ("1 / 2 bölüm hazır"). Kullanım hakkı yalnızca plan başarıyla hazırlanırsa düşer. Aynı anda en fazla 2 iş çalışabilir; deneme kullanıcısı kalan hakkından fazla işi aynı anda başlatamaz.
+
+**Kalan sınır:** arka plan işi de Vercel'in azami çalışma süresine tabidir (`maxDuration = 300` sn; Fluid Compute ile ücretsiz planda da 300 sn, Pro'da 800 sn'ye kadar). Özet planlar (1-2,5 dk) rahat sığar; çok başlıklı detaylı planlar 5 dakikaya yaklaşabilir. Süre aşılırsa iş "yarıda kesildi" olarak gösterilir, hak düşmez. Yayından sonra detaylı planlarda süre aşımı görülürse: Vercel Pro (800 sn) veya ayrı bir kuyruk servisi (Inngest, QStash, Supabase Edge Functions).
+
+*Aşağıdaki değerlendirme ilk analizden (çözüm öncesi) kalmıştır.*
 
 Plan üretimi 1-5 dakika sürüyor. Vercel'de bir isteğin azami süresi **ücretsiz planda 60 saniye**, Pro planda 300 saniye. Bugünkü kurguyla yayına alırsak **planların çoğu "zaman aşımı" hatası verir.**
 
@@ -76,9 +82,11 @@ Türkiye'de kişisel veri işleyen bir hizmet için asgari gereksinimler:
 
 Sayfa geçişlerinde iskelet görünüm, beklenmeyen hatalarda "Tekrar dene" düğmeli Türkçe hata ekranı, olmayan sayfa ve silinmiş plan için Türkçe "bulunamadı" sayfaları eklendi.
 
-### 2.5 🟠 Otomatik test yok
+### 2.5 ✅ Otomatik testler (21.09.2026'da eklendi)
 
-Şu ana kadar her değişikliği elle test ettik. Kritik akışlar (üretim motoru, hak düşme, veri izolasyonu) için otomatik test yazılmazsa, ileride bir değişiklik sessizce bir şeyi bozabilir. Çekirdek katman saf fonksiyonlardan oluştuğu için test yazmak kolay.
+`npm test` ile 95 test çalışır (~6 sn): hak kuralları, arka plan işi kuralları, plan motoru (sahte yapay zekâ ile), güncelleme, dosya/şifre/yönlendirme kuralları, Markdown ve Word çıktısı, ve **veritabanı testleri** (tüm migration'lar bellek içi Postgres'e uygulanır; kullanıcıların birbirinin verisini göremediği, deneme hakkının 3'te durduğu, hesap silinince tüm verinin silindiği doğrulanır). Testler bilinçli bir hatayı yakaladığı kontrol edilerek doğrulandı.
+
+Eski durum: şu ana kadar her değişikliği elle test ettik. Kritik akışlar (üretim motoru, hak düşme, veri izolasyonu) için otomatik test yazılmazsa, ileride bir değişiklik sessizce bir şeyi bozabilir. Çekirdek katman saf fonksiyonlardan oluştuğu için test yazmak kolay.
 
 ---
 
@@ -97,7 +105,7 @@ Sayfa geçişlerinde iskelet görünüm, beklenmeyen hatalarda "Tekrar dene" dü
 Eski durum: yeni kullanıcı giriş yapınca boş bir panel görüyordu. Ne yapacağını anlatan kısa bir karşılama akışı ve **örnek bir plan** (hazır, okunabilir) dönüşümü ciddi artırır. Şu an kullanıcı "bu ne üretecek?" sorusunun cevabını ancak hakkını harcayarak öğreniyor.
 
 ### 3.2 ✅ Üretim sırasında ilerleme (21.09.2026)
-**Yapıldı:** plan hazırlanırken ve güncellenirken aşamalı ilerleme kartı (geçen süre, ilerleme çubuğu, aşama listesi). Aşamalar süreye göre ilerler; gerçek ilerleme bilgisi arka plan üretimiyle (2.1) gelecek.
+**Yapıldı:** plan hazırlanırken ve güncellenirken aşamalı ilerleme kartı (geçen süre, ilerleme çubuğu, aşama listesi). Aşamalar süreye göre ilerler; arka plan üretimiyle birlikte gerçek ilerleme de gösteriliyor ("1 / 2 bölüm hazır").
 
 Eski durum: 4 dakikalık dönen çarkı izlemek uzun. "Durum analizi yapılıyor → alternatifler değerlendiriliyor → aksiyon planı yazılıyor" gibi aşamalı mesajlar beklemeyi kısaltır. (Madde 2.1'deki arka plan işiyle birlikte yapılmalı.)
 
@@ -133,7 +141,9 @@ Sayfalar mobil uyumlu ama uzun tabloların düzenlenmesi telefonda zor. Öncelik
 
 ## 3.11 Çıkarılması veya sadeleştirilmesi gerekenler
 
-Ürüne eklemek kadar, gereksiz olanı çıkarmak da önemli. Bugün fazlalık gördüklerim:
+**21.09.2026'da yapıldı:** "Boş şablon olarak al" kaldırıldı; Şablon/Checklist/Rehber rozetleri kaldırıldı, yerine yalnızca "⭐ Hazır şablon" etiketi; başlık listesi ilk 6 başlığı gösteriyor, gerisi "Tüm başlıkları gör" altında. Rehber tipinin koddan çıkarılması veritabanı değişikliği gerektirdiği için ertelendi; Markdown küçük bir düğme olarak kaldı.
+
+Ürüne eklemek kadar, gereksiz olanı çıkarmak da önemli. İlk analizde fazlalık gördüklerim:
 
 | Ne | Neden | Öneri |
 |---|---|---|
@@ -173,11 +183,11 @@ Dikkat edilecekler:
 5. ~~İlk kullanım rehberi + örnek plan~~ ✅ (21.09.2026)
 6. ~~Planlarım: arama, filtre, kopyalama~~ ✅ (21.09.2026)
 7. ~~Aşamalı ilerleme ekranı~~ ✅ · ~~Word indirme~~ ✅ · ~~Öneri/şikâyet kutusu~~ ✅ (21.09.2026)
-8. Arayüzün sadeleştirilmesi (3.11'deki çıkarmalar)
-9. Çekirdek katman için otomatik testler
+8. ~~Arayüzün sadeleştirilmesi~~ ✅ (21.09.2026)
+9. ~~Otomatik testler~~ ✅ (21.09.2026, 95 test)
 
 **Aşama 2 — Yayın hazırlığı**
-10. Arka plan üretimi (**zorunlu**; aşamalı ilerleme ekranı hazır, gerçek ilerlemeye bağlanacak)
+10. ~~Arka plan üretimi~~ ✅ (21.09.2026; uzun detaylı planlar için bkz. 2.1 "kalan sınır")
 11. Maliyet koruması: aylık tavan, hız sınırı, Anthropic harcama limiti
 12. Yasal metinlerin doldurulması ve hukukçu kontrolü
 13. Vercel'e yayın + alan adı
@@ -212,4 +222,4 @@ Yayına alınca ilk günden izlenmesi gerekenler:
 
 Eksikler ürünün özünde değil, **çevresinde**. İlk kullanım, bekleme ekranı, hata ekranları ve yasal zemin (taslak) tamamlandı; kalan kritik konular maliyet koruması ve arka plan üretimi. Bunlar tamamlanmadan yayına alınırsa ürün teknik olarak çalışsa bile kullanıcıya kötü görünür.
 
-En kritik tek madde: **plan üretiminin arka plana alınması.** Bu yapılmadan yayına alınamaz.
+Plan üretimi arka plana alındı; yayın önündeki en kritik kalan madde artık **maliyet koruması** (aylık tavan ve Anthropic harcama limiti).

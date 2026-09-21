@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import {
   classifyAttachment,
   validateAttachments,
@@ -12,13 +13,17 @@ import { DETAIL_LEVELS, INTAKE_MODES, LANGUAGES, type DetailLevel, type IntakeMo
 import { GenerationError } from "@/core/output/errors";
 import { getAuthenticatedUser } from "@/infrastructure/supabase/server";
 import { buildContextForUser } from "@/services/context-service";
-import { EntitlementError, generateForUser } from "@/services/generation-service";
+import { EntitlementError } from "@/services/generation-service";
+import { JobLimitError, startGenerationJob } from "@/services/job-service";
 
 export type GenerateFormState = { error?: string };
 
 /**
  * Web formu → çıktı üretim servisi köprüsü. İş mantığı içermez; yalnızca
  * form verisini servis girdisine çevirir ve sonucu UI'a uyarlar.
+ *
+ * Üretim arka planda çalışır: iş kaydedilir, kullanıcı hemen bekleme
+ * sayfasına yönlendirilir, plan yanıt gönderildikten sonra hazırlanır.
  */
 export async function generateAction(
   _prev: GenerateFormState,
@@ -40,7 +45,7 @@ export async function generateAction(
   }
 
   let context;
-  if (formData.get("ai") === "1") {
+  {
     const modeValue = String(formData.get("mode"));
     const mode: IntakeMode = (INTAKE_MODES as readonly string[]).includes(modeValue)
       ? (modeValue as IntakeMode)
@@ -86,7 +91,7 @@ export async function generateAction(
 
   // Eklenen dosyalar: yalnızca bu üretimde kullanılır, saklanmaz.
   const attachments: Attachment[] = [];
-  if (context) {
+  {
     const files = formData.getAll("files").filter((f): f is File => f instanceof File && f.size > 0);
     const sizeError = validateAttachments(files.map((f) => ({ name: f.name, size: f.size })));
     if (sizeError) return { error: sizeError };
@@ -106,15 +111,27 @@ export async function generateAction(
     }
   }
 
-  let outputId: string;
+  if (subcategoryIds.length === 0 && !customRequest) {
+    return { error: "Plan oluşturmak için bir başlık seç ya da ne istediğini yaz." };
+  }
+
+  let jobId: string;
   try {
-    ({ outputId } = await generateForUser(user.id, { subcategoryIds, context, customRequest }, attachments));
+    const job = await startGenerationJob(
+      user.id,
+      { subcategoryIds, context, customRequest },
+      attachments,
+      customText || String(formData.get("jobTitle") ?? ""),
+    );
+    jobId = job.jobId;
+    // Yanıt gönderildikten sonra sunucuda çalışır; kullanıcının bağlantısına bağlı değildir.
+    after(job.run);
   } catch (error) {
     if (error instanceof EntitlementError) redirect("/abonelik?durum=limit");
-    if (error instanceof GenerationError) return { error: error.message };
-    console.error("Çıktı üretimi başarısız:", error);
+    if (error instanceof JobLimitError || error instanceof GenerationError) return { error: error.message };
+    console.error("Plan üretimi başlatılamadı:", error);
     return { error: "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin." };
   }
 
-  redirect(`/ciktilar/${outputId}`);
+  redirect(`/ciktilar/hazirlaniyor/${jobId}`);
 }

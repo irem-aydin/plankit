@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { OutputRepository } from "@/infrastructure/supabase/output-repository";
 import { createSupabaseServerClient } from "@/infrastructure/supabase/server";
+import { ActiveJobs } from "./active-jobs";
 import { OutputsList } from "./outputs-list";
 
 export const metadata: Metadata = { title: "Planlarım" };
@@ -20,6 +21,10 @@ export default async function OutputsPage() {
         <Link href="/olustur" className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500">
           Yeni plan oluştur
         </Link>
+      </div>
+
+      <div className="mt-6 empty:hidden">
+        <ActiveJobs />
       </div>
 
       {outputs.length === 0 ? (

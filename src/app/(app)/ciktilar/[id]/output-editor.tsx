@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { GenerationProgress, REFINE_STAGES } from "@/components/generation-progress";
-import { OutputTypeBadge } from "@/components/output-type-badge";
+import { useJobStatus, type JobStatusResponse } from "@/components/use-job-status";
 import { APP_NAME } from "@/config/app";
 import type { DocumentSection, GeneratedDocument, SectionBody } from "@/core/output/document";
 import { renderDocumentMarkdown } from "@/core/output/markdown";
-import { deleteOutputAction, refineSectionAction, saveOutputAction } from "../actions";
+import { deleteOutputAction, loadOutputAction, refineSectionAction, saveOutputAction } from "../actions";
 import { DecisionsPanel } from "./decisions-panel";
 import { ChecklistEditor, GuideEditor, TemplateEditor } from "./section-editors";
 
@@ -16,43 +16,54 @@ export function OutputEditor({
   outputId,
   initialDocument,
   profiles,
+  activeRefineJobId = null,
 }: {
   outputId: string;
   initialDocument: GeneratedDocument;
   profiles: { id: string; name: string }[];
+  /** Sayfa açıldığında bu plan için süren bir güncelleme işi varsa */
+  activeRefineJobId?: string | null;
 }) {
   const [doc, setDoc] = useState(initialDocument);
   const [dirty, setDirty] = useState(false);
   const [status, setStatus] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
   const [isSaving, startSaving] = useTransition();
-  const [refiningIndex, setRefiningIndex] = useState<number | null>(null);
+  // Arka planda süren güncelleme işi (varsa ekran onu takip eder).
+  const [refineJobId, setRefineJobId] = useState<string | null>(activeRefineJobId);
+  const [starting, setStarting] = useState(false);
+  const refining = refineJobId !== null || starting;
   const [exporting, setExporting] = useState(false);
   const router = useRouter();
 
   async function refine(index: number, answers: { question: string; answer: string }[]) {
-    setRefiningIndex(index);
+    setStarting(true);
     setStatus(null);
     try {
       const result = await refineSectionAction(outputId, doc, { sectionIndex: index, answers });
-      if (result.ok) {
-        setDoc(result.document);
-        setDirty(false);
-        setStatus({
-          kind: "ok",
-          text:
-            result.remembered > 0
-              ? `Plan güncellendi · ${result.remembered} bilgi "${result.document.context?.profile?.name}" profilinin hafızasına eklendi`
-              : "Plan cevaplarına göre güncellendi ve kaydedildi",
-        });
-      } else {
+      if (result.ok) setRefineJobId(result.jobId);
+      else {
         setStatus({ kind: "error", text: result.error });
         if (result.needsSubscription) router.push("/abonelik?durum=limit");
       }
     } catch {
       setStatus({ kind: "error", text: "Bağlantı hatası. Lütfen tekrar dene." });
     } finally {
-      setRefiningIndex(null);
+      setStarting(false);
     }
+  }
+
+  async function onRefineFinished(job: JobStatusResponse) {
+    if (job.status === "succeeded") {
+      const latest = await loadOutputAction(outputId).catch(() => null);
+      if (latest) {
+        setDoc(latest);
+        setDirty(false);
+      }
+      setStatus({ kind: "ok", text: job.progress ?? "Plan güncellendi" });
+    } else {
+      setStatus({ kind: "error", text: job.error ?? "Plan güncellenemedi." });
+    }
+    setRefineJobId(null);
   }
 
   function update(next: GeneratedDocument) {
@@ -164,9 +175,8 @@ export function OutputEditor({
         </div>
       </div>
 
-      {refiningIndex !== null && (
-        <GenerationProgress title="Planın güncelleniyor" stages={REFINE_STAGES} expectedSeconds={210} />
-      )}
+      {starting && <GenerationProgress title="Planın güncelleniyor" stages={REFINE_STAGES} expectedSeconds={210} />}
+      {refineJobId && <RefineWaiter key={refineJobId} jobId={refineJobId} onFinished={onRefineFinished} />}
 
       <article className="mx-auto max-w-4xl">
         <input
@@ -229,17 +239,14 @@ export function OutputEditor({
             id={section.subcategoryId}
             className="mt-8 scroll-mt-20 rounded-2xl border border-slate-200 bg-white p-5 sm:p-8 print:border-0 print:p-0"
           >
-            <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500">
-              <span>{section.categoryName}</span>
-              <OutputTypeBadge type={section.body.kind} />
-            </div>
+            <p className="text-sm text-slate-500">{section.categoryName}</p>
             <h2 className="mt-1 text-2xl font-bold text-slate-900">{section.subcategoryName}</h2>
             {section.body.summary && <p className="mt-3 text-slate-600">{section.body.summary}</p>}
             {section.personalization && (
               <PersonalizationNotes
                 key={section.personalization.openQuestions.join("|")}
                 notes={section.personalization}
-                refining={refiningIndex !== null}
+                refining={refining}
                 onRefine={(answers) => refine(index, answers)}
               />
             )}
@@ -285,6 +292,33 @@ export function OutputEditor({
         </form>
       </article>
     </div>
+  );
+}
+
+/** Arka plandaki güncelleme işini takip eder; bitince üst bileşene haber verir. */
+function RefineWaiter({ jobId, onFinished }: { jobId: string; onFinished: (job: JobStatusResponse) => void }) {
+  const { job, lostAccess } = useJobStatus(jobId);
+  const finished = job && (job.status === "succeeded" || job.status === "failed") ? job : null;
+
+  useEffect(() => {
+    if (finished) onFinished(finished);
+    // onFinished her render'da yeniden oluşur; yalnızca iş bittiğinde bir kez çağrılmalı.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [finished?.status]);
+
+  useEffect(() => {
+    if (lostAccess) onFinished({ status: "failed", title: "", progress: null, outputId: null, error: "Güncellemenin durumu okunamadı. Sayfayı yenile.", createdAt: "" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lostAccess]);
+
+  return (
+    <GenerationProgress
+      title="Planın güncelleniyor"
+      stages={REFINE_STAGES}
+      expectedSeconds={210}
+      startedAt={job?.createdAt}
+      note={<p>Sayfayı kapatsan da güncelleme sunucuda devam eder ve plana kaydedilir.</p>}
+    />
   );
 }
 

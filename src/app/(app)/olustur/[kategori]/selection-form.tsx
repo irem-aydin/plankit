@@ -2,8 +2,6 @@
 
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { GENERATE_STAGES, GenerationProgress } from "@/components/generation-progress";
-import { OutputTypeBadge } from "@/components/output-type-badge";
 import {
   FREE_TEXT_HINTS,
   INTAKE_QUESTIONS,
@@ -22,6 +20,9 @@ const MODES: { id: IntakeMode; title: string; text: string }[] = [
   { id: "detailed", title: "Detaylı sorular", text: "13 soru · daha isabetli sonuç" },
   { id: "free", title: "Kendim anlatayım", text: "Serbest metin" },
 ];
+
+/** Listede baştan gösterilen başlık sayısı; gerisi "Tümünü gör" altında. */
+const FEATURED_COUNT = 6;
 
 const DETAIL_OPTIONS: { id: DetailLevel; title: string; text: string }[] = [
   { id: "summary", title: "Özet plan", text: "Kısa, hemen uygulanabilir · daha hızlı" },
@@ -70,15 +71,20 @@ export function SelectionForm({
   const [profileId, setProfileId] = useState<string>(defaultProfileId ?? profiles[0]?.id ?? "");
   const [saveAsProfile, setSaveAsProfile] = useState(false);
   const [customRequest, setCustomRequest] = useState("");
+  const [showAll, setShowAll] = useState(false);
   const fileSelection = useFileSelection();
   const selectedProfile = profiles.find((p) => p.id === profileId);
 
   const selectedSubs = subcategories.filter((s) => selected.has(s.id));
-  // Hazır şablonu olanlar yapay zekâsız da alınabilir; diğerlerini yapay zekâ tasarlar.
-  const readyToFill = selectedSubs.filter((s) => s.hasContent);
-  const aiOnly = selectedSubs.filter((s) => !s.hasContent);
   const hasCustom = customRequest.trim().length > 0;
-  const canUseWithoutAi = readyToFill.length === selectedSubs.length && selectedSubs.length > 0 && !hasCustom;
+  // Seçim yorgunluğunu azaltmak için önce öne çıkan başlıklar: hazır şablonu olanlar, sonra katalog sırası.
+  const featuredIds = new Set(
+    [...subcategories.filter((s) => s.hasContent), ...subcategories.filter((s) => !s.hasContent)]
+      .slice(0, FEATURED_COUNT)
+      .map((s) => s.id),
+  );
+  const hiddenCount = subcategories.length - featuredIds.size;
+  const visibleSubs = showAll ? subcategories : subcategories.filter((s) => featuredIds.has(s.id) || selected.has(s.id));
   const hasSelection = selectedSubs.length > 0 || hasCustom;
   // Profil seçiliyse veya kullanıcı ne istediğini zaten yazdıysa soruları tekrar sormayız.
   const contextFromUser = Boolean(selectedProfile) || hasCustom;
@@ -107,6 +113,7 @@ export function SelectionForm({
       ))}
       <input type="hidden" name="categoryId" value={categoryId} />
       <input type="hidden" name="customRequest" value={customRequest} />
+      <input type="hidden" name="jobTitle" value={selectedSubs.map((s) => s.name).join(", ")} />
       <FileInput inputRef={fileSelection.inputRef} />
 
       {/* ---------------------------------------------------- Adım: seçim */}
@@ -163,7 +170,7 @@ export function SelectionForm({
 
         <fieldset className="grid gap-3 md:grid-cols-2">
           <legend className="sr-only">Alt başlıklar</legend>
-          {subcategories.map((sub) => {
+          {visibleSubs.map((sub) => {
             const checked = selected.has(sub.id);
             return (
               <label
@@ -181,10 +188,12 @@ export function SelectionForm({
                 <span className="min-w-0">
                   <span className="flex flex-wrap items-center gap-2">
                     <span className="font-medium text-slate-900">{sub.name}</span>
-                    <OutputTypeBadge type={sub.outputType} />
-                    {sub.outputType === "template" && (
-                      <span className="rounded-full bg-violet-50 px-2 py-0.5 text-xs font-medium text-violet-700 ring-1 ring-violet-200 ring-inset">
-                        ✨ Yapay zekâ
+                    {sub.hasContent && (
+                      <span
+                        title="Uzmanlarca hazırlanmış şablon; yapay zekâ senin durumuna göre doldurur"
+                        className="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-800 ring-1 ring-amber-200 ring-inset"
+                      >
+                        ⭐ Hazır şablon
                       </span>
                     )}
                   </span>
@@ -194,26 +203,29 @@ export function SelectionForm({
             );
           })}
         </fieldset>
+        {hiddenCount > 0 && (
+          <button
+            type="button"
+            onClick={() => setShowAll((v) => !v)}
+            className="mt-3 w-full rounded-xl border border-dashed border-slate-300 bg-white py-3 text-sm font-medium text-indigo-600 hover:border-indigo-300"
+          >
+            {showAll ? "Daha az göster" : `Tüm başlıkları gör (${hiddenCount} başlık daha)`}
+          </button>
+        )}
         </div>
 
         <StickyBar error={step === "select" ? state.error : undefined} note={trialNote}>
-          {hasSelection && aiAvailable ? (
-            <button
-              type="button"
-              disabled={!canGenerate}
-              onClick={() => {
-                setStep("context");
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-              className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
-            >
-              Devam et →
-            </button>
-          ) : (
-            <SubmitButton name="ai" value="0" disabled={!canGenerate || !canUseWithoutAi}>
-              Oluştur
-            </SubmitButton>
-          )}
+          <button
+            type="button"
+            disabled={!canGenerate || !hasSelection || !aiAvailable}
+            onClick={() => {
+              setStep("context");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Devam et →
+          </button>
         </StickyBar>
       </div>
 
@@ -465,24 +477,13 @@ export function SelectionForm({
             </div>
           )}
 
-          {aiOnly.length > 0 && (
-            <p className="mt-4 rounded-lg bg-violet-50 px-4 py-3 text-sm text-violet-900">
-              Şu başlıklar için çerçeveyi de yapay zekâ hazırlayacak: {aiOnly.map((s) => s.name).join(", ")}.
-            </p>
-          )}
-
           <StickyBar error={state.error} note={trialNote}>
             <div className="flex flex-wrap items-center gap-2">
-              {canUseWithoutAi && (
-                <SubmitButton name="ai" value="0" variant="secondary" disabled={!canGenerate} pendingText="Oluşturuluyor…">
-                  Boş şablon olarak al
-                </SubmitButton>
-              )}
               <SubmitButton
                 name="ai"
                 value="1"
                 disabled={!canGenerate || !aiAvailable || !hasSelection}
-                pendingText="Planın hazırlanıyor… (2-4 dk)"
+                pendingText="Gönderiliyor…"
               >
                 ✨ Bana özel planı oluştur
               </SubmitButton>
@@ -491,7 +492,6 @@ export function SelectionForm({
           {!aiAvailable && (
             <p className="mt-2 text-right text-xs text-amber-700">Yapay zekâ özelliği henüz yapılandırılmadı.</p>
           )}
-          <PendingOverlay />
         </div>
       )}
     </form>
@@ -520,14 +520,12 @@ function SubmitButton({
   value,
   disabled,
   pendingText,
-  variant = "primary",
 }: {
   children: React.ReactNode;
   name: string;
   value: string;
   disabled?: boolean;
   pendingText?: string;
-  variant?: "primary" | "secondary";
 }) {
   const { pending, data } = useFormStatus();
   const isThis = pending && data?.get(name) === value;
@@ -537,19 +535,9 @@ function SubmitButton({
       name={name}
       value={value}
       disabled={pending || disabled}
-      className={
-        variant === "primary"
-          ? "rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
-          : "rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-      }
+      className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
     >
       {isThis ? (pendingText ?? "İşleniyor…") : children}
     </button>
   );
-}
-
-function PendingOverlay() {
-  const { pending, data } = useFormStatus();
-  if (!pending || data?.get("ai") !== "1") return null;
-  return <GenerationProgress title="Planın hazırlanıyor" stages={GENERATE_STAGES} expectedSeconds={150} />;
 }
