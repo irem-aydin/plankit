@@ -26,13 +26,14 @@ export class EntitlementError extends Error {
 
 /** Hak yetmediğinde kullanıcıya duruma uygun mesaj. */
 export function entitlementMessage(entitlement: Entitlement, cost: number): string {
-  if (entitlement.kind === "credits") {
-    return (entitlement.remaining ?? 0) > 0
-      ? `Bu işlem ${cost} kredi gerektiriyor; bu ay ${entitlement.remaining} kredin kaldı. Özet plan seçebilir veya planını yükseltebilirsin.`
-      : "Bu ayki kredilerin bitti. Krediler her ay yenilenir; hemen devam etmek için planını yükseltebilirsin.";
+  if ((entitlement.kind === "credits" || entitlement.kind === "pack") && (entitlement.remaining ?? 0) > 0) {
+    return `Bu işlem ${cost} kredi gerektiriyor; ${entitlement.remaining} kredin kaldı. Özet plan seçebilir ya da kredi ekleyebilirsin.`;
   }
-  if (entitlement.kind === "trial") return "Ücretsiz deneme hakkını kullandın. Devam etmek için bir plan seç.";
-  return "Aboneliğin aktif değil. Devam etmek için bir plan seç.";
+  if (entitlement.kind === "credits") {
+    return "Bu ayki kredilerin bitti. Krediler her ay yenilenir; hemen devam etmek için planını yükseltebilir ya da tek seferlik paket alabilirsin.";
+  }
+  if (entitlement.kind === "trial") return "Ücretsiz deneme hakkını kullandın. Devam etmek için bir plan ya da tek seferlik paket seç.";
+  return "Kullanılabilir kredin kalmadı. Devam etmek için bir plan ya da tek seferlik paket seç.";
 }
 
 /** İşlemin maliyeti için yeterli hak yoksa EntitlementError fırlatır; hesabı ve hakkı döner. */

@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { CreditCard } from "lucide-react";
 import { PricingTable } from "@/components/pricing-table";
-import { isBillingConfigured, stripePriceId } from "@/config/env";
+import { isBillingConfigured, stripePackPriceId, stripePriceId } from "@/config/env";
 import { usageSummary } from "@/core/billing/entitlements";
-import { PLANS, type PaidPlanId } from "@/core/billing/plans";
+import { CREDIT_PACK, PLANS, type PaidPlanId } from "@/core/billing/plans";
 import { getCurrentSession } from "@/services/session";
-import { openBillingPortalAction, startCheckoutAction } from "./actions";
+import { buyPackAction, openBillingPortalAction, startCheckoutAction } from "./actions";
 
 export const metadata: Metadata = { title: "Abonelik" };
 
@@ -14,6 +14,10 @@ const NOTICES: Record<string, { tone: "ok" | "warn"; text: string }> = {
   basarili: {
     tone: "ok",
     text: "Ödemen alındı, teşekkürler! Aboneliğin birkaç saniye içinde aktifleşecek; görünmüyorsa sayfayı yenile.",
+  },
+  paket: {
+    tone: "ok",
+    text: "Ödemen alındı, teşekkürler! Paket kredilerin birkaç saniye içinde hesabına eklenecek; görünmüyorsa sayfayı yenile.",
   },
   iptal: { tone: "warn", text: "Ödeme tamamlanmadı. İstediğin zaman tekrar deneyebilirsin." },
   limit: { tone: "warn", text: "Bu işlem için yeterli hakkın yok. Devam etmek için bir plan seç veya planını yükselt." },
@@ -26,7 +30,7 @@ export default async function SubscriptionPage({ searchParams }: PageProps<"/abo
   const session = await getCurrentSession();
   if (!session) redirect("/giris?sonra=/abonelik");
 
-  const { durum, plan: wantedPlan, donem } = await searchParams;
+  const { durum, plan: wantedPlan, donem, paket } = await searchParams;
   const notice = typeof durum === "string" ? NOTICES[durum] : undefined;
   const { account, entitlement } = session;
   const usage = usageSummary(entitlement);
@@ -37,10 +41,11 @@ export default async function SubscriptionPage({ searchParams }: PageProps<"/abo
       { month: billing && Boolean(stripePriceId(id, "month")), year: billing && Boolean(stripePriceId(id, "year")) },
     ]),
   ) as Record<PaidPlanId, { month: boolean; year: boolean }>;
+  const packPurchasable = billing && Boolean(stripePackPriceId());
   const selected = typeof wantedPlan === "string" && wantedPlan in PLANS ? PLANS[wantedPlan as PaidPlanId] : null;
   const usedPercent =
     entitlement.kind === "credits" && entitlement.limit
-      ? Math.round(((entitlement.limit - (entitlement.remaining ?? 0)) / entitlement.limit) * 100)
+      ? Math.round(((entitlement.limit - (entitlement.monthlyRemaining ?? 0)) / entitlement.limit) * 100)
       : null;
 
   return (
@@ -60,6 +65,12 @@ export default async function SubscriptionPage({ searchParams }: PageProps<"/abo
           Seçtiğin plan: <strong>{selected.name}</strong>. Aşağıdan ödeme adımına geçebilirsin.
         </p>
       )}
+      {paket === "1" && !notice && (
+        <p className="rounded-lg bg-sky-50 px-4 py-3 text-sm text-sky-900">
+          Seçtiğin: <strong>{CREDIT_PACK.name}</strong> ({CREDIT_PACK.credits} kredi). Aşağıdaki &quot;Paketi al&quot; düğmesiyle ödeme adımına
+          geçebilirsin.
+        </p>
+      )}
 
       <section className="rounded-2xl border border-slate-200 bg-white p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
@@ -72,7 +83,9 @@ export default async function SubscriptionPage({ searchParams }: PageProps<"/abo
                   ? "Yönetici hesabı"
                   : entitlement.kind === "trial"
                     ? "Ücretsiz deneme"
-                    : "Aktif plan yok"}
+                    : entitlement.kind === "pack"
+                      ? "Paket kredisi"
+                      : "Aktif plan yok"}
             </p>
             <p className="mt-1 text-sm text-slate-600">
               {usage.value} — {usage.detail}
@@ -96,7 +109,7 @@ export default async function SubscriptionPage({ searchParams }: PageProps<"/abo
               />
             </div>
             <p className="mt-2 text-xs text-slate-500">
-              Bu ay {entitlement.limit! - (entitlement.remaining ?? 0)} / {entitlement.limit} kredi kullanıldı
+              Bu ay {entitlement.limit! - (entitlement.monthlyRemaining ?? 0)} / {entitlement.limit} kredi kullanıldı
               {entitlement.resetsAt && ` · ${dateFormat.format(new Date(entitlement.resetsAt))} tarihinde yenilenir`}
             </p>
           </div>
@@ -117,12 +130,14 @@ export default async function SubscriptionPage({ searchParams }: PageProps<"/abo
               currentPlan={entitlement.plan}
               purchasable={purchasable}
               checkoutAction={startCheckoutAction}
+              packPurchasable={packPurchasable}
+              buyPackAction={buyPackAction}
               defaultInterval={donem === "month" ? "month" : "year"}
             />
           </div>
           <p className="mt-4 text-center text-xs text-slate-500">
             Güvenli ödeme Stripe tarafından sağlanır. Abonelik her dönem sonunda otomatik yenilenir; istediğin an iptal edebilirsin,
-            dönem sonuna kadar kullanmaya devam edersin.
+            dönem sonuna kadar kullanmaya devam edersin. Paket kredileri tek ödemedir ve aboneliğin bittiğinde de hesabında kalır.
           </p>
         </section>
       )}

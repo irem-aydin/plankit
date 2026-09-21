@@ -58,7 +58,7 @@ Plan üretimi 1-5 dakika sürüyor. Vercel'de bir isteğin azami süresi **ücre
 
 ### 2.2 ✅ Maliyet koruması ve abonelik planları (21.09.2026)
 
-**Yapıldı:** Ücretsiz (1 plan) · Başlangıç 249 ₺/ay, 8 kredi · Profesyonel 499 ₺/ay, 25 kredi (kuruluş dönemi fiyatı; ilk 349/749 ₺ yeni site için yüksek bulundu) · yıllıkta %20 indirim (199 / 399 ₺/ay) · Ekip: teklif. Detaylı plan 2, özet plan ve güncelleme 1 kredi; krediler aylık yenilenir, devretmez. Kredi veritabanında atomik düşülür ve yalnızca başarılı üretimde. Kullanıcı başına 2 eşzamanlı ve saatte 10 iş; site geneli 24 saatte 500 iş (ortam değişkeniyle ayarlanır). Herkese açık /fiyatlar sayfası ve uygulama içi abonelik/kullanım ekranı. Fiyatlar Gamma, Upmetrics, LivePlan ve ChatGPT Plus bantlarına göre belirlendi. **Kalan:** Anthropic panelinde aylık harcama limiti; Stripe'ta 4 fiyatın tanımlanması; mesafeli satış sözleşmesi.
+**Yapıldı:** Ücretsiz (1 plan) · Başlangıç 249 ₺/ay, 8 kredi · Profesyonel 499 ₺/ay, 25 kredi (kuruluş dönemi fiyatı; ilk 349/749 ₺ yeni site için yüksek bulundu) · yıllıkta %20 indirim (199 / 399 ₺/ay) · Tek seferlik paket 3 kredi 149 ₺ (abonelik yok, süresiz; harcama sırası deneme → aylık → paket) · Ekip: teklif. Detaylı plan 2, özet plan ve güncelleme 1 kredi; krediler aylık yenilenir, devretmez. Kredi veritabanında atomik düşülür ve yalnızca başarılı üretimde. Kullanıcı başına 2 eşzamanlı ve saatte 10 iş; site geneli 24 saatte 500 iş (ortam değişkeniyle ayarlanır). Herkese açık /fiyatlar sayfası ve uygulama içi abonelik/kullanım ekranı. Fiyatlar Gamma, Upmetrics, LivePlan ve ChatGPT Plus bantlarına göre belirlendi. **Kalan:** Anthropic panelinde aylık harcama limiti; Stripe'ta 4 fiyatın tanımlanması; mesafeli satış sözleşmesi.
 
 *İlk analiz:*
 

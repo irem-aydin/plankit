@@ -3,7 +3,12 @@
 import { redirect } from "next/navigation";
 import { getAuthenticatedUser } from "@/infrastructure/supabase/server";
 import { PAID_PLAN_IDS, type BillingInterval, type PaidPlanId } from "@/core/billing/plans";
-import { BillingUnavailableError, createBillingPortalSession, createCheckoutSession } from "@/services/billing-service";
+import {
+  BillingUnavailableError,
+  createBillingPortalSession,
+  createCheckoutSession,
+  createPackCheckoutSession,
+} from "@/services/billing-service";
 
 export async function startCheckoutAction(formData: FormData) {
   const user = await getAuthenticatedUser();
@@ -16,6 +21,20 @@ export async function startCheckoutAction(formData: FormData) {
   let url: string;
   try {
     url = await createCheckoutSession(user.id, plan, interval);
+  } catch (error) {
+    if (error instanceof BillingUnavailableError) redirect("/abonelik?durum=yakinda");
+    throw error;
+  }
+  redirect(url);
+}
+
+export async function buyPackAction() {
+  const user = await getAuthenticatedUser();
+  if (!user) redirect("/giris?sonra=/abonelik");
+
+  let url: string;
+  try {
+    url = await createPackCheckoutSession(user.id);
   } catch (error) {
     if (error instanceof BillingUnavailableError) redirect("/abonelik?durum=yakinda");
     throw error;

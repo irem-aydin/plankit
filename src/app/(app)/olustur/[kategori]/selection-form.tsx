@@ -56,7 +56,7 @@ export function SelectionForm({
   categoryName: string;
   subcategories: SubcategoryOption[];
   /** Kullanıcının hakları: denemede plan, abonelikte bu ayki kredi */
-  usage: { kind: "trial" | "credits" | "unlimited" | "none"; remaining: number | null };
+  usage: { kind: "trial" | "credits" | "pack" | "unlimited" | "none"; remaining: number | null };
   aiAvailable: boolean;
   personalizationEnabled: boolean;
   profiles: ProfileOption[];
@@ -109,9 +109,9 @@ export function SelectionForm({
   const trialNote =
     usage.kind === "trial" && canGenerate
       ? "Bu plan ücretsiz deneme hakkını kullanacak."
-      : usage.kind === "credits"
+      : usage.kind === "credits" || usage.kind === "pack"
         ? canAffordThis
-          ? `Bu plan ${cost} kredi kullanacak (bu ay kalan: ${usage.remaining}).`
+          ? `Bu plan ${cost} kredi kullanacak (kalan: ${usage.remaining}).`
           : `Detaylı plan ${cost} kredi gerektiriyor, ${usage.remaining} kredin kaldı. Özet plan seçebilirsin.`
         : usage.kind === "unlimited"
           ? "Yönetici hesabı — kota yok."

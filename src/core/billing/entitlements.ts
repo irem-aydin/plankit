@@ -16,20 +16,26 @@ export interface AccountState {
   plan?: PlanId;
   creditsUsed?: number;
   creditsPeriodStart?: string;
+  /** Tek seferlik paketten kalan kredi */
+  packCredits?: number;
 }
 
-export type EntitlementKind = "trial" | "credits" | "unlimited" | "none";
+export type EntitlementKind = "trial" | "credits" | "pack" | "unlimited" | "none";
 
 export interface Entitlement {
   kind: EntitlementKind;
   /** En az 1 hakka/krediye sahip mi */
   canGenerate: boolean;
-  /** Kalan: denemede plan sayısı, abonelikte bu ayki kredi; sınırsızda null */
+  /** Harcanabilir toplam: denemede plan sayısı, aksi hâlde bu ayki kredi + paket kredisi; sınırsızda null */
   remaining: number | null;
-  /** Denemede plan hakkı, abonelikte aylık kredi limiti; sınırsızda null */
+  /** Denemede plan hakkı, abonelikte aylık kredi limiti; diğerlerinde null */
   limit: number | null;
   /** Deneme için kalan hak; denemede değilse null */
   remainingTrial: number | null;
+  /** Abonelikte bu ay kalan kredi (paket hariç); abonelik yoksa null */
+  monthlyRemaining: number | null;
+  /** Tek seferlik paketten kalan kredi */
+  packCredits: number;
   plan: PlanId | null;
   /** Kredilerin yenileneceği an (abonelikte) */
   resetsAt: string | null;
@@ -40,34 +46,47 @@ export function getEntitlement(
   trialLimit = TRIAL_GENERATION_LIMIT,
   now: Date = new Date(),
 ): Entitlement {
+  const pack = Math.max(0, account.packCredits ?? 0);
+  const base = { remainingTrial: null, monthlyRemaining: null, packCredits: pack, resetsAt: null };
+
   if (account.subscriptionStatus === "active") {
     const plan = account.plan ?? "internal";
     if (plan === "internal" || plan === "free") {
       // Elle aktif edilmiş (işletme sahibi / test) hesap: kota yok, hız sınırları geçerli.
-      return { kind: "unlimited", canGenerate: true, remaining: null, limit: null, remainingTrial: null, plan: "internal", resetsAt: null };
+      return { ...base, kind: "unlimited", canGenerate: true, remaining: null, limit: null, plan: "internal" };
     }
     const limit = monthlyCreditLimit(plan);
     const window = currentCreditWindow(new Date(account.creditsPeriodStart ?? now.toISOString()), now);
     const used = window.rolledOver ? 0 : (account.creditsUsed ?? 0);
-    const remaining = Math.max(0, limit - used);
+    const monthlyRemaining = Math.max(0, limit - used);
+    const remaining = monthlyRemaining + pack;
     return {
+      ...base,
       kind: "credits",
       canGenerate: remaining > 0,
       remaining,
       limit,
-      remainingTrial: null,
+      monthlyRemaining,
       plan,
       resetsAt: window.resetsAt.toISOString(),
     };
   }
   if (account.subscriptionStatus === "trial") {
     const remaining = Math.max(0, trialLimit - account.trialLimitUsed);
-    return { kind: "trial", canGenerate: remaining > 0, remaining, limit: trialLimit, remainingTrial: remaining, plan: "free", resetsAt: null };
+    if (remaining > 0) {
+      return { ...base, kind: "trial", canGenerate: true, remaining, limit: trialLimit, remainingTrial: remaining, plan: "free" };
+    }
   }
-  return { kind: "none", canGenerate: false, remaining: 0, limit: null, remainingTrial: null, plan: null, resetsAt: null };
+  if (pack > 0) {
+    return { ...base, kind: "pack", canGenerate: true, remaining: pack, limit: null, plan: null };
+  }
+  if (account.subscriptionStatus === "trial") {
+    return { ...base, kind: "trial", canGenerate: false, remaining: 0, limit: trialLimit, remainingTrial: 0, plan: "free" };
+  }
+  return { ...base, kind: "none", canGenerate: false, remaining: 0, limit: null, plan: null };
 }
 
-/** Deneme planı maliyetten bağımsız 1 hak sayılır; abonelikte kredi maliyeti geçerlidir. */
+/** Deneme planı maliyetten bağımsız 1 hak sayılır; diğerlerinde kredi maliyeti geçerlidir. */
 export function effectiveCost(entitlement: Entitlement, cost: number): number {
   return entitlement.kind === "trial" ? 1 : cost;
 }
@@ -112,6 +131,10 @@ export interface UsageSummary {
 
 const dayFormat = new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", timeZone: "Europe/Istanbul" });
 
+function packNote(e: Entitlement): string {
+  return e.packCredits > 0 ? ` · ayrıca ${e.packCredits} paket kredisi` : "";
+}
+
 /** Hakların kullanıcıya gösterilecek özeti (üst çubuk, panel, ayarlar). */
 export function usageSummary(e: Entitlement): UsageSummary {
   switch (e.kind) {
@@ -123,13 +146,15 @@ export function usageSummary(e: Entitlement): UsageSummary {
       return {
         badge: `${name} · ${e.remaining} kredi`,
         tone: (e.remaining ?? 0) > 0 ? "plan" : "warn",
-        value: `${e.remaining} / ${e.limit}`,
-        detail: `${name} planı · bu ay kalan kredi${resets}`,
+        value: `${e.monthlyRemaining} / ${e.limit}`,
+        detail: `${name} planı · bu ay kalan kredi${resets}${packNote(e)}`,
       };
     }
+    case "pack":
+      return { badge: `${e.remaining} kredi`, tone: "plan", value: String(e.remaining), detail: "tek seferlik paket kredisi · süre sınırı yok" };
     case "trial":
       return (e.remaining ?? 0) > 0
-        ? { badge: `Deneme: ${e.remaining} hak`, tone: "trial", value: `${e.remaining} / ${e.limit}`, detail: "ücretsiz deneme hakkı" }
+        ? { badge: `Deneme: ${e.remaining} hak`, tone: "trial", value: `${e.remaining} / ${e.limit}`, detail: `ücretsiz deneme hakkı${packNote(e)}` }
         : { badge: "Plan seç", tone: "warn", value: "0", detail: "deneme hakkı kullanıldı" };
     default:
       return { badge: "Plan seç", tone: "warn", value: "0", detail: "aktif abonelik yok" };

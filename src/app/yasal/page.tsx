@@ -86,7 +86,8 @@ export default function LegalPage() {
             <p className="mt-4 text-sm text-slate-600">
               Ücretli planlarda: abonelik seçilen dönem (aylık/yıllık) sonunda otomatik yenilenir; Abonelik sayfasından
               istediğiniz an iptal edebilirsiniz, iptal dönem sonunda geçerli olur ve o güne kadar kullanım sürer. Aylık
-              krediler bir sonraki aya devretmez. Plan değişikliklerinde fark orantılı hesaplanır. Dijital hizmetin
+              krediler bir sonraki aya devretmez. Tek seferlik paket kredileri tek ödemedir, otomatik yenilenmez ve süre
+              sınırı olmadan hesapta kalır. Plan değişikliklerinde fark orantılı hesaplanır. Dijital hizmetin
               anında ifasına onay verildiğinden, kullanılmaya başlanan dönem için cayma hakkı ve iade kapsamı mevzuat
               çerçevesinde değerlendirilir. [Mesafeli satış sözleşmesi ve ön bilgilendirme formu yayından önce eklenecektir.]
             </p>

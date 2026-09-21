@@ -167,7 +167,7 @@ cp .env.example .env.local
 
 ### 3. Stripe
 
-1. **Product catalog**'da iki ürün oluştur (Başlangıç, Profesyonel); her birine aylık ve yıllık yinelenen fiyat ekle. Tutarlar `src/core/billing/plans.ts` ile aynı olmalı (249 / 2.388 TL ve 499 / 4.788 TL). Dört `price_…` kimliğini `STRIPE_PRICE_STARTER_MONTHLY`, `STRIPE_PRICE_STARTER_YEARLY`, `STRIPE_PRICE_PRO_MONTHLY`, `STRIPE_PRICE_PRO_YEARLY`'ye yaz. Fiyatı tanımlanmayan plan ekranda "yakında" görünür.
+1. **Product catalog**'da iki ürün oluştur (Başlangıç, Profesyonel); her birine aylık ve yıllık yinelenen fiyat ekle. Tutarlar `src/core/billing/plans.ts` ile aynı olmalı (249 / 2.388 TL ve 499 / 4.788 TL). Dört `price_…` kimliğini `STRIPE_PRICE_STARTER_MONTHLY`, `STRIPE_PRICE_STARTER_YEARLY`, `STRIPE_PRICE_PRO_MONTHLY`, `STRIPE_PRICE_PRO_YEARLY`'ye yaz. Ayrıca "Tek seferlik paket" ürünü için **tek seferlik** (one-off) 149 TL fiyat oluşturup kimliğini `STRIPE_PRICE_PACK`'e yaz. Fiyatı tanımlanmayan plan/paket ekranda "yakında" görünür.
 2. `STRIPE_SECRET_KEY` = test modu secret key.
 3. **Settings → Billing → Customer portal**'ı etkinleştir; "Customers can switch plans" seçeneğinde iki ürünün dört fiyatını ekle (plan değişikliği portal üzerinden yapılır).
 4. Yerelde webhook:
@@ -176,7 +176,7 @@ cp .env.example .env.local
    ```
    Çıktıdaki `whsec_…` değerini `STRIPE_WEBHOOK_SECRET`'a yaz.
 5. Canlıda **Developers → Webhooks**'ta `https://<alan-adı>/api/stripe/webhook` uç noktasını şu olaylarla ekle:
-   `checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `customer.subscription.paused`, `customer.subscription.resumed`.
+   `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `customer.subscription.paused`, `customer.subscription.resumed`.
 
 Test kartı: `4242 4242 4242 4242`, ileri bir tarih, herhangi bir CVC.
 

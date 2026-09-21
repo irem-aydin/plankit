@@ -4,7 +4,7 @@ import { Building2 } from "lucide-react";
 import { PricingTable } from "@/components/pricing-table";
 import { PublicFooter, PublicHeader } from "@/components/public-shell";
 import { APP_NAME } from "@/config/app";
-import { CREDIT_COSTS, formatPrice, PLANS } from "@/core/billing/plans";
+import { CREDIT_COSTS, CREDIT_PACK, formatPrice, PLANS } from "@/core/billing/plans";
 
 export const metadata: Metadata = {
   title: "Fiyatlar",
@@ -17,7 +17,11 @@ const FAQ = [
     q: "Kredi nedir?",
     a: `Plan hazırlamak için kullandığın birimdir. Özet plan ${CREDIT_COSTS.plan} kredi, detaylı plan ${CREDIT_COSTS.detailedPlan} kredi, açık soruları cevaplayarak planı güncellemek ${CREDIT_COSTS.refine} kredidir. Düzenleme, indirme, paylaşım ve karar hafızası kredi harcamaz.`,
   },
-  { q: "Kullanmadığım krediler ne olur?", a: "Krediler her ay yenilenir ve bir sonraki aya devretmez. Yıllık planda da her ay aynı miktarda kredi tanımlanır." },
+  { q: "Kullanmadığım krediler ne olur?", a: "Abonelik kredileri her ay yenilenir ve bir sonraki aya devretmez. Yıllık planda da her ay aynı miktarda kredi tanımlanır. Tek seferlik paket kredilerinin ise süre sınırı yoktur." },
+  {
+    q: "Abonelik olmadan kullanabilir miyim?",
+    a: `Evet. ${CREDIT_PACK.name} (${CREDIT_PACK.credits} kredi, ${formatPrice(CREDIT_PACK.price)}) tek ödemedir, otomatik yenilenmez. Abone olursan önce aylık kredilerin, bitince paket kredilerin kullanılır.`,
+  },
   { q: "Kredilerim biterse?", a: "Yeni plan hazırlayamazsın ama mevcut planlarını görmeye, düzenlemeye ve indirmeye devam edersin. İstersen planını hemen yükseltebilirsin." },
   { q: "İstediğim zaman iptal edebilir miyim?", a: "Evet. İptal ettiğinde dönem sonuna kadar kullanmaya devam edersin, sonrasında yenilenmez. Planların silinmez." },
   { q: "Plan değiştirebilir miyim?", a: "Evet, Abonelik sayfasından istediğin an yükseltip düşürebilirsin; fark Stripe tarafından orantılı olarak hesaplanır." },

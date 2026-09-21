@@ -2,7 +2,8 @@ import { constructWebhookEvent, handleStripeEvent } from "@/services/billing-ser
 
 /**
  * Stripe webhook uç noktası.
- * Dinlenen olaylar: checkout.session.completed, customer.subscription.*
+ * Dinlenen olaylar: checkout.session.completed, checkout.session.async_payment_succeeded,
+ * customer.subscription.*
  */
 export async function POST(request: Request) {
   const signature = request.headers.get("stripe-signature");

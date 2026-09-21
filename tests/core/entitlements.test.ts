@@ -9,6 +9,7 @@ import {
 } from "@/core/billing/entitlements";
 import {
   addMonths,
+  CREDIT_PACK,
   currentCreditWindow,
   monthlyCreditLimit,
   planCreditCost,
@@ -72,6 +73,36 @@ describe("abonelik kredileri", () => {
     const e = getEntitlement({ subscriptionStatus: "active", trialLimitUsed: 0, plan: "internal" });
     expect(e.kind).toBe("unlimited");
     expect(canAfford(e, 99)).toBe(true);
+  });
+});
+
+describe("tek seferlik paket", () => {
+  it("deneme hakkı bitmiş kullanıcı paket kredisiyle üretebilir", () => {
+    const e = getEntitlement({ subscriptionStatus: "expired", trialLimitUsed: 1, packCredits: 3 }, 1, NOW);
+    expect(e).toMatchObject({ kind: "pack", canGenerate: true, remaining: 3 });
+    expect(canAfford(e, 2)).toBe(true);
+    expect(usageSummary(e).badge).toBe("3 kredi");
+  });
+
+  it("abonede kalan kredi aylık + paket toplamıdır", () => {
+    const e = getEntitlement(
+      { subscriptionStatus: "active", trialLimitUsed: 1, plan: "starter", creditsUsed: 8, creditsPeriodStart: NOW.toISOString(), packCredits: 2 },
+      1,
+      NOW,
+    );
+    expect(e).toMatchObject({ kind: "credits", remaining: 2, monthlyRemaining: 0, packCredits: 2, canGenerate: true });
+    expect(usageSummary(e)).toMatchObject({ badge: "Başlangıç · 2 kredi", value: "0 / 8" });
+    expect(usageSummary(e).detail).toContain("2 paket kredisi");
+  });
+
+  it("denemede ücretsiz hak önce gelir", () => {
+    const e = getEntitlement({ subscriptionStatus: "trial", trialLimitUsed: 0, packCredits: 3 }, 1, NOW);
+    expect(e).toMatchObject({ kind: "trial", remaining: 1, packCredits: 3 });
+  });
+
+  it("paket fiyatı abonelikten pahalı kredi başı", () => {
+    expect(CREDIT_PACK).toMatchObject({ credits: 3, price: 149 });
+    expect(CREDIT_PACK.price / CREDIT_PACK.credits).toBeGreaterThan(PLANS.starter.priceMonthly / PLANS.starter.monthlyCredits);
   });
 });
 

@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Check, Sparkles } from "lucide-react";
+import { Check, Package, Sparkles } from "lucide-react";
 import {
+  CREDIT_PACK,
   FREE_PLAN_FEATURES,
   formatPrice,
   LAUNCH_PRICING,
@@ -24,6 +25,8 @@ export function PricingTable({
   currentPlan = null,
   purchasable = { starter: { month: true, year: true }, pro: { month: true, year: true } },
   checkoutAction,
+  packPurchasable = true,
+  buyPackAction,
   defaultInterval = "year",
 }: {
   mode: "public" | "app";
@@ -31,6 +34,9 @@ export function PricingTable({
   /** Stripe fiyatı tanımlı olanlar (tanımsızsa "yakında") */
   purchasable?: Record<PaidPlanId, Record<BillingInterval, boolean>>;
   checkoutAction?: (formData: FormData) => Promise<void>;
+  /** Tek seferlik paket için Stripe fiyatı tanımlı mı */
+  packPurchasable?: boolean;
+  buyPackAction?: () => Promise<void>;
   defaultInterval?: BillingInterval;
 }) {
   const [interval, setBillingInterval] = useState<BillingInterval>(defaultInterval);
@@ -149,8 +155,42 @@ export function PricingTable({
         })}
       </div>
 
+      {/* Tek seferlik paket: planı ara sıra lazım olanlar için */}
+      <div id="paket" className="mt-5 flex scroll-mt-24 flex-wrap items-center justify-between gap-4 rounded-2xl bg-sky-50 p-5 ring-1 ring-sky-100 sm:p-6">
+        <div className="flex items-start gap-4">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white text-sky-600 shadow-sm">
+            <Package className="size-5" aria-hidden />
+          </span>
+          <div>
+            <p className="font-semibold text-slate-900">
+              Abonelik istemiyor musun? {CREDIT_PACK.name}: {CREDIT_PACK.credits} kredi · {formatPrice(CREDIT_PACK.price)}
+            </p>
+            <p className="mt-1 text-sm text-slate-600">
+              Tek ödeme, otomatik yenileme yok. Krediler süre sınırı olmadan hesabında kalır. {CREDIT_PACK.credits} özet plan ya da
+              1 detaylı plan ve 1 güncelleme için yeter.
+            </p>
+          </div>
+        </div>
+        {mode === "public" ? (
+          <Link
+            href={`/kayit?sonra=${encodeURIComponent("/abonelik?paket=1")}`}
+            className="rounded-lg border border-sky-300 bg-white px-4 py-2.5 text-sm font-semibold text-sky-800 hover:bg-sky-100"
+          >
+            Paketi al
+          </Link>
+        ) : packPurchasable && buyPackAction ? (
+          <form action={buyPackAction}>
+            <button className="rounded-lg border border-sky-300 bg-white px-4 py-2.5 text-sm font-semibold text-sky-800 hover:bg-sky-100">
+              Paketi al · {formatPrice(CREDIT_PACK.price)}
+            </button>
+          </form>
+        ) : (
+          <p className="rounded-lg bg-white/70 px-4 py-2.5 text-sm text-slate-600">Online ödeme çok yakında</p>
+        )}
+      </div>
+
       <p className="mt-6 text-center text-sm text-slate-500">
-        1 kredi = 1 özet plan veya 1 plan güncellemesi · detaylı plan 2 kredi · krediler her ay yenilenir.{" "}
+        1 kredi = 1 özet plan veya 1 plan güncellemesi · detaylı plan 2 kredi · abonelik kredileri her ay yenilenir.{" "}
         <Link href="/fiyatlar#ekip" className="font-medium text-rose-600 hover:underline">
           Ekip ve kurumsal
         </Link>

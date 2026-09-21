@@ -24,7 +24,7 @@ import { APP_NAME } from "@/config/app";
 import { EXAMPLES } from "@/content/examples";
 import { SAMPLE_PLAN } from "@/content/sample-plan";
 import { CATEGORY_NAMES } from "@/core/ai/preview";
-import { formatPrice, PLANS, yearlyDiscountPercent } from "@/core/billing/plans";
+import { CREDIT_PACK, formatPrice, PLANS, yearlyDiscountPercent } from "@/core/billing/plans";
 import { HeroDemo } from "./hero-demo";
 import { TryPreview } from "./try-preview";
 
@@ -60,7 +60,7 @@ const CATEGORIES = [
 const FAQ = [
   {
     q: "Ücretli mi?",
-    a: `İlk planın ücretsiz ve kredi kartı gerekmez. Sonrasında Başlangıç (${formatPrice(PLANS.starter.priceMonthly)}/ay, ${PLANS.starter.monthlyCredits} kredi) veya Profesyonel (${formatPrice(PLANS.pro.priceMonthly)}/ay, ${PLANS.pro.monthlyCredits} kredi) planla devam edebilirsin; yıllık ödemede %${yearlyDiscountPercent(PLANS.pro)} indirim var.`,
+    a: `İlk planın ücretsiz ve kredi kartı gerekmez. Sonrasında Başlangıç (${formatPrice(PLANS.starter.priceMonthly)}/ay, ${PLANS.starter.monthlyCredits} kredi) veya Profesyonel (${formatPrice(PLANS.pro.priceMonthly)}/ay, ${PLANS.pro.monthlyCredits} kredi) planla devam edebilirsin; yıllık ödemede %${yearlyDiscountPercent(PLANS.pro)} indirim var. Abonelik istemezsen tek seferlik paket (${CREDIT_PACK.credits} kredi, ${formatPrice(CREDIT_PACK.price)}) alabilirsin.`,
   },
   { q: "Bilgilerim güvende mi?", a: "Planların ve profillerin yalnızca senin hesabında durur. Eklediğin dosyalar saklanmaz; verilerini istediğin an indirebilir veya silebilirsin." },
   { q: "Yapay zekâ hata yapabilir mi?", a: "Evet, bu yüzden tahminler ve varsayımlar planda açıkça işaretlenir. Önemli kararlardan, mevzuat ve tutar içeren konularda uzman görüşü almanı öneririz." },

@@ -53,6 +53,11 @@ export function stripePriceId(plan: "starter" | "pro", interval: "month" | "year
   return value || undefined;
 }
 
+/** Tek seferlik kredi paketinin Stripe fiyatı (tek seferlik ödeme, abonelik değil). */
+export function stripePackPriceId(): string | undefined {
+  return process.env.STRIPE_PRICE_PACK || undefined;
+}
+
 /** Stripe fiyat kimliğinden plan (webhook'ta aboneliğin hangi plana ait olduğunu bulmak için). */
 export function planForStripePrice(priceId: string | undefined): "starter" | "pro" | null {
   if (!priceId) return null;

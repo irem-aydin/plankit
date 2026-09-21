@@ -305,6 +305,69 @@ describe("abonelik kredileri (consume_credits)", () => {
   });
 });
 
+describe("tek seferlik kredi paketi", () => {
+  async function newUser(email: string, patch = "") {
+    const [{ id }] = await rows<{ id: string }>(`insert into auth.users(email) values ($1) returning id`, [email]);
+    if (patch) await db.query(`update users set ${patch} where id = $1`, [id]);
+    return id;
+  }
+  const consume = async (id: string, cost: number, monthly = 8) =>
+    (await rows<{ ok: boolean }>("select public.consume_credits($1, $2, 1, $3) as ok", [id, cost, monthly]))[0].ok;
+  const addPack = async (id: string, purchase: string, credits = 3) =>
+    (await rows<{ ok: boolean }>("select public.add_pack_credits($1, $2, $3, 14900, 'try') as ok", [id, purchase, credits]))[0].ok;
+  const state = async (id: string) =>
+    (await rows<{ subscription_status: string; credits_used: number; pack_credits: number }>(
+      "select subscription_status, credits_used, pack_credits from users where id = $1",
+      [id],
+    ))[0];
+
+  it("aynı ödeme iki kez gelse de kredi bir kez eklenir", async () => {
+    const id = await newUser("paket1@test.com");
+    expect(await addPack(id, "cs_test_1")).toBe(true);
+    expect(await addPack(id, "cs_test_1")).toBe(false);
+    expect((await state(id)).pack_credits).toBe(3);
+  });
+
+  it("deneme hakkı bitmiş kullanıcı paket kredisini harcar", async () => {
+    const id = await newUser("paket2@test.com", "subscription_status = 'expired', trial_limit_used = 1");
+    expect(await consume(id, 1)).toBe(false);
+    await addPack(id, "cs_test_2");
+    expect(await consume(id, 2)).toBe(true);
+    expect(await consume(id, 2)).toBe(false);
+    expect(await consume(id, 1)).toBe(true);
+    expect(await state(id)).toMatchObject({ subscription_status: "expired", pack_credits: 0 });
+  });
+
+  it("denemede önce ücretsiz hak kullanılır, paket korunur", async () => {
+    const id = await newUser("paket3@test.com");
+    await addPack(id, "cs_test_3");
+    expect(await consume(id, 2)).toBe(true);
+    expect(await state(id)).toMatchObject({ subscription_status: "expired", pack_credits: 3 });
+    expect(await consume(id, 1)).toBe(true);
+    expect((await state(id)).pack_credits).toBe(2);
+  });
+
+  it("abonede önce aylık kredi, yetmezse paket kredisi kullanılır", async () => {
+    const id = await newUser("paket4@test.com", "subscription_status = 'active', plan = 'starter', credits_used = 7");
+    await addPack(id, "cs_test_4");
+    expect(await consume(id, 2)).toBe(true);
+    expect(await state(id)).toMatchObject({ credits_used: 8, pack_credits: 2 });
+    expect(await consume(id, 3)).toBe(false);
+    expect(await state(id)).toMatchObject({ credits_used: 8, pack_credits: 2 });
+  });
+
+  it("kullanıcı paket kredisi ekleyemez ve kendi kredisini değiştiremez", async () => {
+    await asUser(alice);
+    expect(await allowed("select public.add_pack_credits($1, 'sahte', 100, 0, 'try')", [alice])).toBe(false);
+    await db.query("update users set pack_credits = 100 where id = $1", [alice]).catch(() => {});
+    expect(await allowed("select * from credit_purchases")).toBe(true);
+    const visible = await rows<{ id: string }>("select id from credit_purchases");
+    await asAdmin();
+    expect(visible).toEqual([]);
+    expect((await state(alice)).pack_credits).toBe(0);
+  });
+});
+
 describe("kayıtsız önizleme kotası", () => {
   const consume = async (visitor: string, perVisitor = 3, global = 5) => {
     const [{ ok }] = await rows<{ ok: boolean }>("select public.consume_preview_quota($1, $2, $3) as ok", [visitor, perVisitor, global]);

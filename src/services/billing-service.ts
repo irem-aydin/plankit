@@ -1,7 +1,7 @@
 import "server-only";
 import type Stripe from "stripe";
-import { planForStripePrice, publicEnv, serverEnv, stripePriceId } from "@/config/env";
-import type { BillingInterval, PaidPlanId } from "@/core/billing/plans";
+import { planForStripePrice, publicEnv, serverEnv, stripePackPriceId, stripePriceId } from "@/config/env";
+import { CREDIT_PACK, type BillingInterval, type PaidPlanId } from "@/core/billing/plans";
 import { mapStripeSubscriptionStatus } from "@/core/billing/entitlements";
 import { getStripe } from "@/infrastructure/stripe";
 import { createSupabaseAdminClient } from "@/infrastructure/supabase/admin";
@@ -56,6 +56,43 @@ export async function createCheckoutSession(userId: string, plan: PaidPlanId, in
   return session.url;
 }
 
+/** Tek seferlik kredi paketi için Stripe Checkout (tek ödeme, abonelik değil). */
+export async function createPackCheckoutSession(userId: string): Promise<string> {
+  const price = stripePackPriceId();
+  if (!price) throw new BillingUnavailableError("Paket için online ödeme henüz açılmadı.");
+
+  const customer = await ensureStripeCustomer(userId);
+  const metadata = { user_id: userId, kind: "credit_pack", credits: String(CREDIT_PACK.credits) };
+  const session = await getStripe().checkout.sessions.create({
+    mode: "payment",
+    customer,
+    client_reference_id: userId,
+    line_items: [{ price, quantity: 1 }],
+    metadata,
+    payment_intent_data: { metadata },
+    invoice_creation: { enabled: true },
+    success_url: `${publicEnv.siteUrl}/abonelik?durum=paket`,
+    cancel_url: `${publicEnv.siteUrl}/abonelik?durum=iptal`,
+  });
+  if (!session.url) throw new Error("Stripe ödeme sayfası oluşturulamadı.");
+  return session.url;
+}
+
+/**
+ * Ödemesi tamamlanan paket oturumunun kredisini ekler. Oturum kimliği
+ * kayıt anahtarıdır; Stripe olayı tekrar gönderse de kredi bir kez eklenir.
+ */
+async function fulfillCreditPack(session: Stripe.Checkout.Session) {
+  if (session.metadata?.kind !== "credit_pack" || session.payment_status !== "paid") return;
+  const userId = session.metadata.user_id ?? session.client_reference_id;
+  if (!userId) {
+    console.warn(`Paket ödemesi bir kullanıcıyla eşleşmedi: ${session.id}`);
+    return;
+  }
+  const credits = Number.parseInt(session.metadata.credits ?? "", 10) || CREDIT_PACK.credits;
+  await accounts().addPackCredits(userId, session.id, credits, session.amount_total ?? null, session.currency ?? null);
+}
+
 /** Aboneliği yönetme (kart, iptal, fatura) için Stripe Customer Portal. */
 export async function createBillingPortalSession(userId: string): Promise<string> {
   const account = await accounts().findById(userId);
@@ -79,8 +116,10 @@ export async function constructWebhookEvent(payload: string, signature: string) 
 /** Stripe olayını işler; ilgisiz olayları yok sayar. İdempotenttir. */
 export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
   switch (event.type) {
-    case "checkout.session.completed": {
+    case "checkout.session.completed":
+    case "checkout.session.async_payment_succeeded": {
       const session = event.data.object;
+      if (session.mode === "payment") return fulfillCreditPack(session);
       if (session.mode !== "subscription" || !session.subscription) return;
       const subscriptionId =
         typeof session.subscription === "string"

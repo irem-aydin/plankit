@@ -60,6 +60,16 @@ export const PLANS: Record<PaidPlanId, PaidPlan> = {
 };
 
 /**
+ * Tek seferlik kredi paketi: abonelik gerektirmez, süre sınırı yoktur.
+ * Kredi başı fiyatı abonelikten yüksektir; sık kullanan için abonelik daha avantajlı kalır.
+ */
+export const CREDIT_PACK = {
+  name: "Tek seferlik paket",
+  credits: 3,
+  price: 149,
+} as const;
+
+/**
  * Kuruluş dönemi fiyatı etiketi. Stripe mevcut aboneliklerde eski fiyatı
  * korur; fiyat artışında yalnızca yeni fiyatlar tanımlanır, sonra bu false yapılır.
  */

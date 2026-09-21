@@ -56,8 +56,10 @@ export default async function SubcategorySelectionPage({ params, searchParams }:
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
           <p className="text-sm text-amber-900">
             {entitlement.kind === "credits"
-              ? "Bu ayki kredilerin bitti. Krediler her ay yenilenir; hemen devam etmek için planını yükseltebilirsin."
-              : "Ücretsiz deneme hakkını kullandın. Yeni planlar için sana uygun planı seç."}
+              ? "Bu ayki kredilerin bitti. Krediler her ay yenilenir; hemen devam etmek için planını yükseltebilir ya da tek seferlik paket alabilirsin."
+              : entitlement.kind === "trial"
+                ? "Ücretsiz deneme hakkını kullandın. Devam etmek için bir abonelik ya da tek seferlik paket seç."
+                : "Kullanılabilir kredin kalmadı. Devam etmek için bir abonelik ya da tek seferlik paket seç."}
           </p>
           <Link href="/abonelik" className="rounded-lg bg-amber-600 px-3 py-2 text-sm font-semibold text-white hover:bg-amber-500">
             Planları gör

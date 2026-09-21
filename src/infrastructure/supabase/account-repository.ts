@@ -24,10 +24,11 @@ type UserRow = {
   plan: PlanId;
   credits_used: number;
   credits_period_start: string;
+  pack_credits: number;
 };
 
 const COLUMNS =
-  "id, email, subscription_status, trial_started_at, trial_limit_used, stripe_customer_id, stripe_subscription_id, current_period_end, plan, credits_used, credits_period_start";
+  "id, email, subscription_status, trial_started_at, trial_limit_used, stripe_customer_id, stripe_subscription_id, current_period_end, plan, credits_used, credits_period_start, pack_credits";
 
 function toAccount(row: UserRow): Account {
   return {
@@ -42,6 +43,7 @@ function toAccount(row: UserRow): Account {
     plan: row.plan,
     creditsUsed: row.credits_used,
     creditsPeriodStart: row.credits_period_start,
+    packCredits: row.pack_credits,
   };
 }
 
@@ -70,8 +72,8 @@ export class AccountRepository {
   }
 
   /**
-   * Hakkı atomik olarak düşer: denemede 1 plan, abonelikte aylık krediden
-   * `cost`. Hak yoksa false döner ve hiçbir şey değişmez.
+   * Hakkı atomik olarak düşer: denemede 1 plan; aksi hâlde `cost` kredi, önce
+   * bu ayki abonelik kredisinden sonra paket kredisinden. Hak yoksa false döner.
    */
   async consumeCredits(userId: string, cost: number, trialLimit: number, monthlyLimit: number): Promise<boolean> {
     const { data, error } = await this.client.rpc("consume_credits", {
@@ -81,6 +83,19 @@ export class AccountRepository {
       p_monthly_limit: monthlyLimit,
     });
     if (error) throw new Error(`Kullanım hakkı düşülemedi: ${error.message}`);
+    return data === true;
+  }
+
+  /** Ödemesi alınan paketin kredisini ekler; aynı ödeme ikinci kez eklenmez (false döner). */
+  async addPackCredits(userId: string, purchaseId: string, credits: number, amountTotal: number | null, currency: string | null): Promise<boolean> {
+    const { data, error } = await this.client.rpc("add_pack_credits", {
+      p_user_id: userId,
+      p_purchase_id: purchaseId,
+      p_credits: credits,
+      p_amount_total: amountTotal,
+      p_currency: currency,
+    });
+    if (error) throw new Error(`Paket kredisi eklenemedi: ${error.message}`);
     return data === true;
   }
 
