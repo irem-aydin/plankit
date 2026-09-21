@@ -35,7 +35,7 @@ export default function GlobalError({ retry }: { error: Error & { digest?: strin
               padding: "10px 16px",
               border: 0,
               borderRadius: 8,
-              background: "#4f46e5",
+              background: "#e11d48",
               color: "#fff",
               fontWeight: 600,
               cursor: "pointer",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
+import { Link2 } from "lucide-react";
 import { sharePath } from "@/core/share/share";
 import { setSharingAction } from "../actions";
 
@@ -77,11 +78,12 @@ export function ShareButton({
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className={`rounded-lg border px-3 py-2 text-sm font-medium ${
+        className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-medium ${
           token ? "border-emerald-300 bg-emerald-50 text-emerald-800 hover:bg-emerald-100" : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
         }`}
       >
-        🔗 {token ? "Paylaşılıyor" : "Paylaş"}
+        <Link2 className="size-4" aria-hidden />
+        {token ? "Paylaşılıyor" : "Paylaş"}
       </button>
 
       {open && (
@@ -108,7 +110,7 @@ export function ShareButton({
                 <button
                   type="button"
                   onClick={copy}
-                  className="shrink-0 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+                  className="shrink-0 rounded-lg bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-500"
                 >
                   {copied ? "Kopyalandı ✓" : "Kopyala"}
                 </button>
@@ -120,7 +122,7 @@ export function ShareButton({
                 </p>
               )}
               <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3">
-                <a href={url} target="_blank" rel="noreferrer" className="text-sm font-medium text-indigo-600 hover:underline">
+                <a href={url} target="_blank" rel="noreferrer" className="text-sm font-medium text-rose-600 hover:underline">
                   Önizle ↗
                 </a>
                 <button
@@ -148,7 +150,7 @@ export function ShareButton({
                 type="button"
                 onClick={() => toggle(true)}
                 disabled={isPending}
-                className="mt-4 w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
+                className="mt-4 w-full rounded-lg bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-rose-500 disabled:opacity-50"
               >
                 {isPending && pendingAction === "on" ? "Oluşturuluyor…" : "Paylaşım bağlantısı oluştur"}
               </button>

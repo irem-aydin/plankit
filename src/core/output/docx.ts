@@ -151,7 +151,7 @@ function table(headers: string[], rows: string[][]) {
       children: text.split(/\r?\n/).map(
         (line) => new Paragraph({ children: [new TextRun({ text: line, bold: header, size: 20 })] }),
       ),
-      shading: header ? { type: ShadingType.CLEAR, color: "auto", fill: "EEF2FF" } : undefined,
+      shading: header ? { type: ShadingType.CLEAR, color: "auto", fill: "FFF1F2" } : undefined,
       margins: { top: 60, bottom: 60, left: 100, right: 100 },
     });
 

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
+import { ArrowLeft, FileDown, Printer, Save } from "lucide-react";
 import { GenerationProgress, REFINE_STAGES } from "@/components/generation-progress";
 import { useJobStatus, type JobStatusResponse } from "@/components/use-job-status";
 import { APP_NAME } from "@/config/app";
@@ -136,8 +137,9 @@ export function OutputEditor({
     <div>
       {/* Araç çubuğu */}
       <div className="sticky top-0 z-10 -mx-4 mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-slate-50/95 px-4 py-3 backdrop-blur print:hidden">
-        <Link href="/ciktilar" className="text-sm font-medium text-slate-500 hover:text-slate-800">
-          ← Planlarım
+        <Link href="/ciktilar" className="flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-slate-800">
+          <ArrowLeft className="size-4" aria-hidden />
+          Planlarım
         </Link>
         <div className="flex flex-wrap items-center gap-2">
           {status && (
@@ -149,8 +151,9 @@ export function OutputEditor({
             type="button"
             onClick={downloadWord}
             disabled={exporting}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
           >
+            <FileDown className="size-4" aria-hidden />
             {exporting ? "Hazırlanıyor…" : "Word indir"}
           </button>
           <button
@@ -164,16 +167,18 @@ export function OutputEditor({
           <button
             type="button"
             onClick={() => window.print()}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className="flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
+            <Printer className="size-4" aria-hidden />
             PDF olarak kaydet
           </button>
           <button
             type="button"
             onClick={save}
             disabled={isSaving || !dirty}
-            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-500 disabled:opacity-50"
           >
+            <Save className="size-4" aria-hidden />
             {isSaving ? "Kaydediliyor…" : "Kaydet"}
           </button>
         </div>
@@ -188,7 +193,7 @@ export function OutputEditor({
           value={doc.title}
           maxLength={200}
           onChange={(e) => update({ ...doc, title: e.target.value })}
-          className="w-full rounded-lg border border-transparent bg-transparent px-2 py-1 text-3xl font-bold tracking-tight text-slate-900 hover:border-slate-200 focus:border-indigo-400 focus:outline-none"
+          className="w-full rounded-lg border border-transparent bg-transparent px-2 py-1 text-3xl font-bold tracking-tight text-slate-900 hover:border-slate-200 focus:border-rose-400 focus:outline-none"
         />
         <p className="mt-1 px-2 text-sm text-slate-500">
           {new Date(doc.generatedAt).toLocaleString("tr-TR")} tarihinde oluşturuldu · {doc.sections.length} bölüm
@@ -228,7 +233,7 @@ export function OutputEditor({
             <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm">
               {doc.sections.map((s) => (
                 <li key={s.subcategoryId}>
-                  <a href={`#${s.subcategoryId}`} className="text-indigo-700 hover:underline">
+                  <a href={`#${s.subcategoryId}`} className="text-rose-700 hover:underline">
                     {s.subcategoryName}
                   </a>
                 </li>
@@ -343,9 +348,9 @@ function PersonalizationNotes({
   return (
     <div className="mt-4 space-y-3">
       {notes.keyFindings.length > 0 && (
-        <div className="rounded-xl border border-indigo-200 bg-indigo-50/70 p-4 print:border-slate-300 print:bg-white">
-          <p className="text-sm font-semibold text-indigo-950">Öne çıkan bulgular</p>
-          <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-indigo-950">
+        <div className="rounded-xl border border-rose-200 bg-rose-50/70 p-4 print:border-slate-300 print:bg-white">
+          <p className="text-sm font-semibold text-rose-950">Öne çıkan bulgular</p>
+          <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-rose-950">
             {notes.keyFindings.map((k, i) => (
               <li key={i}>{k}</li>
             ))}
@@ -353,8 +358,8 @@ function PersonalizationNotes({
         </div>
       )}
 
-      <div className="rounded-xl border border-violet-200 bg-violet-50/60 p-4 text-sm print:border-slate-300 print:bg-white">
-        <p className="font-medium text-violet-900 print:hidden">
+      <div className="rounded-xl border border-pink-200 bg-pink-50/60 p-4 text-sm print:border-slate-300 print:bg-white">
+        <p className="font-medium text-pink-900 print:hidden">
           ✨ Bu bölüm senin anlattıklarına göre yapay zekâ ile hazırlandı. Tahmini rakamları ve mevzuat bilgilerini
           uygulamadan önce doğrula; gerektiği yerde düzenle.
         </p>
@@ -390,7 +395,7 @@ function PersonalizationNotes({
                       rows={1}
                       placeholder="Cevabın…"
                       disabled={refining}
-                      className="mt-1 block w-full resize-none rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm field-sizing-content focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 focus:outline-none print:hidden"
+                      className="mt-1 block w-full resize-none rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm field-sizing-content focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 focus:outline-none print:hidden"
                     />
                   </label>
                 </li>
@@ -402,7 +407,7 @@ function PersonalizationNotes({
                 type="button"
                 disabled={refining || answered.length === 0}
                 onClick={() => onRefine(answered)}
-                className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-lg bg-pink-600 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-500 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {refining
                   ? "Plan güncelleniyor…"

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Logo } from "@/components/logo";
 import { DocumentView } from "@/components/document-view";
 import { APP_NAME } from "@/config/app";
 import { TRIAL_GENERATION_LIMIT } from "@/core/billing/entitlements";
@@ -22,10 +23,10 @@ export default async function SamplePlanPage() {
     <div className="flex flex-1 flex-col">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-          <Link href={user ? "/panel" : "/"} className="text-lg font-bold tracking-tight">
-            {APP_NAME}
+          <Link href={user ? "/panel" : "/"} aria-label={APP_NAME}>
+            <Logo />
           </Link>
-          <Link href={cta.href} className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500">
+          <Link href={cta.href} className="rounded-lg bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-500">
             {cta.label}
           </Link>
         </div>
@@ -43,12 +44,12 @@ export default async function SamplePlanPage() {
 
         <DocumentView doc={SAMPLE_PLAN} />
 
-        <div className="mx-auto mt-10 max-w-4xl rounded-3xl bg-gradient-to-br from-indigo-600 to-violet-600 px-6 py-10 text-center text-white">
+        <div className="mx-auto mt-10 max-w-4xl rounded-3xl bg-gradient-to-br from-rose-600 to-pink-600 px-6 py-10 text-center text-white">
           <h2 className="text-2xl font-bold tracking-tight">Sıra senin planında</h2>
-          <p className="mx-auto mt-2 max-w-xl text-indigo-100">
+          <p className="mx-auto mt-2 max-w-xl text-rose-100">
             Durumunu kendi cümlelerinle anlat, birkaç dakika içinde sana özel planın hazır olsun.
           </p>
-          <Link href={cta.href} className="mt-6 inline-block rounded-lg bg-white px-6 py-3 font-semibold text-indigo-700 hover:bg-indigo-50">
+          <Link href={cta.href} className="mt-6 inline-block rounded-lg bg-white px-6 py-3 font-semibold text-rose-700 hover:bg-rose-50">
             {cta.label}
           </Link>
         </div>

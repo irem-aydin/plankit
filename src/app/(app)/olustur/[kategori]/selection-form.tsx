@@ -30,7 +30,7 @@ const DETAIL_OPTIONS: { id: DetailLevel; title: string; text: string }[] = [
 ];
 
 const inputClass =
-  "mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-xs placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none";
+  "mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-xs placeholder:text-slate-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 focus:outline-none";
 
 export interface ProfileOption {
   id: string;
@@ -119,7 +119,7 @@ export function SelectionForm({
       {/* ---------------------------------------------------- Adım: seçim */}
       <div hidden={step !== "select"}>
         {/* Serbest istek: sayfanın en üstünde, asıl giriş noktası */}
-        <div className="rounded-2xl border border-violet-300 bg-gradient-to-br from-violet-50 to-white p-4 sm:p-5">
+        <div className="rounded-2xl border border-pink-300 bg-gradient-to-br from-pink-50 to-white p-4 sm:p-5">
           <label htmlFor="custom-request" className="block text-base font-semibold text-slate-900">
             ✨ Ne oluşturmak istiyorsun?
           </label>
@@ -136,7 +136,7 @@ export function SelectionForm({
             className={`${inputClass} field-sizing-content min-h-16 bg-white`}
           />
           {hasCustom && (
-            <p className="mt-2 text-xs font-medium text-violet-800">
+            <p className="mt-2 text-xs font-medium text-pink-800">
               İsteğin dokümana eklenecek. İstersen aşağıdan başlık da seçebilirsin.
             </p>
           )}
@@ -161,7 +161,7 @@ export function SelectionForm({
             <button
               type="button"
               onClick={() => setSelected(allSelected ? new Set() : new Set(subcategories.map((s) => s.id)))}
-              className="font-medium text-indigo-600 hover:underline"
+              className="font-medium text-rose-600 hover:underline"
             >
               {allSelected ? "Seçimi temizle" : "Hepsini seç"}
             </button>
@@ -176,14 +176,14 @@ export function SelectionForm({
               <label
                 key={sub.id}
                 className={`flex cursor-pointer gap-3 rounded-xl border bg-white p-4 transition ${
-                  checked ? "border-indigo-400 ring-2 ring-indigo-500/20" : "border-slate-200 hover:border-slate-300"
+                  checked ? "border-rose-400 ring-2 ring-rose-500/20" : "border-slate-200 hover:border-slate-300"
                 }`}
               >
                 <input
                   type="checkbox"
                   checked={checked}
                   onChange={() => toggle(sub.id)}
-                  className="mt-0.5 size-4 shrink-0 rounded border-slate-300 accent-indigo-600"
+                  className="mt-0.5 size-4 shrink-0 rounded border-slate-300 accent-rose-600"
                 />
                 <span className="min-w-0">
                   <span className="flex flex-wrap items-center gap-2">
@@ -192,7 +192,7 @@ export function SelectionForm({
                     {(sub.outputType === "template" || !sub.hasContent) && (
                       <span
                         title="Yapay zekâ bu başlığı senin durumuna göre hazırlar"
-                        className="rounded-full bg-violet-50 px-2 py-0.5 text-xs font-medium text-violet-700 ring-1 ring-violet-200 ring-inset"
+                        className="rounded-full bg-pink-50 px-2 py-0.5 text-xs font-medium text-pink-700 ring-1 ring-pink-200 ring-inset"
                       >
                         ✨ Yapay zekâ
                       </span>
@@ -216,7 +216,7 @@ export function SelectionForm({
           <button
             type="button"
             onClick={() => setShowAll((v) => !v)}
-            className="mt-3 w-full rounded-xl border border-dashed border-slate-300 bg-white py-3 text-sm font-medium text-indigo-600 hover:border-indigo-300"
+            className="mt-3 w-full rounded-xl border border-dashed border-slate-300 bg-white py-3 text-sm font-medium text-rose-600 hover:border-rose-300"
           >
             {showAll ? "Daha az göster" : `Tüm başlıkları gör (${hiddenCount} başlık daha)`}
           </button>
@@ -231,7 +231,7 @@ export function SelectionForm({
               setStep("context");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-lg bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Devam et →
           </button>
@@ -249,8 +249,8 @@ export function SelectionForm({
             ← Başlık seçimine dön
           </button>
 
-          <p className="mt-4 text-sm font-medium text-violet-700">Adım 3</p>
-          <div className="mt-1 rounded-2xl border border-violet-200 bg-gradient-to-br from-violet-50 to-white p-5 sm:p-6">
+          <p className="mt-4 text-sm font-medium text-pink-700">Adım 3</p>
+          <div className="mt-1 rounded-2xl border border-pink-200 bg-gradient-to-br from-pink-50 to-white p-5 sm:p-6">
             <h2 className="text-xl font-bold text-slate-900">
               {contextFromUser ? "Son ayarlar" : "Durumunu anlat, planını birlikte hazırlayalım"}
             </h2>
@@ -282,7 +282,7 @@ export function SelectionForm({
                       onClick={() => setProfileId(p.id)}
                       className={`rounded-xl border p-3 text-left transition ${
                         profileId === p.id
-                          ? "border-violet-500 bg-white ring-2 ring-violet-500/20"
+                          ? "border-pink-500 bg-white ring-2 ring-pink-500/20"
                           : "border-slate-200 bg-white/60 hover:border-slate-300"
                       }`}
                     >
@@ -298,7 +298,7 @@ export function SelectionForm({
                     onClick={() => setProfileId("")}
                     className={`rounded-xl border p-3 text-left transition ${
                       profileId === ""
-                        ? "border-violet-500 bg-white ring-2 ring-violet-500/20"
+                        ? "border-pink-500 bg-white ring-2 ring-pink-500/20"
                         : "border-slate-200 bg-white/60 hover:border-slate-300"
                     }`}
                   >
@@ -331,7 +331,7 @@ export function SelectionForm({
                   onClick={() => setMode(m.id)}
                   className={`rounded-xl border p-3 text-left transition ${
                     mode === m.id
-                      ? "border-violet-500 bg-white ring-2 ring-violet-500/20"
+                      ? "border-pink-500 bg-white ring-2 ring-pink-500/20"
                       : "border-slate-200 bg-white/60 hover:border-slate-300"
                   }`}
                 >
@@ -353,7 +353,7 @@ export function SelectionForm({
                   onClick={() => setLanguage(code)}
                   className={`rounded-xl border p-3 text-left transition ${
                     language === code
-                      ? "border-violet-500 bg-white ring-2 ring-violet-500/20"
+                      ? "border-pink-500 bg-white ring-2 ring-pink-500/20"
                       : "border-slate-200 bg-white/60 hover:border-slate-300"
                   }`}
                 >
@@ -377,7 +377,7 @@ export function SelectionForm({
                   onClick={() => setDetail(d.id)}
                   className={`rounded-xl border p-3 text-left transition ${
                     detail === d.id
-                      ? "border-violet-500 bg-white ring-2 ring-violet-500/20"
+                      ? "border-pink-500 bg-white ring-2 ring-pink-500/20"
                       : "border-slate-200 bg-white/60 hover:border-slate-300"
                   }`}
                 >
@@ -465,7 +465,7 @@ export function SelectionForm({
                   value="1"
                   checked={saveAsProfile}
                   onChange={(e) => setSaveAsProfile(e.target.checked)}
-                  className="mt-1 accent-violet-600"
+                  className="mt-1 accent-pink-600"
                 />
                 <span>
                   <span className="block text-sm font-medium text-slate-900">🧠 Bu bilgileri profil olarak kaydet</span>
@@ -544,7 +544,7 @@ function SubmitButton({
       name={name}
       value={value}
       disabled={pending || disabled}
-      className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+      className="rounded-lg bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-500 disabled:cursor-not-allowed disabled:opacity-50"
     >
       {isThis ? (pendingText ?? "İşleniyor…") : children}
     </button>

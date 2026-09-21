@@ -1,11 +1,12 @@
 "use client";
 
 import { useId } from "react";
+import { TableCharts } from "@/components/table-charts";
 import { emptyRow } from "@/core/output/generator";
 import type { ChecklistInstance, GuideInstance, TemplateInstance } from "@/core/output/document";
 
 const inputClass =
-  "w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm text-slate-900 shadow-xs placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none";
+  "w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm text-slate-900 shadow-xs placeholder:text-slate-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 focus:outline-none";
 
 // ------------------------------------------------------------------ template
 
@@ -90,6 +91,11 @@ export function TemplateEditor({
           )}
 
           {section.table && (
+            <div className="mt-4">
+              <TableCharts table={section.table} />
+            </div>
+          )}
+          {section.table && (
             <EditableTable
               table={section.table}
               showExamples={showExamples}
@@ -140,11 +146,11 @@ function EditableTable({
           </thead>
           <tbody>
             {showExamples && table.exampleRows.map((row, i) => (
-              <tr key={`example-${i}`} className="bg-indigo-50/40 text-slate-500 italic print:hidden">
+              <tr key={`example-${i}`} className="bg-rose-50/40 text-slate-500 italic print:hidden">
                 {table.columns.map((c, ci) => (
                   <td key={c.id} className="border-b border-slate-100 px-2 py-2 align-top">
                     {ci === 0 && (
-                      <span className="mr-1 rounded bg-indigo-100 px-1 text-[10px] font-semibold text-indigo-700 not-italic uppercase">
+                      <span className="mr-1 rounded bg-rose-100 px-1 text-[10px] font-semibold text-rose-700 not-italic uppercase">
                         Örnek
                       </span>
                     )}
@@ -202,7 +208,7 @@ function EditableTable({
       <button
         type="button"
         onClick={() => onChange({ ...table, rows: [...table.rows, emptyRow(columnIds)] })}
-        className="mt-2 text-sm font-medium text-indigo-600 hover:underline print:hidden"
+        className="mt-2 text-sm font-medium text-rose-600 hover:underline print:hidden"
       >
         + Satır ekle
       </button>

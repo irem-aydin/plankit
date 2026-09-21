@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { MessageSquare, X } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { FEEDBACK_KINDS, FEEDBACK_KIND_LABELS, type FeedbackKind } from "@/core/feedback/feedback";
 import { sendFeedbackAction } from "./feedback-actions";
@@ -56,9 +57,10 @@ export function FeedbackBox() {
         type="button"
         onClick={() => (open ? close() : setOpen(true))}
         aria-expanded={open}
-        className="fixed right-4 bottom-4 z-40 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-lg hover:bg-slate-800"
+        className="fixed right-4 bottom-4 z-40 flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-lg hover:bg-slate-800"
       >
-        {open ? "✕ Kapat" : "💬 Öneri / Şikâyet"}
+        {open ? <X className="size-4" aria-hidden /> : <MessageSquare className="size-4" aria-hidden />}
+        {open ? "Kapat" : "Öneri / Şikâyet"}
       </button>
 
       {open && (
@@ -76,7 +78,7 @@ export function FeedbackBox() {
               <p className="mt-1 text-sm text-slate-600">
                 {wantsReply ? "En kısa sürede e-posta adresine dönüş yapacağız." : "Her mesajı okuyup değerlendiriyoruz."}
               </p>
-              <button type="button" onClick={close} className="mt-4 text-sm font-medium text-indigo-600 hover:underline">
+              <button type="button" onClick={close} className="mt-4 text-sm font-medium text-rose-600 hover:underline">
                 Kapat
               </button>
             </div>
@@ -94,7 +96,7 @@ export function FeedbackBox() {
                     aria-checked={kind === k}
                     onClick={() => setKind(k)}
                     className={`rounded-lg border px-3 py-2 text-sm font-medium ${
-                      kind === k ? "border-indigo-400 bg-indigo-50 text-indigo-800" : "border-slate-200 text-slate-700 hover:border-slate-300"
+                      kind === k ? "border-rose-400 bg-rose-50 text-rose-800" : "border-slate-200 text-slate-700 hover:border-slate-300"
                     }`}
                   >
                     {FEEDBACK_KIND_LABELS[k]}
@@ -117,7 +119,7 @@ export function FeedbackBox() {
                       ? "Neyin daha iyi olmasını isterdin?"
                       : "Mesajın…"
                 }
-                className="mt-3 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+                className="mt-3 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 focus:outline-none"
               />
 
               <label className="mt-3 flex items-start gap-2 text-sm text-slate-700">
@@ -125,7 +127,7 @@ export function FeedbackBox() {
                   type="checkbox"
                   checked={wantsReply}
                   onChange={(e) => setWantsReply(e.target.checked)}
-                  className="mt-0.5 accent-indigo-600"
+                  className="mt-0.5 accent-rose-600"
                 />
                 Bana e-postayla dönüş yapılsın
               </label>
@@ -139,7 +141,7 @@ export function FeedbackBox() {
               <button
                 type="submit"
                 disabled={isPending || message.trim().length < 5}
-                className="mt-4 w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
+                className="mt-4 w-full rounded-lg bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-rose-500 disabled:opacity-50"
               >
                 {isPending ? "Gönderiliyor…" : "Gönder"}
               </button>

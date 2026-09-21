@@ -12,7 +12,7 @@ import {
 import type { ProfileFormState } from "./actions";
 
 const inputClass =
-  "mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-xs placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none";
+  "mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-xs placeholder:text-slate-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 focus:outline-none";
 
 export function ProfileForm({
   action,
@@ -36,7 +36,7 @@ export function ProfileForm({
               <label
                 key={k}
                 className={`flex cursor-pointer gap-3 rounded-xl border bg-white p-4 transition ${
-                  kind === k ? "border-indigo-500 ring-2 ring-indigo-500/20" : "border-slate-200 hover:border-slate-300"
+                  kind === k ? "border-rose-500 ring-2 ring-rose-500/20" : "border-slate-200 hover:border-slate-300"
                 }`}
               >
                 <input
@@ -45,7 +45,7 @@ export function ProfileForm({
                   value={k}
                   checked={kind === k}
                   onChange={() => setKind(k)}
-                  className="mt-1 accent-indigo-600"
+                  className="mt-1 accent-rose-600"
                 />
                 <span>
                   <span className="block font-semibold text-slate-900">

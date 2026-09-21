@@ -86,7 +86,7 @@ export function FilePicker({
   const { files, error, add, remove } = selection;
 
   return (
-    <div className={compact ? "mt-5 border-t border-violet-200/70 pt-4" : "mt-6"}>
+    <div className={compact ? "mt-5 border-t border-pink-200/70 pt-4" : "mt-6"}>
       <p className="text-sm font-medium text-slate-800">📎 Dosya ekle (isteğe bağlı)</p>
       <p className="mt-0.5 text-xs text-slate-600">
         Elindeki rapor, tablo, ekran görüntüsü veya sunumu ekle; yapay zekâ içeriğini okuyup plana dahil etsin. Görsel,
@@ -107,7 +107,7 @@ export function FilePicker({
           add(e.dataTransfer.files);
         }}
         className={`mt-2 rounded-xl border-2 border-dashed p-4 text-center transition ${
-          dragging ? "border-violet-500 bg-violet-50" : "border-slate-300 bg-white"
+          dragging ? "border-pink-500 bg-pink-50" : "border-slate-300 bg-white"
         }`}
       >
         <input
@@ -121,7 +121,7 @@ export function FilePicker({
           className="sr-only"
           id={id}
         />
-        <label htmlFor={id} className="cursor-pointer text-sm font-medium text-violet-700 hover:underline">
+        <label htmlFor={id} className="cursor-pointer text-sm font-medium text-pink-700 hover:underline">
           Dosya seç
         </label>
         <span className="text-sm text-slate-500"> veya buraya sürükle</span>

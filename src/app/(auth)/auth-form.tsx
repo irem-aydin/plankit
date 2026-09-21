@@ -7,7 +7,7 @@ import { PASSWORD_HINT } from "@/core/account/security";
 import type { AuthFormState } from "./actions";
 
 const inputClass =
-  "mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none";
+  "mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 focus:outline-none";
 
 function Feedback({ state }: { state: AuthFormState }) {
   return (
@@ -55,7 +55,7 @@ export function AuthForm({
             Şifre
           </label>
           {isSignIn && (
-            <Link href="/sifremi-unuttum" className="text-xs font-medium text-indigo-600 hover:underline">
+            <Link href="/sifremi-unuttum" className="text-xs font-medium text-rose-600 hover:underline">
               Şifremi unuttum
             </Link>
           )}
@@ -82,14 +82,14 @@ export function AuthForm({
         {isSignIn ? (
           <>
             Hesabın yok mu?{" "}
-            <Link href="/kayit" className="font-semibold text-indigo-600 hover:underline">
+            <Link href="/kayit" className="font-semibold text-rose-600 hover:underline">
               Kayıt ol
             </Link>
           </>
         ) : (
           <>
             Zaten hesabın var mı?{" "}
-            <Link href="/giris" className="font-semibold text-indigo-600 hover:underline">
+            <Link href="/giris" className="font-semibold text-rose-600 hover:underline">
               Giriş yap
             </Link>
           </>
@@ -118,7 +118,7 @@ export function ForgotPasswordForm({
         Sıfırlama bağlantısı gönder
       </SubmitButton>
       <p className="text-center text-sm text-slate-600">
-        <Link href="/giris" className="font-semibold text-indigo-600 hover:underline">
+        <Link href="/giris" className="font-semibold text-rose-600 hover:underline">
           ← Girişe dön
         </Link>
       </p>

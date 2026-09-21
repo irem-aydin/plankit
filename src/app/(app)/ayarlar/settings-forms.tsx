@@ -15,7 +15,7 @@ import {
 } from "./actions";
 
 const inputClass =
-  "mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-xs focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none";
+  "mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-xs focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 focus:outline-none";
 
 function Feedback({ state }: { state: SettingsState }) {
   if (state.error)
@@ -142,7 +142,7 @@ function Toggle({
           onChange={(e) => onChange(e.target.checked)}
           className="peer sr-only"
         />
-        <span className="h-6 w-11 rounded-full bg-slate-300 transition peer-checked:bg-indigo-600 peer-focus-visible:ring-2 peer-focus-visible:ring-indigo-500/40" />
+        <span className="h-6 w-11 rounded-full bg-slate-300 transition peer-checked:bg-rose-600 peer-focus-visible:ring-2 peer-focus-visible:ring-rose-500/40" />
         <span className="absolute top-0.5 left-0.5 size-5 rounded-full bg-white shadow transition peer-checked:translate-x-5" />
       </span>
     </label>

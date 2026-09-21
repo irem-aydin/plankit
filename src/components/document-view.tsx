@@ -1,3 +1,4 @@
+import { TableCharts } from "./table-charts";
 import type { DocumentSection, GeneratedDocument, SectionBody } from "@/core/output/document";
 
 /** Dokümanın salt okunur görünümü (örnek plan ve ileride paylaşım bağlantısı için). */
@@ -36,9 +37,9 @@ function Notes({ notes }: { notes: NonNullable<DocumentSection["personalization"
   return (
     <div className="mt-4 space-y-3 text-sm">
       {notes.keyFindings.length > 0 && (
-        <div className="rounded-xl border border-indigo-200 bg-indigo-50/70 p-4">
-          <p className="font-semibold text-indigo-950">Öne çıkan bulgular</p>
-          <ol className="mt-2 list-decimal space-y-1 pl-5 text-indigo-950">
+        <div className="rounded-xl border border-rose-200 bg-rose-50/70 p-4">
+          <p className="font-semibold text-rose-950">Öne çıkan bulgular</p>
+          <ol className="mt-2 list-decimal space-y-1 pl-5 text-rose-950">
             {notes.keyFindings.map((k, i) => (
               <li key={i}>{k}</li>
             ))}
@@ -46,7 +47,7 @@ function Notes({ notes }: { notes: NonNullable<DocumentSection["personalization"
         </div>
       )}
       {(notes.assumptions.length > 0 || notes.openQuestions.length > 0) && (
-        <div className="rounded-xl border border-violet-200 bg-violet-50/60 p-4">
+        <div className="rounded-xl border border-pink-200 bg-pink-50/60 p-4">
           {notes.assumptions.length > 0 && (
             <>
               <p className="font-semibold text-slate-800">Yapılan varsayımlar ({notes.assumptions.length})</p>
@@ -91,6 +92,11 @@ function Body({ body }: { body: SectionBody }) {
                     </div>
                   ))}
                 </dl>
+              )}
+              {s.table && s.table.rows.length > 0 && (
+                <div className="mt-3">
+                  <TableCharts table={s.table} />
+                </div>
               )}
               {s.table && s.table.rows.length > 0 && (
                 <div className="mt-3 overflow-x-auto rounded-lg border border-slate-200">

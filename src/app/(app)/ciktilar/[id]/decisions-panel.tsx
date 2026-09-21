@@ -43,7 +43,7 @@ export function DecisionsPanel({
           Kararları hafızaya almak için önce bir profil oluşturman gerekiyor. Profil oluşturduğunda sonraki planlar bu
           kararlarla (bütçe dağılımı, tarihler, eşikler) tutarlı olur.
         </p>
-        <Link href="/profiller/yeni" className="mt-3 inline-block text-sm font-semibold text-indigo-600 hover:underline">
+        <Link href="/profiller/yeni" className="mt-3 inline-block text-sm font-semibold text-rose-600 hover:underline">
           Profil oluştur →
         </Link>
       </section>
@@ -86,7 +86,7 @@ export function DecisionsPanel({
   }
 
   return (
-    <section className="mt-10 rounded-2xl border border-indigo-200 bg-indigo-50/50 p-5 sm:p-6 print:hidden">
+    <section className="mt-10 rounded-2xl border border-rose-200 bg-rose-50/50 p-5 sm:p-6 print:hidden">
       <h2 className="font-semibold text-slate-900">🧠 Bu planın kararlarını hatırla</h2>
       <p className="mt-1 text-sm text-slate-600">
         Plandaki kalıcı kararlar (bütçe dağılımı, tarihler, karar eşikleri) profilinin hafızasına eklenir. Böylece
@@ -100,7 +100,7 @@ export function DecisionsPanel({
             <select
               value={profileId}
               onChange={(e) => setProfileId(e.target.value)}
-              className="mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+              className="mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 focus:outline-none"
             >
               {profiles.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -113,7 +113,7 @@ export function DecisionsPanel({
             type="button"
             onClick={propose}
             disabled={!profileId}
-            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
+            className="rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-500 disabled:opacity-50"
           >
             Kararları çıkar
           </button>
@@ -123,7 +123,7 @@ export function DecisionsPanel({
 
       {phase.step === "loading" && (
         <p className="mt-4 flex items-center gap-2 text-sm text-slate-700">
-          <span className="size-4 animate-spin rounded-full border-2 border-indigo-200 border-t-indigo-600" />
+          <span className="size-4 animate-spin rounded-full border-2 border-rose-200 border-t-rose-600" />
           İşleniyor…
         </p>
       )}
@@ -154,7 +154,7 @@ export function DecisionsPanel({
                             return next;
                           })
                         }
-                        className="mt-0.5 size-4 shrink-0 accent-indigo-600"
+                        className="mt-0.5 size-4 shrink-0 accent-rose-600"
                       />
                       <span>
                         <span className="mr-2 rounded bg-slate-100 px-1.5 py-0.5 text-xs font-medium text-slate-600">
@@ -171,7 +171,7 @@ export function DecisionsPanel({
                   type="button"
                   onClick={() => save(phase.decisions, phase.profileId, phase.profileName)}
                   disabled={selected.size === 0}
-                  className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
+                  className="rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-500 disabled:opacity-50"
                 >
                   Seçilenleri hafızaya kaydet ({selected.size})
                 </button>

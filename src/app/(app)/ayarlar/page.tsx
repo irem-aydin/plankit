@@ -111,7 +111,7 @@ export default async function SettingsPage() {
             />
             <p className="mt-5 text-sm text-slate-600">
               Profillerini ve hafızalarını{" "}
-              <Link href="/profiller" className="font-semibold text-indigo-600 hover:underline">
+              <Link href="/profiller" className="font-semibold text-rose-600 hover:underline">
                 Profillerim
               </Link>{" "}
               sayfasından yönetebilirsin.
@@ -126,7 +126,7 @@ export default async function SettingsPage() {
                   ? `Ücretsiz deneme: ${account.trialLimitUsed} / ${TRIAL_GENERATION_LIMIT} kullanıldı.`
                   : "Deneme süren sona erdi."}
             </p>
-            <Link href="/abonelik" className="mt-3 inline-block text-sm font-semibold text-indigo-600 hover:underline">
+            <Link href="/abonelik" className="mt-3 inline-block text-sm font-semibold text-rose-600 hover:underline">
               Abonelik ayrıntıları →
             </Link>
           </Section>

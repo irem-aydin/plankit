@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Logo } from "@/components/logo";
 import { APP_NAME } from "@/config/app";
 
 export const metadata: Metadata = {
@@ -25,8 +26,8 @@ export default function LegalPage() {
     <div className="flex flex-1 flex-col bg-white">
       <header className="border-b border-slate-100">
         <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-4">
-          <Link href="/" className="text-lg font-bold tracking-tight">
-            {APP_NAME}
+          <Link href="/" aria-label={APP_NAME}>
+            <Logo />
           </Link>
           <Link href="/giris" className="text-sm font-medium text-slate-700 hover:underline">
             Giriş yap

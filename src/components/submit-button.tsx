@@ -18,7 +18,7 @@ export function SubmitButton({
     <button
       type="submit"
       disabled={pending || disabled}
-      className={`inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+      className={`inline-flex items-center justify-center rounded-lg bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-rose-500 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
     >
       {pending ? (pendingText ?? "İşleniyor…") : children}
     </button>

@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { FileText, LayoutDashboard, Sparkles, UsersRound } from "lucide-react";
 
 const LINKS = [
-  { href: "/panel", label: "Panel" },
-  { href: "/olustur", label: "Yeni plan" },
-  { href: "/ciktilar", label: "Planlarım" },
-  { href: "/profiller", label: "Profillerim" },
+  { href: "/panel", label: "Panel", Icon: LayoutDashboard },
+  { href: "/olustur", label: "Yeni plan", Icon: Sparkles },
+  { href: "/ciktilar", label: "Planlarım", Icon: FileText },
+  { href: "/profiller", label: "Profillerim", Icon: UsersRound },
 ];
 
 export function AppNav() {
@@ -21,10 +22,11 @@ export function AppNav() {
             key={l.href}
             href={l.href}
             aria-current={active ? "page" : undefined}
-            className={`rounded-md px-3 py-1.5 font-medium ${
-              active ? "bg-indigo-50 text-indigo-700" : "text-slate-700 hover:bg-slate-100"
+            className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 font-medium ${
+              active ? "bg-rose-50 text-rose-700" : "text-slate-700 hover:bg-slate-100"
             }`}
           >
+            <l.Icon className="size-4 opacity-70" aria-hidden />
             {l.label}
           </Link>
         );

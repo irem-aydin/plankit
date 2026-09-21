@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Logo } from "@/components/logo";
 import { notFound } from "next/navigation";
 import { after } from "next/server";
 import { cache } from "react";
@@ -61,14 +62,14 @@ export default async function SharedPlanPage({ params }: PageProps<"/p/[token]">
     <div className="flex flex-1 flex-col">
       <header className="border-b border-slate-200 bg-white print:hidden">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-          <Link href="/" className="text-lg font-bold tracking-tight">
-            {APP_NAME}
+          <Link href="/" aria-label={APP_NAME}>
+            <Logo />
           </Link>
           <div className="flex items-center gap-2">
             <PrintButton className="hidden rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 sm:inline">
               PDF olarak kaydet
             </PrintButton>
-            <Link href={cta.href} className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500">
+            <Link href={cta.href} className="rounded-lg bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-500">
               {cta.label}
             </Link>
           </div>
@@ -98,18 +99,18 @@ export default async function SharedPlanPage({ params }: PageProps<"/p/[token]">
         </p>
 
         {!isOwner && (
-          <section className="mx-auto mt-10 max-w-4xl rounded-3xl bg-gradient-to-br from-indigo-600 to-violet-600 px-6 py-10 text-center text-white print:hidden">
-            <p className="text-sm font-medium text-indigo-100">Bu plan {APP_NAME} ile birkaç dakikada hazırlandı</p>
+          <section className="mx-auto mt-10 max-w-4xl rounded-3xl bg-gradient-to-br from-rose-600 to-pink-600 px-6 py-10 text-center text-white print:hidden">
+            <p className="text-sm font-medium text-rose-100">Bu plan {APP_NAME} ile birkaç dakikada hazırlandı</p>
             <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">Senin işin için de hazırlayalım</h2>
-            <p className="mx-auto mt-3 max-w-xl text-indigo-100">
+            <p className="mx-auto mt-3 max-w-xl text-rose-100">
               Durumunu kendi cümlelerinle anlat; analiz, alternatifler, riskler ve adım adım aksiyon planı dakikalar içinde
               hazır olsun.
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-              <Link href={cta.href} className="rounded-lg bg-white px-6 py-3 font-semibold text-indigo-700 hover:bg-indigo-50">
+              <Link href={cta.href} className="rounded-lg bg-white px-6 py-3 font-semibold text-rose-700 hover:bg-rose-50">
                 {viewer ? cta.label : `Ücretsiz başla — ilk ${TRIAL_GENERATION_LIMIT} plan ücretsiz`}
               </Link>
-              {!viewer && <span className="text-sm text-indigo-100">Kredi kartı gerekmez.</span>}
+              {!viewer && <span className="text-sm text-rose-100">Kredi kartı gerekmez.</span>}
             </div>
           </section>
         )}

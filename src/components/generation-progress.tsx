@@ -72,10 +72,10 @@ export function GenerationProgress({
         </span>
       </div>
 
-      <div className="mt-4 h-2 overflow-hidden rounded-full bg-violet-100">
-        <div className="h-full rounded-full bg-violet-600 transition-all duration-1000" style={{ width: `${percent}%` }} />
+      <div className="mt-4 h-2 overflow-hidden rounded-full bg-pink-100">
+        <div className="h-full rounded-full bg-pink-600 transition-all duration-1000" style={{ width: `${percent}%` }} />
       </div>
-      {detail && <p className="mt-2 text-xs font-medium text-violet-800">{detail}</p>}
+      {detail && <p className="mt-2 text-xs font-medium text-pink-800">{detail}</p>}
 
       <ol className="mt-5 space-y-2.5 text-sm">
         {stages.map((s, i) => (
@@ -88,7 +88,7 @@ export function GenerationProgress({
             {i < current ? (
               <span className="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs text-emerald-700">✓</span>
             ) : i === current ? (
-              <span className="size-5 animate-spin rounded-full border-2 border-violet-200 border-t-violet-600" />
+              <span className="size-5 animate-spin rounded-full border-2 border-pink-200 border-t-pink-600" />
             ) : (
               <span className="size-5 rounded-full border-2 border-slate-200" />
             )}

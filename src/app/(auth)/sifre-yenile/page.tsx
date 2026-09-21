@@ -18,7 +18,7 @@ export default async function ResetPasswordPage() {
         </p>
         <Link
           href="/sifremi-unuttum"
-          className="mt-6 block rounded-lg bg-indigo-600 px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-indigo-500"
+          className="mt-6 block rounded-lg bg-rose-600 px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-rose-500"
         >
           Yeni bağlantı iste
         </Link>

@@ -32,12 +32,12 @@ export async function ActiveJobs() {
           <li
             key={j.id}
             className={`flex flex-wrap items-center justify-between gap-2 rounded-xl border px-4 py-3 text-sm ${
-              active ? "border-violet-200 bg-violet-50" : "border-red-200 bg-red-50"
+              active ? "border-pink-200 bg-pink-50" : "border-red-200 bg-red-50"
             }`}
           >
             <span className="flex min-w-0 items-center gap-2.5">
               {active ? (
-                <span className="size-4 shrink-0 animate-spin rounded-full border-2 border-violet-200 border-t-violet-600" />
+                <span className="size-4 shrink-0 animate-spin rounded-full border-2 border-pink-200 border-t-pink-600" />
               ) : (
                 <span aria-hidden>⚠️</span>
               )}
@@ -53,7 +53,7 @@ export async function ActiveJobs() {
               </span>
             </span>
             {active ? (
-              <Link href={href} className="font-semibold text-violet-700 hover:underline">
+              <Link href={href} className="font-semibold text-pink-700 hover:underline">
                 İlerlemeyi gör →
               </Link>
             ) : (

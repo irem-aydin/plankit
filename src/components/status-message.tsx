@@ -30,7 +30,7 @@ export function StatusLink({ href, children, primary }: { href: string; children
       href={href}
       className={
         primary
-          ? "rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+          ? "rounded-lg bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-rose-500"
           : "rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
       }
     >

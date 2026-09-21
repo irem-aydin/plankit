@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Logo } from "@/components/logo";
 import { APP_NAME } from "@/config/app";
 import { getCurrentSession } from "@/services/session";
+import { LogOut, Settings } from "lucide-react";
 import { AppNav } from "./app-nav";
 import { FeedbackBox } from "./feedback-box";
 
@@ -17,8 +19,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <header className="border-b border-slate-200 bg-white print:hidden">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
           <div className="flex flex-wrap items-center gap-4">
-            <Link href="/panel" className="text-lg font-bold tracking-tight">
-              {APP_NAME}
+            <Link href="/panel" aria-label={`${APP_NAME} — Panel`}>
+              <Logo />
             </Link>
             <AppNav />
           </div>
@@ -30,7 +32,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                 entitlement.unlimited
                   ? "bg-emerald-50 text-emerald-700 ring-emerald-200"
                   : entitlement.canGenerate
-                    ? "bg-indigo-50 text-indigo-700 ring-indigo-200"
+                    ? "bg-rose-50 text-rose-700 ring-rose-200"
                     : "bg-amber-50 text-amber-800 ring-amber-200"
               }`}
             >
@@ -49,9 +51,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                 {(displayName ?? "?").slice(0, 1)}
               </span>
               <span className="hidden sm:inline">Ayarlar</span>
+              <Settings className="size-4 text-slate-400 sm:hidden" aria-hidden />
             </Link>
             <form action="/auth/cikis" method="post">
-              <button className="rounded-md px-2 py-1.5 text-slate-600 hover:bg-slate-100">Çıkış</button>
+              <button className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-slate-600 hover:bg-slate-100">
+                <LogOut className="size-4" aria-hidden />
+                <span className="hidden sm:inline">Çıkış</span>
+              </button>
             </form>
           </div>
         </div>

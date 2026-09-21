@@ -16,7 +16,7 @@ export default function SignUpPage() {
       <AuthForm mode="signup" action={signUpAction} />
       <p className="mt-4 text-center text-xs text-slate-500">
         Hesap oluşturarak{" "}
-        <Link href="/yasal" className="font-medium text-indigo-600 hover:underline">
+        <Link href="/yasal" className="font-medium text-rose-600 hover:underline">
           kullanım koşullarını ve KVKK aydınlatma metnini
         </Link>{" "}
         kabul etmiş olursun.

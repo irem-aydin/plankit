@@ -20,7 +20,7 @@ function searchKey(value: string) {
 }
 
 const selectClass =
-  "rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none";
+  "rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 focus:outline-none";
 
 export function OutputsList({ outputs }: { outputs: OutputSummary[] }) {
   const [query, setQuery] = useState("");
@@ -104,7 +104,7 @@ export function OutputsList({ outputs }: { outputs: OutputSummary[] }) {
               setCategory(ALL);
               setProfile(ALL);
             }}
-            className="ml-2 font-medium text-indigo-600 hover:underline"
+            className="ml-2 font-medium text-rose-600 hover:underline"
           >
             Filtreleri temizle
           </button>
@@ -183,7 +183,7 @@ function OutputRow({ output: o }: { output: OutputSummary }) {
               aria-label="Yeni plan adı"
               className={`${selectClass} min-w-0 flex-1`}
             />
-            <button disabled={isPending} className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50">
+            <button disabled={isPending} className="rounded-lg bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-500 disabled:opacity-50">
               {isPending ? "Kaydediliyor…" : "Kaydet"}
             </button>
             <button
@@ -198,7 +198,7 @@ function OutputRow({ output: o }: { output: OutputSummary }) {
             </button>
           </form>
         ) : (
-          <Link href={`/ciktilar/${o.id}`} className="font-medium text-slate-900 hover:text-indigo-700 hover:underline">
+          <Link href={`/ciktilar/${o.id}`} className="font-medium text-slate-900 hover:text-rose-700 hover:underline">
             {o.title}
           </Link>
         )}

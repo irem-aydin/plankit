@@ -18,7 +18,7 @@ export function ErrorView({ error, retry }: { error: Error & { digest?: string }
       <button
         type="button"
         onClick={() => retry()}
-        className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+        className="rounded-lg bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-rose-500"
       >
         Tekrar dene
       </button>

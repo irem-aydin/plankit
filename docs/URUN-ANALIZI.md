@@ -134,6 +134,13 @@ Plan dili seçilebiliyor ama **arayüz metinleri hâlâ Türkçe sabit.** Yurt d
 ### 3.9 ✅ Öneri ve şikâyet kutusu (21.09.2026)
 Uygulama içinde sağ altta sabit "Öneri / Şikâyet" düğmesi. Kullanıcı türü seçer (öneri, şikâyet, hata, diğer), mesajını yazar, isterse e-postayla dönüş ister. Mesajlar Supabase'deki `feedback` tablosunda toplanır (Table Editor'den okunur). Hesap silinince kullanıcının mesajları da silinir.
 
+### 3.12 ✅ Görsel yenileme (21.09.2026)
+- **Marka:** logo ve site ikonu; ana renk gül/pembe (rose–pink) tonları; emojiler yerine çizgi ikonlar (lucide).
+- **Planlara grafikler:** tablolar otomatik olarak SWOT dört kutusuna, olasılık × etki (veya ilgi × güç) matrisine, zaman çizelgesine ve durum dağılımına dönüşür. Tablo düzenlendikçe grafik güncellenir; PDF'te ve paylaşım sayfasında da görünür. Emin olunamayan tablolarda grafik çizilmez. Word çıktısında grafikler henüz yok.
+- **Panel:** özet kartları (toplam, bu ay, görüntülenme, kalan hak), son 6 ay grafiği, alanlara göre dağılım, hızlı başla kartları.
+- **Ana sayfa:** canlı ürün önizlemesi (istek yazılır → plan belirir), görsel plan örnekleri, kimler için, sık sorulanlar.
+- **Kalan:** karanlık mod (tüm sayfalara dokunduğu için ayrı iş).
+
 ### 3.10 Mobil deneyim
 Sayfalar mobil uyumlu ama uzun tabloların düzenlenmesi telefonda zor. Öncelik düşük: bu ürün masaüstünde kullanılır.
 

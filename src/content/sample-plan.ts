@@ -168,13 +168,14 @@ export const SAMPLE_PLAN: GeneratedDocument = {
               columns: [
                 { id: "risk", label: "Risk", type: "text" },
                 { id: "olasilik", label: "Olasılık", type: "select", options: ["Yüksek", "Orta", "Düşük"] },
+                { id: "etki", label: "Etki", type: "select", options: ["Yüksek", "Orta", "Düşük"] },
                 { id: "onlem", label: "Önlem", type: "text" },
               ],
               exampleRows: [],
               rows: [
-                { risk: "Paket servis komisyonları kârı eritir", olasilik: "Orta", onlem: "Platform fiyatlarını %15 yüksek belirle; kendi sipariş hattını tanıt" },
-                { risk: "Bornova dükkânı başkasına kiralanır", olasilik: "Orta", onlem: "Bölgede 2 alternatif dükkânı da takipte tut; bu dükkâna bağımlı kalma" },
-                { risk: "Maliyet artışları marjı düşürür", olasilik: "Yüksek", onlem: "Çeyrek başı menü fiyat gözden geçirmesi; tedarikçiyle 6 aylık fiyat anlaşması" },
+                { risk: "Paket servis komisyonları kârı eritir", olasilik: "Orta", etki: "Orta", onlem: "Platform fiyatlarını %15 yüksek belirle; kendi sipariş hattını tanıt" },
+                { risk: "Bornova dükkânı başkasına kiralanır", olasilik: "Orta", etki: "Yüksek", onlem: "Bölgede 2 alternatif dükkânı da takipte tut; bu dükkâna bağımlı kalma" },
+                { risk: "Maliyet artışları marjı düşürür", olasilik: "Yüksek", etki: "Yüksek", onlem: "Çeyrek başı menü fiyat gözden geçirmesi; tedarikçiyle 6 aylık fiyat anlaşması" },
               ],
             },
           },

@@ -29,7 +29,7 @@ export function AddMemoryForm({
           maxLength={2000}
           required
           placeholder="Örn. Yıllık pazarlama bütçemiz 2027 için 1,2 milyon TL olarak onaylandı."
-          className="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm field-sizing-content focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+          className="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm field-sizing-content focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 focus:outline-none"
         />
         <SubmitButton pendingText="Ekleniyor…" className="shrink-0">
           Ekle

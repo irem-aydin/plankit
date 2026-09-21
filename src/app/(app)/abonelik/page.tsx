@@ -76,7 +76,7 @@ export default async function SubscriptionPage({ searchParams }: PageProps<"/abo
 
         {account.stripeCustomerId && (
           <form action={openBillingPortalAction} className="mt-4">
-            <button className="text-sm font-medium text-indigo-600 hover:underline">
+            <button className="text-sm font-medium text-rose-600 hover:underline">
               Ödeme yöntemi, faturalar ve iptal →
             </button>
           </form>
@@ -84,13 +84,13 @@ export default async function SubscriptionPage({ searchParams }: PageProps<"/abo
       </div>
 
       {!isActive && (
-        <div className="mt-6 rounded-2xl border-2 border-indigo-500 bg-white p-6 shadow-sm">
-          <p className="text-sm font-semibold text-indigo-600">Pro</p>
+        <div className="mt-6 rounded-2xl border-2 border-rose-500 bg-white p-6 shadow-sm">
+          <p className="text-sm font-semibold text-rose-600">Pro</p>
           <p className="mt-1 text-slate-600">Tek plan, sınırsız kullanım. İstediğin zaman iptal et.</p>
           <ul className="mt-5 space-y-2 text-sm text-slate-700">
             {FEATURES.map((f) => (
               <li key={f} className="flex gap-2">
-                <span className="text-indigo-600" aria-hidden>
+                <span className="text-rose-600" aria-hidden>
                   ✓
                 </span>
                 {f}

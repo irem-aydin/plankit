@@ -12,6 +12,7 @@ export interface OutputSummary {
   profile: string | null;
   language: "tr" | "en";
   shared: boolean;
+  shareViews: number;
 }
 
 export interface ShareState {
@@ -121,7 +122,7 @@ export class OutputRepository {
     const { data, error } = await this.client
       .from("generated_outputs")
       .select(
-        "id, title, created_at, updated_at, share_token, category:document->sections->0->>categoryName, profile:document->context->profile->>name, language:document->context->>language",
+        "id, title, created_at, updated_at, share_token, share_views, category:document->sections->0->>categoryName, profile:document->context->profile->>name, language:document->context->>language",
       )
       .order("created_at", { ascending: false })
       .limit(limit);
@@ -135,6 +136,7 @@ export class OutputRepository {
       profile: r.profile ?? null,
       language: r.language === "en" ? "en" : "tr",
       shared: Boolean(r.share_token),
+      shareViews: r.share_views ?? 0,
     }));
   }
 

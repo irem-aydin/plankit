@@ -43,7 +43,7 @@ export default async function SubcategorySelectionPage({ params }: PageProps<"/o
       <Link href="/olustur" className="text-sm font-medium text-slate-500 hover:text-slate-800">
         ← Kategoriler
       </Link>
-      <p className="mt-4 text-sm font-medium text-indigo-600">Adım 2</p>
+      <p className="mt-4 text-sm font-medium text-rose-600">Adım 2</p>
       <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">{data.category.name}</h1>
       <p className="mt-2 max-w-2xl text-slate-600">
         Yalnızca ihtiyacın olan alt başlıkları seç. Bir sonraki adımda durumunu anlatırsan yapay zekâ sana özel analiz,

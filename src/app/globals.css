@@ -11,6 +11,12 @@ body {
 }
 
 @media print {
+  /* Grafik renkleri PDF'te de korunsun */
+  figure,
+  figure * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
   @page {
     margin: 16mm 14mm;
   }
