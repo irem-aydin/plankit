@@ -115,7 +115,7 @@ Eski durum: 4 dakikalık dönen çarkı izlemek uzun. "Durum analizi yapılıyor
 Eski durum: 11 plana kadar idare eder, 50 planda kaybolur. Eksikler: **arama**, kategoriye/profile göre **filtre**, **kopyalama** ("geçen ayki planı güncelle"), yeniden adlandırma.
 
 ### 3.4 Paylaşım ve dışa aktarma
-**Word (.docx) indirme 21.09.2026'da eklendi.** Kalanlar: bağlantıyla paylaşma, e-posta ile gönderme.
+**Word (.docx) indirme ve bağlantıyla paylaşma 21.09.2026'da eklendi.** Paylaşılan plan giriş yapmadan salt okunur görüntülenir; anlatılan durum, profil ve dosya adları paylaşılmaz; sayfa arama motorlarına kapalıdır; görüntülenme sayılır; paylaşım kapatılınca bağlantı çalışmaz. Sayfanın altındaki "Senin işin için de hazırlayalım" çağrısı yeni kullanıcı kazanımının ana kanalıdır. Kalan: e-posta ile gönderme.
 
 İlk durumda yalnızca PDF ve Markdown vardı. Eklenebilecekler: **bağlantıyla paylaşma** (salt okunur), **Word (.docx)** çıktısı, e-posta ile gönderme. İş dünyasında Word hâlâ standart.
 
@@ -194,7 +194,7 @@ Dikkat edilecekler:
 
 **Aşama 3 — Para kazanma**
 14. Stripe bağlantısı ve fiyat planları
-15. Bağlantıyla paylaşma
+15. ~~Bağlantıyla paylaşma~~ ✅ (21.09.2026)
 16. Kalan başlıklar için hazır şablonlar
 17. Arayüzün İngilizceye çevrilmesi (hedef pazara göre)
 

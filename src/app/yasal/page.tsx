@@ -72,6 +72,11 @@ export default function LegalPage() {
                 paylaşabilirsiniz.
               </li>
               <li>
+                Bir plan için paylaşım bağlantısı oluşturduğunuzda, bağlantıya sahip herkes planın içeriğini giriş
+                yapmadan görüntüleyebilir. Plan için anlattığınız durum, profil bilgileriniz ve eklediğiniz dosyalar
+                paylaşılmaz. Paylaşımı istediğiniz an kapatabilirsiniz; kapatılan bağlantı çalışmaz.
+              </li>
+              <li>
                 Hizmet geliştirme aşamasındadır; özellikler değişebilir, kesinti yaşanabilir. Önemli değişiklikler
                 önceden duyurulur.
               </li>

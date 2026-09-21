@@ -6,6 +6,7 @@ import { GenerationError } from "@/core/output/errors";
 import type { RefineSectionInput } from "@/core/output/refiner";
 import { redirect } from "next/navigation";
 import { generatedDocumentSchema, type GeneratedDocument } from "@/core/output/document";
+import { createShareToken } from "@/core/share/share";
 import { createSupabaseAdminClient } from "@/infrastructure/supabase/admin";
 import { OutputRepository } from "@/infrastructure/supabase/output-repository";
 import { createSupabaseServerClient, getAuthenticatedUser } from "@/infrastructure/supabase/server";
@@ -81,6 +82,24 @@ export async function copyOutputAction(outputId: string): Promise<ListActionResu
   revalidatePath("/ciktilar");
   revalidatePath("/panel");
   return { ok: true, id };
+}
+
+export type ShareResult = { ok: true; token: string | null; views: number } | { ok: false; error: string };
+
+/**
+ * Planın paylaşım bağlantısını açar veya kapatır. Yeniden açmak yeni bir
+ * bağlantı üretir; eski bağlantı çalışmaz. RLS yalnızca kendi planına izin verir.
+ */
+export async function setSharingAction(outputId: string, enabled: boolean): Promise<ShareResult> {
+  const user = await getAuthenticatedUser();
+  if (!user) return { ok: false, error: "Oturumunuz sona ermiş. Lütfen tekrar giriş yapın." };
+
+  const token = enabled ? createShareToken() : null;
+  const updated = await new OutputRepository(await createSupabaseServerClient()).setShareToken(outputId, token);
+  if (!updated) return { ok: false, error: "Plan bulunamadı veya erişim yetkiniz yok." };
+
+  revalidatePath("/ciktilar");
+  return { ok: true, token, views: 0 };
 }
 
 export type RefineResult =

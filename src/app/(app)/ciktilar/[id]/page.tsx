@@ -38,12 +38,13 @@ export default async function OutputPage({ params }: PageProps<"/ciktilar/[id]">
   }
 
   const supabase = await createSupabaseServerClient();
-  const [profiles, activeRefine] = await Promise.all([
+  const [profiles, activeRefine, share] = await Promise.all([
     new ProfileRepository(supabase)
       .list()
       .catch(() => [])
       .then((list) => list.map((p) => ({ id: p.id, name: p.name }))),
     findActiveRefine(supabase, output.id),
+    new OutputRepository(supabase).getShareState(output.id).catch(() => null),
   ]);
 
   return (
@@ -52,6 +53,7 @@ export default async function OutputPage({ params }: PageProps<"/ciktilar/[id]">
       initialDocument={parsed.data}
       profiles={profiles}
       activeRefineJobId={activeRefine}
+      share={share ?? undefined}
     />
   );
 }

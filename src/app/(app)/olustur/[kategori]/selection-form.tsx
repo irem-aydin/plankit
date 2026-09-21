@@ -188,6 +188,15 @@ export function SelectionForm({
                 <span className="min-w-0">
                   <span className="flex flex-wrap items-center gap-2">
                     <span className="font-medium text-slate-900">{sub.name}</span>
+                    {/* Şablon tipindekileri yapay zekâ doldurur; hazır içeriği olmayanları sıfırdan tasarlar. */}
+                    {(sub.outputType === "template" || !sub.hasContent) && (
+                      <span
+                        title="Yapay zekâ bu başlığı senin durumuna göre hazırlar"
+                        className="rounded-full bg-violet-50 px-2 py-0.5 text-xs font-medium text-violet-700 ring-1 ring-violet-200 ring-inset"
+                      >
+                        ✨ Yapay zekâ
+                      </span>
+                    )}
                     {sub.hasContent && (
                       <span
                         title="Uzmanlarca hazırlanmış şablon; yapay zekâ senin durumuna göre doldurur"

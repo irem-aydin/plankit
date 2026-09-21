@@ -156,7 +156,7 @@ function OutputRow({ output: o }: { output: OutputSummary }) {
     });
   }
 
-  const meta = [o.category, o.profile && `🧠 ${o.profile}`, o.language === "en" && "English"].filter(Boolean);
+  const meta = [o.category, o.profile && `🧠 ${o.profile}`, o.language === "en" && "English", o.shared && "🔗 Paylaşılıyor"].filter(Boolean);
 
   return (
     <li className="flex flex-wrap items-center gap-x-4 gap-y-2 px-5 py-4 hover:bg-slate-50">

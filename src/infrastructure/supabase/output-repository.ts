@@ -11,6 +11,19 @@ export interface OutputSummary {
   category: string | null;
   profile: string | null;
   language: "tr" | "en";
+  shared: boolean;
+}
+
+export interface ShareState {
+  token: string | null;
+  views: number;
+}
+
+export interface SharedOutput {
+  ownerId: string;
+  title: string;
+  document: GeneratedDocument;
+  updatedAt: string;
 }
 
 export interface StoredOutput {
@@ -108,7 +121,7 @@ export class OutputRepository {
     const { data, error } = await this.client
       .from("generated_outputs")
       .select(
-        "id, title, created_at, updated_at, category:document->sections->0->>categoryName, profile:document->context->profile->>name, language:document->context->>language",
+        "id, title, created_at, updated_at, share_token, category:document->sections->0->>categoryName, profile:document->context->profile->>name, language:document->context->>language",
       )
       .order("created_at", { ascending: false })
       .limit(limit);
@@ -121,6 +134,7 @@ export class OutputRepository {
       category: r.category ?? null,
       profile: r.profile ?? null,
       language: r.language === "en" ? "en" : "tr",
+      shared: Boolean(r.share_token),
     }));
   }
 
@@ -133,6 +147,44 @@ export class OutputRepository {
       .select("id");
     if (error) throw new Error(`Çıktı güncellenemedi: ${error.message}`);
     return (data ?? []).length > 0;
+  }
+
+  /** Paylaşım durumu (kullanıcı istemcisiyle: RLS yalnızca kendi planını döndürür). */
+  async getShareState(id: string): Promise<ShareState | null> {
+    const { data, error } = await this.client
+      .from("generated_outputs")
+      .select("share_token, share_views")
+      .eq("id", id)
+      .maybeSingle<{ share_token: string | null; share_views: number }>();
+    if (error) throw new Error(`Paylaşım durumu okunamadı: ${error.message}`);
+    return data ? { token: data.share_token, views: data.share_views } : null;
+  }
+
+  /** token = null paylaşımı kapatır; yeni token eski bağlantıyı geçersiz kılar. */
+  async setShareToken(id: string, token: string | null): Promise<boolean> {
+    const { data, error } = await this.client
+      .from("generated_outputs")
+      .update({ share_token: token, shared_at: token ? new Date().toISOString() : null, share_views: 0 })
+      .eq("id", id)
+      .select("id");
+    if (error) throw new Error(`Paylaşım güncellenemedi: ${error.message}`);
+    return (data ?? []).length > 0;
+  }
+
+  /** Herkese açık okuma: YALNIZCA service role ile ve doğru anahtarla çağrılır. */
+  async findByShareToken(token: string): Promise<SharedOutput | null> {
+    const { data, error } = await this.client
+      .from("generated_outputs")
+      .select("user_id, title, document, updated_at")
+      .eq("share_token", token)
+      .maybeSingle<{ user_id: string; title: string; document: GeneratedDocument; updated_at: string }>();
+    if (error) throw new Error(`Paylaşılan plan okunamadı: ${error.message}`);
+    return data ? { ownerId: data.user_id, title: data.title, document: data.document, updatedAt: data.updated_at } : null;
+  }
+
+  async recordShareView(token: string) {
+    const { error } = await this.client.rpc("record_share_view", { p_token: token });
+    if (error) console.error("Görüntülenme kaydedilemedi:", error.message);
   }
 
   async delete(id: string) {

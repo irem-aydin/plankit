@@ -10,6 +10,7 @@ import type { DocumentSection, GeneratedDocument, SectionBody } from "@/core/out
 import { renderDocumentMarkdown } from "@/core/output/markdown";
 import { deleteOutputAction, loadOutputAction, refineSectionAction, saveOutputAction } from "../actions";
 import { DecisionsPanel } from "./decisions-panel";
+import { ShareButton } from "./share-dialog";
 import { ChecklistEditor, GuideEditor, TemplateEditor } from "./section-editors";
 
 export function OutputEditor({
@@ -17,12 +18,14 @@ export function OutputEditor({
   initialDocument,
   profiles,
   activeRefineJobId = null,
+  share = { token: null, views: 0 },
 }: {
   outputId: string;
   initialDocument: GeneratedDocument;
   profiles: { id: string; name: string }[];
   /** Sayfa açıldığında bu plan için süren bir güncelleme işi varsa */
   activeRefineJobId?: string | null;
+  share?: { token: string | null; views: number };
 }) {
   const [doc, setDoc] = useState(initialDocument);
   const [dirty, setDirty] = useState(false);
@@ -141,6 +144,7 @@ export function OutputEditor({
             <span className={`text-sm ${status.kind === "ok" ? "text-emerald-700" : "text-red-700"}`}>{status.text}</span>
           )}
           {dirty && !status && <span className="text-sm text-amber-700">Kaydedilmemiş değişiklikler</span>}
+          <ShareButton outputId={outputId} initialToken={share.token} initialViews={share.views} dirty={dirty} />
           <button
             type="button"
             onClick={downloadWord}

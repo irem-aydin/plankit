@@ -48,8 +48,9 @@ beforeAll(async () => {
     await db.exec(fs.readFileSync(path.join(MIGRATIONS, file), "utf8"));
   }
   await db.exec(`
-    grant usage on schema public to authenticated;
-    grant select, insert, update, delete on all tables in schema public to authenticated;
+    grant usage on schema public to authenticated, anon;
+    -- Supabase varsayılanı gibi: tablo izinleri açık, veriyi yalnızca RLS korur.
+    grant select, insert, update, delete on all tables in schema public to authenticated, anon;
   `);
 
   [{ id: alice }] = await rows<{ id: string }>(`insert into auth.users(email) values ('alice@test.com') returning id`);
@@ -176,6 +177,66 @@ describe("veri izolasyonu (RLS)", () => {
     await asUser(bob);
     expect(await allowed(`insert into feedback(user_id, kind, message) values ($1, 'bug', 'sahte kayıt')`, [alice])).toBe(false);
     expect(await allowed(`insert into feedback(user_id, kind, message) values ($1, 'bug', 'gerçek kayıt')`, [bob])).toBe(true);
+  });
+});
+
+describe("paylaşım bağlantısı", () => {
+  const TOKEN = "AbCdEfGhIjKlMnOpQrStUv12";
+  let output: string;
+
+  beforeAll(async () => {
+    await asAdmin();
+    [{ id: output }] = await rows<{ id: string }>(
+      `insert into generated_outputs(user_id, title, document) values ($1, 'Paylaşılan', '{}') returning id`,
+      [alice],
+    );
+  });
+
+  it("sahibi paylaşımı açıp kapatabilir, başkası açamaz", async () => {
+    await asUser(bob);
+    const hijack = await db.query("update generated_outputs set share_token = $1 where id = $2", [TOKEN, output]);
+    expect(hijack.affectedRows).toBe(0);
+
+    await asUser(alice);
+    const own = await db.query("update generated_outputs set share_token = $1, shared_at = now() where id = $2", [TOKEN, output]);
+    expect(own.affectedRows).toBe(1);
+  });
+
+  it("paylaşılan plan giriş yapmamış ziyaretçiye veya başka kullanıcıya veritabanından açılmaz", async () => {
+    await asUser(bob);
+    expect(await rows("select id from generated_outputs where share_token = $1", [TOKEN])).toHaveLength(0);
+    await db.exec("set role anon");
+    expect(await rows("select id from generated_outputs where share_token = $1", [TOKEN])).toHaveLength(0);
+    expect(await rows("select id from generated_outputs")).toHaveLength(0);
+  });
+
+  it("görüntülenme sayacı yalnızca sunucu tarafından artırılır", async () => {
+    await asUser(bob);
+    expect(await allowed("select public.record_share_view($1)", [TOKEN])).toBe(false);
+    await asAdmin();
+    await db.query("select public.record_share_view($1)", [TOKEN]);
+    await db.query("select public.record_share_view($1)", [TOKEN]);
+    const [row] = await rows<{ share_views: number }>("select share_views from generated_outputs where id = $1", [output]);
+    expect(row.share_views).toBe(2);
+  });
+
+  it("paylaşım ve görüntülenme planı 'düzenlendi' göstermez; içerik değişikliği gösterir", async () => {
+    const before = await rows<{ updated_at: string }>("select updated_at::text from generated_outputs where id = $1", [output]);
+    await db.query("select public.record_share_view($1)", [TOKEN]);
+    await db.query("update generated_outputs set share_token = null where id = $1", [output]);
+    const after = await rows<{ updated_at: string }>("select updated_at::text from generated_outputs where id = $1", [output]);
+    expect(after[0].updated_at).toBe(before[0].updated_at);
+
+    await db.query("update generated_outputs set title = 'Yeni ad' where id = $1", [output]);
+    const edited = await rows<{ updated_at: string }>("select updated_at::text from generated_outputs where id = $1", [output]);
+    expect(edited[0].updated_at).not.toBe(before[0].updated_at);
+  });
+
+  it("aynı bağlantı anahtarı iki planda kullanılamaz", async () => {
+    await db.query("update generated_outputs set share_token = $1 where id = $2", [TOKEN, output]);
+    expect(
+      await allowed(`insert into generated_outputs(user_id, title, document, share_token) values ($1, 'x', '{}', $2)`, [bob, TOKEN]),
+    ).toBe(false);
   });
 });
 
