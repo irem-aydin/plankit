@@ -5,6 +5,7 @@ import { isAiConfigured } from "@/infrastructure/ai/claude-personalizer";
 import { PROFILE_KIND_META, profileCompleteness } from "@/core/profile/profile";
 import { getCategoryWithSubcategories } from "@/infrastructure/supabase/catalog-queries";
 import { ProfileRepository } from "@/infrastructure/supabase/profile-repository";
+import { ProjectRepository } from "@/infrastructure/supabase/project-repository";
 import { createSupabaseServerClient } from "@/infrastructure/supabase/server";
 import { getCurrentSession } from "@/services/session";
 import { SelectionForm } from "./selection-form";
@@ -23,9 +24,13 @@ export async function generateMetadata({ params }: PageProps<"/olustur/[kategori
 
 export default async function SubcategorySelectionPage({ params, searchParams }: PageProps<"/olustur/[kategori]">) {
   const { kategori } = await params;
-  const { istek } = await searchParams;
+  const { istek, proje } = await searchParams;
   const initialRequest = typeof istek === "string" ? istek.slice(0, 500) : "";
-  const [data, session] = await Promise.all([getCategoryWithSubcategories(kategori), getCurrentSession()]);
+  const [data, session, projects] = await Promise.all([
+    getCategoryWithSubcategories(kategori),
+    getCurrentSession(),
+    createSupabaseServerClient().then((client) => new ProjectRepository(client).list().catch(() => [])),
+  ]);
   if (!data) notFound();
 
   const entitlement = session?.entitlement;
@@ -80,6 +85,8 @@ export default async function SubcategorySelectionPage({ params, searchParams }:
         }
         defaultDetail={preferences?.defaultDetail ?? "summary"}
         initialRequest={initialRequest}
+        projects={projects.map((p) => ({ id: p.id, name: p.name, profileId: p.profileId }))}
+        defaultProjectId={projects.find((p) => p.id === proje)?.id ?? ""}
       />
     </div>
   );

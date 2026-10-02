@@ -89,6 +89,8 @@ export async function startGenerationJob(
   input: GenerateOutputInput,
   attachments: Attachment[],
   displayTitle: string,
+  /** Planın ekleneceği proje; sahipliği çağıran doğrulamış olmalıdır. */
+  projectId: string | null = null,
 ): Promise<StartedJob> {
   const jobs = new JobRepository(createSupabaseAdminClient());
   await assertCanStart(userId, jobs, planCreditCost(input.context?.detail));
@@ -103,6 +105,7 @@ export async function startGenerationJob(
         // (aksi hâlde geç kalan bir ilerleme kaydı "hazır" mesajının üzerine yazabilir).
         let progressWrites = Promise.resolve();
         const { outputId } = await generateForUser(userId, input, attachments, {
+          projectId,
           onProgress: ({ completed, total, finished }) => {
             progressWrites = progressWrites
               .then(() => jobs.setProgress(jobId, progressMessage(completed, total, finished)))

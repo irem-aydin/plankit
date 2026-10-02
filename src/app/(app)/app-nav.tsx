@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FileText, LayoutDashboard, Sparkles, UsersRound } from "lucide-react";
+import { FileText, FolderOpen, LayoutDashboard, Sparkles, UsersRound } from "lucide-react";
 
 const LINKS = [
   { href: "/panel", label: "Panel", Icon: LayoutDashboard },
   { href: "/olustur", label: "Yeni plan", Icon: Sparkles },
   { href: "/ciktilar", label: "Planlarım", Icon: FileText },
+  { href: "/projeler", label: "Projelerim", Icon: FolderOpen },
   { href: "/profiller", label: "Profillerim", Icon: UsersRound },
 ];
 

@@ -4,11 +4,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 import type { OutputSummary } from "@/infrastructure/supabase/output-repository";
-import { copyOutputAction, renameOutputAction } from "./actions";
+import { copyOutputAction, moveOutputToProjectAction, renameOutputAction } from "./actions";
 
 const dateFormat = new Intl.DateTimeFormat("tr-TR", { dateStyle: "medium", timeStyle: "short" });
 const ALL = "";
 const NO_PROFILE = "__none__";
+const NO_PROJECT = "__none__";
+
+export interface ProjectOption {
+  id: string;
+  name: string;
+}
 
 /** Türkçe büyük/küçük harf ve aksan farkını yok sayan arama anahtarı. */
 function searchKey(value: string) {
@@ -22,8 +28,9 @@ function searchKey(value: string) {
 const selectClass =
   "rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 focus:outline-none";
 
-export function OutputsList({ outputs }: { outputs: OutputSummary[] }) {
+export function OutputsList({ outputs, projects = [] }: { outputs: OutputSummary[]; projects?: ProjectOption[] }) {
   const [query, setQuery] = useState("");
+  const [project, setProject] = useState(ALL);
   const [category, setCategory] = useState(ALL);
   const [profile, setProfile] = useState(ALL);
   const [sort, setSort] = useState<"new" | "old" | "updated" | "name">("new");
@@ -43,16 +50,19 @@ export function OutputsList({ outputs }: { outputs: OutputSummary[] }) {
       (o) =>
         (!q || searchKey(o.title).includes(q)) &&
         (category === ALL || o.category === category) &&
-        (profile === ALL || (profile === NO_PROFILE ? !o.profile : o.profile === profile)),
+        (profile === ALL || (profile === NO_PROFILE ? !o.profile : o.profile === profile)) &&
+        (project === ALL || (project === NO_PROJECT ? !o.projectId : o.projectId === project)),
     );
     const sorted = [...filtered];
     if (sort === "old") sorted.reverse();
     if (sort === "updated") sorted.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
     if (sort === "name") sorted.sort((a, b) => a.title.localeCompare(b.title, "tr"));
     return sorted;
-  }, [outputs, query, category, profile, sort]);
+  }, [outputs, query, category, profile, project, sort]);
 
-  const filtering = query.trim() !== "" || category !== ALL || profile !== ALL;
+  // Proje sayfasında liste zaten tek projeye ait; filtre yalnızca birden çok projeli listede anlamlı.
+  const showProjectFilter = projects.length > 0 && new Set(outputs.map((o) => o.projectId)).size > 1;
+  const filtering = query.trim() !== "" || category !== ALL || profile !== ALL || project !== ALL;
 
   return (
     <div className="mt-8">
@@ -86,6 +96,17 @@ export function OutputsList({ outputs }: { outputs: OutputSummary[] }) {
             <option value={NO_PROFILE}>Profilsiz</option>
           </select>
         )}
+        {showProjectFilter && (
+          <select aria-label="Proje" value={project} onChange={(e) => setProject(e.target.value)} className={selectClass}>
+            <option value={ALL}>Tüm projeler</option>
+            {projects.map((p) => (
+              <option key={p.id} value={p.id}>
+                📁 {p.name}
+              </option>
+            ))}
+            <option value={NO_PROJECT}>Projesiz</option>
+          </select>
+        )}
         <select aria-label="Sıralama" value={sort} onChange={(e) => setSort(e.target.value as typeof sort)} className={selectClass}>
           <option value="new">En yeni</option>
           <option value="old">En eski</option>
@@ -103,6 +124,7 @@ export function OutputsList({ outputs }: { outputs: OutputSummary[] }) {
               setQuery("");
               setCategory(ALL);
               setProfile(ALL);
+              setProject(ALL);
             }}
             className="ml-2 font-medium text-rose-600 hover:underline"
           >
@@ -118,7 +140,7 @@ export function OutputsList({ outputs }: { outputs: OutputSummary[] }) {
       ) : (
         <ul className="mt-3 divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
           {visible.map((o) => (
-            <OutputRow key={o.id} output={o} />
+            <OutputRow key={o.id} output={o} projects={projects} />
           ))}
         </ul>
       )}
@@ -126,12 +148,13 @@ export function OutputsList({ outputs }: { outputs: OutputSummary[] }) {
   );
 }
 
-function OutputRow({ output: o }: { output: OutputSummary }) {
+function OutputRow({ output: o, projects }: { output: OutputSummary; projects: ProjectOption[] }) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(o.title);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [isMoving, startMove] = useTransition();
 
   function rename() {
     if (title.trim() === o.title) {
@@ -156,10 +179,20 @@ function OutputRow({ output: o }: { output: OutputSummary }) {
     });
   }
 
-  const meta = [o.category, o.profile && `🧠 ${o.profile}`, o.language === "en" && "English", o.shared && "🔗 Paylaşılıyor"].filter(Boolean);
+  function moveTo(projectId: string) {
+    startMove(async () => {
+      const result = await moveOutputToProjectAction(o.id, projectId || null);
+      if (result.ok) {
+        setError(null);
+        router.refresh();
+      } else setError(result.error);
+    });
+  }
+
+  const meta = [o.project && `📁 ${o.project}`, o.category, o.profile && `🧠 ${o.profile}`, o.language === "en" && "English", o.shared && "🔗 Paylaşılıyor"].filter(Boolean);
 
   return (
-    <li className="flex flex-wrap items-center gap-x-4 gap-y-2 px-5 py-4 hover:bg-slate-50">
+    <li className="group relative flex flex-wrap items-center gap-x-4 gap-y-2 px-5 py-4 transition-colors hover:bg-rose-50/60">
       <div className="min-w-0 flex-1">
         {editing ? (
           <form
@@ -198,7 +231,11 @@ function OutputRow({ output: o }: { output: OutputSummary }) {
             </button>
           </form>
         ) : (
-          <Link href={`/ciktilar/${o.id}`} className="font-medium text-slate-900 hover:text-rose-700 hover:underline">
+          // after: katmanı satırın tamamını kaplar; böylece satırın her yeri plana gider.
+          <Link
+            href={`/ciktilar/${o.id}`}
+            className="font-medium text-slate-900 after:absolute after:inset-0 after:content-[''] group-hover:text-rose-700 group-hover:underline focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-rose-500 focus-visible:after:ring-inset"
+          >
             {o.title}
           </Link>
         )}
@@ -211,7 +248,24 @@ function OutputRow({ output: o }: { output: OutputSummary }) {
       </div>
 
       {!editing && (
-        <div className="flex items-center gap-1 text-sm">
+        <div className="relative z-10 flex items-center gap-1 text-sm">
+          {projects.length > 0 && (
+            <select
+              aria-label="Projeye taşı"
+              title="Projeye taşı"
+              value={o.projectId ?? ""}
+              disabled={isPending || isMoving}
+              onChange={(e) => moveTo(e.target.value)}
+              className="max-w-40 rounded-md border-0 bg-transparent px-2 py-1.5 font-medium text-slate-600 hover:bg-slate-100 focus:ring-2 focus:ring-rose-500/20 focus:outline-none disabled:opacity-50"
+            >
+              <option value="">📁 Proje yok</option>
+              {projects.map((p) => (
+                <option key={p.id} value={p.id}>
+                  📁 {p.name}
+                </option>
+              ))}
+            </select>
+          )}
           <button
             type="button"
             onClick={() => setEditing(true)}

@@ -6,6 +6,7 @@ import { OutputRepository } from "@/infrastructure/supabase/output-repository";
 import { FeedbackRepository } from "@/infrastructure/supabase/feedback-repository";
 import { PreferencesRepository } from "@/infrastructure/supabase/preferences-repository";
 import { ProfileRepository } from "@/infrastructure/supabase/profile-repository";
+import { ProjectRepository } from "@/infrastructure/supabase/project-repository";
 import { createSupabaseServerClient } from "@/infrastructure/supabase/server";
 
 /**
@@ -17,10 +18,11 @@ export async function exportUserData(userId: string) {
   const profilesRepo = new ProfileRepository(supabase);
   const outputsRepo = new OutputRepository(supabase);
 
-  const [account, preferences, profiles, outputList, feedback] = await Promise.all([
+  const [account, preferences, profiles, projects, outputList, feedback] = await Promise.all([
     new AccountRepository(supabase).findById(userId),
     new PreferencesRepository(supabase).get(userId),
     profilesRepo.list(),
+    new ProjectRepository(supabase).list(),
     outputsRepo.listForCurrentUser(1_000),
     new FeedbackRepository(supabase).listForCurrentUser().catch(() => []),
   ]);
@@ -41,6 +43,7 @@ export async function exportUserData(userId: string) {
     },
     preferences,
     profiles: profilesWithMemory,
+    projects,
     outputs: outputs.filter(Boolean),
     feedback,
   };

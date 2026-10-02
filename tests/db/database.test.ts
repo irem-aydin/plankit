@@ -180,6 +180,80 @@ describe("veri izolasyonu (RLS)", () => {
   });
 });
 
+describe("projeler", () => {
+  let aliceProject: string;
+  let bobProject: string;
+  let aliceOutput: string;
+
+  beforeAll(async () => {
+    await asAdmin();
+    [{ id: aliceProject }] = await rows<{ id: string }>(
+      `insert into projects(user_id, name) values ($1, 'Alice projesi') returning id`,
+      [alice],
+    );
+    [{ id: bobProject }] = await rows<{ id: string }>(`insert into projects(user_id, name) values ($1, 'Bob projesi') returning id`, [bob]);
+    [{ id: aliceOutput }] = await rows<{ id: string }>(
+      `insert into generated_outputs(user_id, title, document) values ($1, 'Alice proje planı', '{}') returning id`,
+      [alice],
+    );
+  });
+
+  it("kullanıcı yalnızca kendi projelerini görür ve kendi adına proje açabilir", async () => {
+    await asUser(alice);
+    expect(await rows("select id from projects")).toEqual([{ id: aliceProject }]);
+    expect(await allowed(`insert into projects(user_id, name) values ($1, 'Yeni')`, [alice])).toBe(true);
+    expect(await allowed(`insert into projects(user_id, name) values ($1, 'Sahte')`, [bob])).toBe(false);
+    await asAdmin();
+  });
+
+  it("plan yalnızca kendi projesine taşınabilir", async () => {
+    await asUser(alice);
+    expect(await allowed("update generated_outputs set project_id = $1 where id = $2", [aliceProject, aliceOutput])).toBe(true);
+    expect(await allowed("update generated_outputs set project_id = $1 where id = $2", [bobProject, aliceOutput])).toBe(false);
+    await asAdmin();
+    expect(await rows("select project_id from generated_outputs where id = $1", [aliceOutput])).toEqual([{ project_id: aliceProject }]);
+  });
+
+  it("başka kullanıcı projeyi değiştiremez veya silemez", async () => {
+    await asUser(bob);
+    await db.query("update projects set name = 'hack' where id = $1", [aliceProject]);
+    await db.query("delete from projects where id = $1", [aliceProject]);
+    await asAdmin();
+    expect(await rows("select name from projects where id = $1", [aliceProject])).toEqual([{ name: "Alice projesi" }]);
+  });
+
+  it("proje yalnızca kullanıcının kendi profiline bağlanabilir", async () => {
+    await asAdmin();
+    const [{ id: aliceProfile }] = await rows<{ id: string }>(
+      `insert into context_profiles(user_id, name, kind) values ($1, 'Alice şirketi', 'work') returning id`,
+      [alice],
+    );
+    const [{ id: bobProfile }] = await rows<{ id: string }>(
+      `insert into context_profiles(user_id, name, kind) values ($1, 'Bob şirketi', 'work') returning id`,
+      [bob],
+    );
+
+    await asUser(alice);
+    expect(await allowed("update projects set profile_id = $1 where id = $2", [aliceProfile, aliceProject])).toBe(true);
+    expect(await allowed("update projects set profile_id = $1 where id = $2", [bobProfile, aliceProject])).toBe(false);
+    expect(
+      await allowed(`insert into projects(user_id, name, profile_id) values ($1, 'Sızma', $2)`, [alice, bobProfile]),
+    ).toBe(false);
+
+    // Profil silinince proje silinmez, profilsiz kalır.
+    await db.query("delete from context_profiles where id = $1", [aliceProfile]);
+    await asAdmin();
+    expect(await rows("select profile_id from projects where id = $1", [aliceProject])).toEqual([{ profile_id: null }]);
+  });
+
+  it("proje silinince planlar silinmez, projesiz kalır", async () => {
+    await asUser(alice);
+    await db.query("delete from projects where id = $1", [aliceProject]);
+    await asAdmin();
+    expect(await rows("select project_id from generated_outputs where id = $1", [aliceOutput])).toEqual([{ project_id: null }]);
+  });
+});
+
 describe("paylaşım bağlantısı", () => {
   const TOKEN = "AbCdEfGhIjKlMnOpQrStUv12";
   let output: string;

@@ -9,9 +9,11 @@ import {
   type Attachment,
 } from "@/core/ai/attachments";
 import { customRequestSchema } from "@/core/ai/custom-document";
-import { DETAIL_LEVELS, INTAKE_MODES, LANGUAGES, type DetailLevel, type IntakeMode, type Language } from "@/core/ai/intake";
+import { DETAIL_LEVELS, INTAKE_MODES, LANGUAGES, MAX_CONTEXT_ENTRIES, type DetailLevel, type IntakeMode, type Language } from "@/core/ai/intake";
 import { GenerationError } from "@/core/output/errors";
-import { getAuthenticatedUser } from "@/infrastructure/supabase/server";
+import { projectContextEntry } from "@/core/project/project";
+import { ProjectRepository } from "@/infrastructure/supabase/project-repository";
+import { createSupabaseServerClient, getAuthenticatedUser } from "@/infrastructure/supabase/server";
 import { buildContextForUser } from "@/services/context-service";
 import { EntitlementError } from "@/services/generation-service";
 import { JobLimitError, startGenerationJob } from "@/services/job-service";
@@ -115,6 +117,15 @@ export async function generateAction(
     return { error: "Plan oluşturmak için bir başlık seç ya da ne istediğini yaz." };
   }
 
+  // Plan arka planda service role ile kaydedilir; projenin kullanıcıya ait olduğu burada (RLS ile) doğrulanır.
+  const projectId = String(formData.get("projectId") ?? "") || null;
+  if (projectId) {
+    const project = await new ProjectRepository(await createSupabaseServerClient()).findById(projectId).catch(() => null);
+    if (!project) return { error: "Seçilen proje bulunamadı. Sayfayı yenileyip tekrar dene." };
+    // Aynı projedeki planlar tutarlı olsun diye proje bilgisi yapay zekâya bağlam olarak gider.
+    if (context.entries.length < MAX_CONTEXT_ENTRIES) context.entries.push(projectContextEntry(project));
+  }
+
   let jobId: string;
   try {
     const job = await startGenerationJob(
@@ -122,6 +133,7 @@ export async function generateAction(
       { subcategoryIds, context, customRequest },
       attachments,
       customText || String(formData.get("jobTitle") ?? ""),
+      projectId,
     );
     jobId = job.jobId;
     // Yanıt gönderildikten sonra sunucuda çalışır; kullanıcının bağlantısına bağlı değildir.

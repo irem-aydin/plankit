@@ -68,7 +68,10 @@ export async function generateForUser(
   userId: string,
   input: GenerateOutputInput,
   attachments: Attachment[] = [],
-  options: Pick<GenerateOutputOptions, "onProgress"> = {},
+  options: Pick<GenerateOutputOptions, "onProgress"> & {
+    /** Planın ekleneceği proje; sahipliği çağıran doğrulamış olmalıdır. */
+    projectId?: string | null;
+  } = {},
 ): Promise<GenerateForUserResult> {
   const admin = createSupabaseAdminClient();
   const cost = planCreditCost(input.context?.detail);
@@ -84,7 +87,7 @@ export async function generateForUser(
   // Hak yalnızca üretim başarılı olursa düşer.
   await consume(userId, entitlement, cost, account.plan ?? "free");
 
-  const outputId = await new OutputRepository(admin).create(userId, document);
+  const outputId = await new OutputRepository(admin).create(userId, document, { projectId: options.projectId ?? null });
   return { outputId, document };
 }
 

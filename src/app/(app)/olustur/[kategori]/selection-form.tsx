@@ -51,6 +51,8 @@ export function SelectionForm({
   defaultProfileId,
   defaultDetail,
   initialRequest = "",
+  projects = [],
+  defaultProjectId = "",
 }: {
   categoryId: string;
   categoryName: string;
@@ -64,6 +66,9 @@ export function SelectionForm({
   defaultDetail: DetailLevel;
   /** Ana sayfadaki önizlemeden veya örnek plandan gelen istek */
   initialRequest?: string;
+  projects?: { id: string; name: string; profileId: string | null }[];
+  /** Proje sayfasından gelindiyse önceden seçili proje */
+  defaultProjectId?: string;
 }) {
   const [state, formAction] = useActionState(generateAction, {});
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -71,8 +76,16 @@ export function SelectionForm({
   const [mode, setMode] = useState<IntakeMode>("quick");
   const [detail, setDetail] = useState<DetailLevel>(defaultDetail);
   const [language, setLanguage] = useState<Language>("tr");
-  const [profileId, setProfileId] = useState<string>(defaultProfileId ?? profiles[0]?.id ?? "");
+  // Projeden gelindiyse projenin profili, yoksa varsayılan profil seçili başlar.
+  const projectProfileId = (id: string) => {
+    const linked = projects.find((p) => p.id === id)?.profileId;
+    return linked && profiles.some((p) => p.id === linked) ? linked : null;
+  };
+  const [profileId, setProfileId] = useState<string>(
+    projectProfileId(defaultProjectId) ?? defaultProfileId ?? profiles[0]?.id ?? "",
+  );
   const [saveAsProfile, setSaveAsProfile] = useState(false);
+  const [projectId, setProjectId] = useState(defaultProjectId);
   const [customRequest, setCustomRequest] = useState(initialRequest.slice(0, 500));
   const [showAll, setShowAll] = useState(false);
   const fileSelection = useFileSelection();
@@ -326,6 +339,32 @@ export function SelectionForm({
               </div>
             )}
             <input type="hidden" name="profileId" value={selectedProfile ? selectedProfile.id : ""} />
+
+            {projects.length > 0 && (
+              <div className="mt-5">
+                <label htmlFor="project-select" className="text-sm font-medium text-slate-800">
+                  Hangi projeye eklensin?
+                </label>
+                <select
+                  id="project-select"
+                  value={projectId}
+                  onChange={(e) => {
+                    setProjectId(e.target.value);
+                    const linked = projectProfileId(e.target.value);
+                    if (linked) setProfileId(linked);
+                  }}
+                  className={`${inputClass} sm:max-w-sm`}
+                >
+                  <option value="">Projeye ekleme</option>
+                  {projects.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      📁 {p.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+            <input type="hidden" name="projectId" value={projectId} />
 
             <div
               role="radiogroup"

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { z } from "zod";
 import { MAX_MEMORIES_PER_PROFILE, PROFILE_KIND_META } from "@/core/profile/profile";
 import { ProfileRepository } from "@/infrastructure/supabase/profile-repository";
+import { ProjectRepository } from "@/infrastructure/supabase/project-repository";
 import { createSupabaseServerClient } from "@/infrastructure/supabase/server";
 import {
   addMemoryAction,
@@ -13,7 +14,8 @@ import {
   updateProfileAction,
 } from "../actions";
 import { ProfileForm } from "../profile-form";
-import { AddMemoryForm, ConfirmSubmit } from "./memory-forms";
+import { ConfirmSubmit } from "@/components/confirm-submit";
+import { AddMemoryForm } from "./memory-forms";
 
 export const metadata: Metadata = { title: "Profil" };
 
@@ -23,10 +25,14 @@ export default async function ProfilePage({ params, searchParams }: PageProps<"/
   const [{ id }, { durum }] = await Promise.all([params, searchParams]);
   if (!z.uuid().safeParse(id).success) notFound();
 
-  const profiles = new ProfileRepository(await createSupabaseServerClient());
+  const supabase = await createSupabaseServerClient();
+  const profiles = new ProfileRepository(supabase);
   const profile = await profiles.findById(id);
   if (!profile) notFound();
-  const memories = await profiles.listMemories(id);
+  const [memories, projects] = await Promise.all([
+    profiles.listMemories(id),
+    new ProjectRepository(supabase).list({ profileId: id }),
+  ]);
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -52,6 +58,38 @@ export default async function ProfilePage({ params, searchParams }: PageProps<"/
         <div className="mt-5">
           <ProfileForm action={updateProfileAction.bind(null, profile.id)} profile={profile} />
         </div>
+      </section>
+
+      <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 sm:p-8">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">📁 Projeler</h2>
+            <p className="mt-1 text-sm text-slate-600">
+              Bu profil için yürüttüğün projeler. Bir projede plan oluşturduğunda bu profil otomatik seçilir.
+            </p>
+          </div>
+          <Link
+            href={`/projeler/yeni?profil=${profile.id}`}
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            + Bu profil için proje
+          </Link>
+        </div>
+
+        {projects.length === 0 ? (
+          <p className="mt-5 rounded-lg bg-slate-50 px-4 py-3 text-sm text-slate-600">Bu profile bağlı bir proje yok.</p>
+        ) : (
+          <ul className="mt-5 divide-y divide-slate-100 rounded-lg border border-slate-200">
+            {projects.map((p) => (
+              <li key={p.id}>
+                <Link href={`/projeler/${p.id}`} className="block px-4 py-3 text-sm hover:bg-rose-50/60">
+                  <span className="font-medium text-slate-900">📁 {p.name}</span>
+                  {p.description && <span className="mt-0.5 block truncate text-xs text-slate-500">{p.description}</span>}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 sm:p-8">
@@ -112,7 +150,7 @@ export default async function ProfilePage({ params, searchParams }: PageProps<"/
       <section className="mt-8 rounded-2xl border border-red-200 bg-white p-5 sm:p-8">
         <h2 className="text-lg font-semibold text-slate-900">Profili sil</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Profil ve hafızası kalıcı olarak silinir. Bu profille oluşturduğun planlar silinmez.
+          Profil ve hafızası kalıcı olarak silinir. Bu profille oluşturduğun planlar ve projeler silinmez.
         </p>
         <form action={deleteProfileAction} className="mt-4">
           <input type="hidden" name="id" value={profile.id} />

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { OutputRepository } from "@/infrastructure/supabase/output-repository";
+import { ProjectRepository } from "@/infrastructure/supabase/project-repository";
 import { createSupabaseServerClient } from "@/infrastructure/supabase/server";
 import { ActiveJobs } from "./active-jobs";
 import { OutputsList } from "./outputs-list";
@@ -9,7 +10,10 @@ export const metadata: Metadata = { title: "Planlarım" };
 
 export default async function OutputsPage() {
   const supabase = await createSupabaseServerClient();
-  const outputs = await new OutputRepository(supabase).listSummaries();
+  const [outputs, projects] = await Promise.all([
+    new OutputRepository(supabase).listSummaries(),
+    new ProjectRepository(supabase).list(),
+  ]);
 
   return (
     <div>
@@ -18,9 +22,17 @@ export default async function OutputsPage() {
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">Planlarım</h1>
           <p className="mt-1 text-slate-600">Oluşturduğun planlar, şablonlar ve checklist&apos;ler.</p>
         </div>
-        <Link href="/olustur" className="rounded-lg bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-rose-500">
-          Yeni plan oluştur
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/projeler/yeni"
+            className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            + Proje
+          </Link>
+          <Link href="/olustur" className="rounded-lg bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-rose-500">
+            Yeni plan oluştur
+          </Link>
+        </div>
       </div>
 
       <div className="mt-6 empty:hidden">
@@ -36,7 +48,7 @@ export default async function OutputsPage() {
           </Link>
         </div>
       ) : (
-        <OutputsList outputs={outputs} />
+        <OutputsList outputs={outputs} projects={projects.map((p) => ({ id: p.id, name: p.name }))} />
       )}
     </div>
   );

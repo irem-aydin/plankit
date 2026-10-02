@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { z } from "zod";
 import { listCategories } from "@/infrastructure/supabase/catalog-queries";
 
 export const metadata: Metadata = { title: "Yeni plan" };
 
-export default async function CategoriesPage() {
-  const categories = await listCategories();
+export default async function CategoriesPage({ searchParams }: PageProps<"/olustur">) {
+  const [categories, { proje }] = await Promise.all([listCategories(), searchParams]);
+  // Proje sayfasından gelindiyse seçili proje bir sonraki adıma taşınır.
+  const projectQuery = typeof proje === "string" && z.uuid().safeParse(proje).success ? `?proje=${proje}` : "";
 
   return (
     <div>
@@ -17,7 +20,7 @@ export default async function CategoriesPage() {
         {categories.map((category) => (
           <Link
             key={category.id}
-            href={`/olustur/${category.slug}`}
+            href={`/olustur/${category.slug}${projectQuery}`}
             className="group rounded-xl border border-slate-200 bg-white p-6 transition hover:border-rose-300 hover:shadow-md"
           >
             <h2 className="text-lg font-semibold text-slate-900 group-hover:text-rose-700">{category.name}</h2>

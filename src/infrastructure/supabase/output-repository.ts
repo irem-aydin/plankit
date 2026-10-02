@@ -10,6 +10,8 @@ export interface OutputSummary {
   updatedAt: string;
   category: string | null;
   profile: string | null;
+  projectId: string | null;
+  project: string | null;
   language: "tr" | "en";
   shared: boolean;
   shareViews: number;
@@ -43,6 +45,12 @@ type OutputRow = {
   updated_at: string;
 };
 
+/** Gömülü ilişki tekil ya da dizi olarak dönebilir. */
+function projectName(value: unknown): string | null {
+  const row = Array.isArray(value) ? value[0] : value;
+  return row && typeof row === "object" && "name" in row && typeof row.name === "string" ? row.name : null;
+}
+
 const toStored = (r: OutputRow): StoredOutput => ({
   id: r.id,
   title: r.title,
@@ -59,7 +67,11 @@ export class OutputRepository {
   constructor(private readonly client: SupabaseClient) {}
 
   /** trackSelections=false: kopyalarda raporlama verisi çiftlenmesin. */
-  async create(userId: string, document: GeneratedDocument, { trackSelections = true } = {}): Promise<string> {
+  async create(
+    userId: string,
+    document: GeneratedDocument,
+    { trackSelections = true, projectId = null }: { trackSelections?: boolean; projectId?: string | null } = {},
+  ): Promise<string> {
     const { data, error } = await this.client
       .from("generated_outputs")
       .insert({
@@ -67,6 +79,7 @@ export class OutputRepository {
         title: document.title,
         document,
         profile_id: document.context?.profile?.id ?? null,
+        project_id: projectId,
       })
       .select("id")
       .single();
@@ -118,14 +131,14 @@ export class OutputRepository {
    * filtrelemede gereken alanlar JSON yolu ile okunur (bir plan tek kategori
    * sayfasından üretildiği için ilk bölümün kategorisi planın kategorisidir).
    */
-  async listSummaries(limit = 300): Promise<OutputSummary[]> {
-    const { data, error } = await this.client
+  async listSummaries({ limit = 300, projectId }: { limit?: number; projectId?: string } = {}): Promise<OutputSummary[]> {
+    let query = this.client
       .from("generated_outputs")
       .select(
-        "id, title, created_at, updated_at, share_token, share_views, category:document->sections->0->>categoryName, profile:document->context->profile->>name, language:document->context->>language",
-      )
-      .order("created_at", { ascending: false })
-      .limit(limit);
+        "id, title, created_at, updated_at, share_token, share_views, project_id, project:projects(name), category:document->sections->0->>categoryName, profile:document->context->profile->>name, language:document->context->>language",
+      );
+    if (projectId) query = query.eq("project_id", projectId);
+    const { data, error } = await query.order("created_at", { ascending: false }).limit(limit);
     if (error) throw new Error(`Çıktılar okunamadı: ${error.message}`);
     return (data ?? []).map((r) => ({
       id: r.id,
@@ -134,6 +147,8 @@ export class OutputRepository {
       updatedAt: r.updated_at,
       category: r.category ?? null,
       profile: r.profile ?? null,
+      projectId: r.project_id ?? null,
+      project: projectName(r.project),
       language: r.language === "en" ? "en" : "tr",
       shared: Boolean(r.share_token),
       shareViews: r.share_views ?? 0,
@@ -149,6 +164,28 @@ export class OutputRepository {
       .select("id");
     if (error) throw new Error(`Çıktı güncellenemedi: ${error.message}`);
     return (data ?? []).length > 0;
+  }
+
+  /** projectId = null planı projeden çıkarır. RLS yalnızca kendi projesine taşımaya izin verir. */
+  async setProject(id: string, projectId: string | null): Promise<boolean> {
+    const { data, error } = await this.client
+      .from("generated_outputs")
+      .update({ project_id: projectId })
+      .eq("id", id)
+      .select("id");
+    if (error) throw new Error(`Plan projeye taşınamadı: ${error.message}`);
+    return (data ?? []).length > 0;
+  }
+
+  /** Planın bağlı olduğu proje (yoksa null). */
+  async getProjectId(id: string): Promise<string | null> {
+    const { data, error } = await this.client
+      .from("generated_outputs")
+      .select("project_id")
+      .eq("id", id)
+      .maybeSingle<{ project_id: string | null }>();
+    if (error) throw new Error(`Plan okunamadı: ${error.message}`);
+    return data?.project_id ?? null;
   }
 
   /** Paylaşım durumu (kullanıcı istemcisiyle: RLS yalnızca kendi planını döndürür). */

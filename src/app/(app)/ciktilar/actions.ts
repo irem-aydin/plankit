@@ -66,7 +66,8 @@ export async function copyOutputAction(outputId: string): Promise<ListActionResu
   if (!user) return { ok: false, error: "Oturumunuz sona ermiş. Lütfen tekrar giriş yapın." };
 
   // Sahiplik: RLS yalnızca kullanıcının kendi planını döndürür.
-  const source = await new OutputRepository(await createSupabaseServerClient()).findById(outputId);
+  const userOutputs = new OutputRepository(await createSupabaseServerClient());
+  const [source, projectId] = await Promise.all([userOutputs.findById(outputId), userOutputs.getProjectId(outputId)]);
   if (!source) return { ok: false, error: "Plan bulunamadı." };
 
   const parsed = generatedDocumentSchema.safeParse(source.document);
@@ -77,11 +78,26 @@ export async function copyOutputAction(outputId: string): Promise<ListActionResu
   const id = await new OutputRepository(createSupabaseAdminClient()).create(
     user.id,
     { ...parsed.data, title, generatedAt: new Date().toISOString() },
-    { trackSelections: false },
+    // Kopya, kaynak planın projesinde kalır.
+    { trackSelections: false, projectId },
   );
   revalidatePath("/ciktilar");
   revalidatePath("/panel");
+  if (projectId) revalidatePath(`/projeler/${projectId}`);
   return { ok: true, id };
+}
+
+/** Planı bir projeye taşır; projectId boşsa projeden çıkarır. RLS yalnızca kendi projesine izin verir. */
+export async function moveOutputToProjectAction(outputId: string, projectId: string | null): Promise<ListActionResult> {
+  const outputs = new OutputRepository(await createSupabaseServerClient());
+  const previous = await outputs.getProjectId(outputId);
+  const moved = await outputs.setProject(outputId, projectId || null).catch(() => false);
+  if (!moved) return { ok: false, error: "Plan projeye taşınamadı." };
+
+  revalidatePath("/ciktilar");
+  revalidatePath("/projeler");
+  for (const id of [previous, projectId]) if (id) revalidatePath(`/projeler/${id}`);
+  return { ok: true };
 }
 
 export type ShareResult = { ok: true; token: string | null; views: number } | { ok: false; error: string };

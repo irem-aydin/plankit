@@ -127,6 +127,7 @@ export const FREE_TEXT_HINTS = [
 export const MIN_CONTEXT_CHARS = 40;
 const MAX_ANSWER_CHARS = 4_000;
 const MAX_FREE_TEXT_CHARS = 12_000;
+export const MAX_CONTEXT_ENTRIES = 60;
 
 export const intakeContextSchema = z.object({
   mode: z.enum(INTAKE_MODES),
@@ -140,7 +141,7 @@ export const intakeContextSchema = z.object({
         answer: z.string().max(MAX_FREE_TEXT_CHARS),
       }),
     )
-    .max(60),
+    .max(MAX_CONTEXT_ENTRIES),
   /** Bağlam bir profilden geldiyse (bellek) */
   profile: z.object({ id: z.string(), name: z.string() }).optional(),
 });
