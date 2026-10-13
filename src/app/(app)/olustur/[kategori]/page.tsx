@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { MAX_CUSTOM_REQUEST_CHARS } from "@/core/ai/custom-document";
 import { isAiConfigured } from "@/infrastructure/ai/claude-personalizer";
 import { PROFILE_KIND_META, profileCompleteness } from "@/core/profile/profile";
 import { getCategoryWithSubcategories } from "@/infrastructure/supabase/catalog-queries";
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: PageProps<"/olustur/[kategori
 export default async function SubcategorySelectionPage({ params, searchParams }: PageProps<"/olustur/[kategori]">) {
   const { kategori } = await params;
   const { istek, proje } = await searchParams;
-  const initialRequest = typeof istek === "string" ? istek.slice(0, 500) : "";
+  const initialRequest = typeof istek === "string" ? istek.slice(0, MAX_CUSTOM_REQUEST_CHARS) : "";
   const [data, session, projects] = await Promise.all([
     getCategoryWithSubcategories(kategori),
     getCurrentSession(),

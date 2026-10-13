@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { isAccountDeleteConfirmed, passwordSchema, safeInternalPath } from "@/core/account/security";
+import { customRequestSchema, MAX_CUSTOM_REQUEST_CHARS } from "@/core/ai/custom-document";
 import { classifyAttachment, MAX_ATTACHMENTS, validateAttachments } from "@/core/ai/attachments";
 import { decisionToMemory, MAX_DECISIONS, normalizeDecisions } from "@/core/ai/decisions";
 import { buildIntakeContext, INTAKE_QUESTIONS } from "@/core/ai/intake";
@@ -31,6 +32,21 @@ describe("isAccountDeleteConfirmed", () => {
 
   it("farklı metni reddeder", () => {
     for (const v of ["", "SIL", "HESABI SIL", null]) expect(isAccountDeleteConfirmed(v)).toBe(false);
+  });
+});
+
+describe("customRequestSchema", () => {
+  it("tarayıcının \\r\\n satır sonlarını tek karakter sayar", () => {
+    const line = "a".repeat(99);
+    const text = Array(MAX_CUSTOM_REQUEST_CHARS / 100).fill(line).join("\r\n");
+    const parsed = customRequestSchema.safeParse(text);
+    expect(parsed.success).toBe(true);
+    expect(parsed.data).not.toContain("\r");
+  });
+
+  it("sınırı aşan isteği Türkçe mesajla reddeder", () => {
+    const parsed = customRequestSchema.safeParse("a".repeat(MAX_CUSTOM_REQUEST_CHARS + 1));
+    expect(parsed.error?.issues[0].message).toContain(`en fazla ${MAX_CUSTOM_REQUEST_CHARS} karakter`);
   });
 });
 

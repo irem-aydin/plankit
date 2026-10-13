@@ -162,10 +162,19 @@ export function customResponseToTemplate(response: CustomDocumentResponse): Temp
   };
 }
 
-export const MAX_CUSTOM_REQUEST_CHARS = 500;
+export const MAX_CUSTOM_REQUEST_CHARS = 2_000;
 
+/**
+ * Tarayıcı form gönderiminde satır sonlarını "\r\n" yapar; metin kutusunda
+ * sınırın içinde kalan bir istek sunucuda sınırı aşmasın diye önce normalleştirilir.
+ */
 export const customRequestSchema = z
   .string()
-  .trim()
-  .min(10, "Ne oluşturmak istediğini birkaç kelimeyle daha anlat.")
-  .max(MAX_CUSTOM_REQUEST_CHARS);
+  .transform((s) => s.replace(/\r\n?/g, "\n"))
+  .pipe(
+    z
+      .string()
+      .trim()
+      .min(10, "Ne oluşturmak istediğini birkaç kelimeyle daha anlat.")
+      .max(MAX_CUSTOM_REQUEST_CHARS, `İsteğin en fazla ${MAX_CUSTOM_REQUEST_CHARS} karakter olabilir.`),
+  );

@@ -11,6 +11,7 @@ import {
   type IntakeMode,
   type Language,
 } from "@/core/ai/intake";
+import { MAX_CUSTOM_REQUEST_CHARS } from "@/core/ai/custom-document";
 import { planCreditCost } from "@/core/billing/plans";
 import type { SubcategoryOption } from "@/infrastructure/supabase/catalog-queries";
 import { generateAction } from "../actions";
@@ -86,7 +87,7 @@ export function SelectionForm({
   );
   const [saveAsProfile, setSaveAsProfile] = useState(false);
   const [projectId, setProjectId] = useState(defaultProjectId);
-  const [customRequest, setCustomRequest] = useState(initialRequest.slice(0, 500));
+  const [customRequest, setCustomRequest] = useState(initialRequest.slice(0, MAX_CUSTOM_REQUEST_CHARS));
   const [showAll, setShowAll] = useState(false);
   const fileSelection = useFileSelection();
   const selectedProfile = profiles.find((p) => p.id === profileId);
@@ -154,11 +155,16 @@ export function SelectionForm({
           <textarea
             id="custom-request"
             value={customRequest}
-            onChange={(e) => setCustomRequest(e.target.value.slice(0, 500))}
+            onChange={(e) => setCustomRequest(e.target.value.slice(0, MAX_CUSTOM_REQUEST_CHARS))}
             rows={2}
             placeholder="Örn. Bayilerimizi değerlendirmek için bir performans ve sözleşme yenileme çerçevesi istiyorum."
             className={`${inputClass} field-sizing-content min-h-16 bg-white`}
           />
+          {customRequest.length > MAX_CUSTOM_REQUEST_CHARS * 0.8 && (
+            <p className="mt-1 text-right text-xs text-slate-500">
+              {customRequest.length} / {MAX_CUSTOM_REQUEST_CHARS}
+            </p>
+          )}
           {hasCustom && (
             <p className="mt-2 text-xs font-medium text-pink-800">
               İsteğin dokümana eklenecek. İstersen aşağıdan başlık da seçebilirsin.
