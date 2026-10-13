@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import { SubmitButton } from "@/components/submit-button";
-import { ACCOUNT_DELETE_CONFIRMATION, PASSWORD_HINT } from "@/core/account/security";
+import { ACCOUNT_DELETE_CONFIRMATION, PASSWORD_HINT, isAccountDeleteConfirmed } from "@/core/account/security";
 import type { DetailLevel } from "@/core/ai/intake";
 import {
   changePasswordAction,
@@ -270,7 +270,7 @@ export function DeleteAccountForm() {
       </div>
       <Feedback state={state} />
       <SubmitButton
-        disabled={confirmation !== ACCOUNT_DELETE_CONFIRMATION}
+        disabled={!isAccountDeleteConfirmed(confirmation)}
         className="!bg-red-600 hover:!bg-red-500"
         pendingText="Hesap siliniyor…"
       >

@@ -14,7 +14,17 @@ export const passwordSchema = z
 
 export const PASSWORD_HINT = `En az ${PASSWORD_MIN_LENGTH} karakter; en az bir harf ve bir rakam.`;
 
-export const ACCOUNT_DELETE_CONFIRMATION = "HESABIMI SIL";
+export const ACCOUNT_DELETE_CONFIRMATION = "HESABIMI SİL";
+
+/**
+ * Onay metnini büyük/küçük harf ve Türkçe I/İ/ı/i farkı gözetmeden karşılaştırır;
+ * Türkçe klavyede "SİL", İngilizce klavyede "SIL" yazan da onaylayabilsin.
+ */
+export function isAccountDeleteConfirmed(value: unknown): boolean {
+  const normalize = (s: string) =>
+    s.trim().replace(/\s+/g, " ").toLocaleUpperCase("tr").replace(/İ/g, "I");
+  return typeof value === "string" && normalize(value) === normalize(ACCOUNT_DELETE_CONFIRMATION);
+}
 
 /** Açık yönlendirmeyi önlemek için yalnızca site içi yolları kabul eder. */
 export function safeInternalPath(value: unknown, fallback: string): string {

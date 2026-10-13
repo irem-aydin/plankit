@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { publicEnv } from "@/config/env";
-import { ACCOUNT_DELETE_CONFIRMATION, passwordSchema } from "@/core/account/security";
+import { ACCOUNT_DELETE_CONFIRMATION, isAccountDeleteConfirmed, passwordSchema } from "@/core/account/security";
 import { DETAIL_LEVELS } from "@/core/ai/intake";
 import { PreferencesRepository } from "@/infrastructure/supabase/preferences-repository";
 import { ProfileRepository } from "@/infrastructure/supabase/profile-repository";
@@ -124,7 +124,7 @@ export async function clearAllMemoriesAction(): Promise<SettingsState> {
 
 export async function deleteAccountAction(_prev: SettingsState, formData: FormData): Promise<SettingsState> {
   const { user, supabase } = await requireUser();
-  if (formData.get("confirmation") !== ACCOUNT_DELETE_CONFIRMATION) {
+  if (!isAccountDeleteConfirmed(formData.get("confirmation"))) {
     return { error: `Onaylamak için kutuya tam olarak "${ACCOUNT_DELETE_CONFIRMATION}" yaz.` };
   }
   if (!user.email) return { error: "Hesabında e-posta bulunamadı." };

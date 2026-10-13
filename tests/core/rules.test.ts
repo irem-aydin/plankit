@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { passwordSchema, safeInternalPath } from "@/core/account/security";
+import { isAccountDeleteConfirmed, passwordSchema, safeInternalPath } from "@/core/account/security";
 import { classifyAttachment, MAX_ATTACHMENTS, validateAttachments } from "@/core/ai/attachments";
 import { decisionToMemory, MAX_DECISIONS, normalizeDecisions } from "@/core/ai/decisions";
 import { buildIntakeContext, INTAKE_QUESTIONS } from "@/core/ai/intake";
@@ -20,6 +20,18 @@ describe("safeInternalPath (açık yönlendirme koruması)", () => {
       expect(safeInternalPath(value, "/panel")).toBe("/panel");
     },
   );
+});
+
+describe("isAccountDeleteConfirmed", () => {
+  it("Türkçe/İngilizce klavye ve büyük-küçük harf farkını kabul eder", () => {
+    for (const v of ["HESABIMI SİL", "HESABIMI SIL", "hesabımı sil", "hesabimi sil", "  Hesabımı  Sil "]) {
+      expect(isAccountDeleteConfirmed(v)).toBe(true);
+    }
+  });
+
+  it("farklı metni reddeder", () => {
+    for (const v of ["", "SIL", "HESABI SIL", null]) expect(isAccountDeleteConfirmed(v)).toBe(false);
+  });
 });
 
 describe("passwordSchema", () => {
